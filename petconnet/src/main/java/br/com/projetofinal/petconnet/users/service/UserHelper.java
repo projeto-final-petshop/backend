@@ -1,6 +1,7 @@
 package br.com.projetofinal.petconnet.users.service;
 
 import br.com.projetofinal.petconnet.exceptions.UnableToUpdateUserException;
+import br.com.projetofinal.petconnet.exceptions.UserNotFoundException;
 import br.com.projetofinal.petconnet.users.dto.UserResponse;
 import br.com.projetofinal.petconnet.users.entity.Users;
 import br.com.projetofinal.petconnet.users.mapper.UserMapper;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class UserHelper {
+    private final UserMapper userMapper;
 
     private final UserRepository userRepository;
 
@@ -24,6 +26,11 @@ public class UserHelper {
             log.error("Erro ao tentar atualizar Usuário.");
             throw ex;
         }
+    }
+
+    public Users findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
     }
 
 }

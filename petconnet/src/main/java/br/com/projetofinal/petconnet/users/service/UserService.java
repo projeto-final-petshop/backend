@@ -33,4 +33,10 @@ public class UserService {
         return UserMapper.userMapper().toUserListResponse(users);
     }
 
+    @Transactional(readOnly = true)
+    public UserResponse getUserById(Long id) {
+        Users user = userHelper.findUserById(id);
+        return UserMapper.userMapper().toUserResponse(user);
+    }
+
 }
