@@ -31,3 +31,8 @@ Content-Type: application/json
   "password": "12e@56T8",
   "phoneNumber": "11998765432"
 }
+
+### excluindo usuário por ID
+# @name deleteUserById
+DELETE http://localhost:8888/api/petconnet/users/1
+Content-Type: application/json

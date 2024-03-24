@@ -1,5 +1,6 @@
 package br.com.projetofinal.petconnet.users.service;
 
+import br.com.projetofinal.petconnet.exceptions.UnableToDeleteUserException;
 import br.com.projetofinal.petconnet.users.dto.UserRequest;
 import br.com.projetofinal.petconnet.users.dto.UserResponse;
 import br.com.projetofinal.petconnet.users.entity.Users;
@@ -44,6 +45,17 @@ public class UserService {
         Users user = userHelper.findUserById(id);
         userHelper.updateUserData(request, user);
         return userHelper.saveUser(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        Users user = userHelper.findUserById(id);
+        try {
+            userRepository.delete(user);
+        } catch (UnableToDeleteUserException ex) {
+            log.error("Erro ao tentar excluir Usuário.");
+            throw ex;
+        }
     }
 
 }
