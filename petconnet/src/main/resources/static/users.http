@@ -9,3 +9,8 @@ Content-Type: application/json
   "password": "12e@56T8",
   "phoneNumber": "11998765432"
 }
+
+### listando usuários cadastrados
+# @name listUsers
+GET http://localhost:8888/api/petconnet/users/list
+Content-Type: application/json
