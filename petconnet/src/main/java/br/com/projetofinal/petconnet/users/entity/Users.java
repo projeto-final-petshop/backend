@@ -1,24 +1,25 @@
 package br.com.projetofinal.petconnet.users.entity;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Users {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -32,7 +33,7 @@ public class Users {
      * O username é o email do usuário e deve ser um email válido.
      */
     @Email
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     /**

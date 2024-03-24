@@ -1,0 +1,11 @@
+### cadastrando usuário
+# @name registerUser
+POST http://localhost:8888/api/petconnet/users/register
+Content-Type: application/json
+
+{
+  "name": "Rian",
+  "username": "rian@email.com",
+  "password": "12e@56T8",
+  "phoneNumber": "11998765432"
+}
