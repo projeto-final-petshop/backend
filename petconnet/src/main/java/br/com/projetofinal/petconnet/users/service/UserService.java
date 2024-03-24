@@ -39,4 +39,11 @@ public class UserService {
         return UserMapper.userMapper().toUserResponse(user);
     }
 
+    @Transactional
+    public UserResponse updateUser(Long id, UserRequest request) {
+        Users user = userHelper.findUserById(id);
+        userHelper.updateUserData(request, user);
+        return userHelper.saveUser(user);
+    }
+
 }

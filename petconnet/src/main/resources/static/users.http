@@ -19,3 +19,15 @@ Content-Type: application/json
 # @name getUserById
 GET http://localhost:8888/api/petconnet/users/1
 Content-Type: application/json
+
+### atualizando usuário por ID
+# @name updateUserById
+PUT http://localhost:8888/api/petconnet/users/1
+Content-Type: application/json
+
+{
+  "name": "Rian o Gato",
+  "username": "rian@email.com",
+  "password": "12e@56T8",
+  "phoneNumber": "11998765432"
+}
