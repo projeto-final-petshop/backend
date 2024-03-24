@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.users;
+package br.com.projetofinal.petconnet.users.entity;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;

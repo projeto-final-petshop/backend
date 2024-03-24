@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.users;
+package br.com.projetofinal.petconnet.users.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
