@@ -33,5 +33,3 @@ A API utiliza arquitetura monolítica e oferece recursos para gerenciar pets, se
 ## Documentação
 
 A documentação da API está dispoinível no Swagger UI em: http://localhost:8888/swagger-ui.html
-
-## Recursos
