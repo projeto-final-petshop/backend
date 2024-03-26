@@ -1,6 +1,6 @@
-package br.com.projetofinal.petconnet.users.entity;
+package br.com.projetofinal.petconnet.pets.repository;
 
-import br.com.projetofinal.petconnet.pets.Pets;
+import br.com.projetofinal.petconnet.pets.entity.Pets;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PetRepository extends JpaRepository<Pets, Long> {

@@ -1,8 +1,9 @@
-package br.com.projetofinal.petconnet.pets;
+package br.com.projetofinal.petconnet.pets.entity;
 
-import br.com.projetofinal.petconnet.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -17,15 +18,22 @@ public class Pets {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String type;
+
     private Integer age;
+
     private String raca;
 
-    @ManyToOne
-    private Users user;
-
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
 }
