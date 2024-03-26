@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.exceptions;
+package br.com.projetofinal.petconnet.exceptions.errors;
 
 public class UnableToDeleteUserException extends RuntimeException {
 
