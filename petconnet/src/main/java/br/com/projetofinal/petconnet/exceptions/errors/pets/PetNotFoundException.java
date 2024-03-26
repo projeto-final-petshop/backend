@@ -1,18 +1,20 @@
 package br.com.projetofinal.petconnet.exceptions.errors.pets;
 
-public class UnableToRegisterPetException extends RuntimeException {
-    public UnableToRegisterPetException() {
+public class PetNotFoundException extends RuntimeException {
+
+    public PetNotFoundException() {
     }
 
-    public UnableToRegisterPetException(String message) {
+    public PetNotFoundException(String message) {
         super(message);
     }
 
-    public UnableToRegisterPetException(String message, Throwable cause) {
+    public PetNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UnableToRegisterPetException(Throwable cause) {
+    public PetNotFoundException(Throwable cause) {
         super(cause);
     }
+    
 }
