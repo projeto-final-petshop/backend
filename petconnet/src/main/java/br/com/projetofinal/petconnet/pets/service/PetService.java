@@ -39,9 +39,16 @@ public class PetService {
         return PetMapper.petMapper().toPetListResponse(pets);
     }
 
+    @Transactional(readOnly = true)
+    public PetResponse getPetById(Long id) {
+        Pets pet = findPetById(id);
+        return PetMapper.petMapper().toPetResponse(pet);
+    }
+
     private Pets findPetById(Long id) {
         return petRepository.findById(id)
                 .orElseThrow(PetNotFoundException::new);
     }
+
 
 }

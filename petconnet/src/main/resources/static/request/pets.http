@@ -17,7 +17,7 @@ Content-Type: application/json
 
 ### buscando animal por ID
 # @name getPetById
-GET http://localhost:8888/api/petconnet/pets/4
+GET http://localhost:8888/api/petconnet/pets/5
 Content-Type: application/json
 
 ### atualizando animal por ID

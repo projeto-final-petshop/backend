@@ -29,4 +29,10 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PetResponse> getPetById(@PathVariable Long id) {
+        PetResponse response = petService.getPetById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }
