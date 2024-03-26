@@ -1,38 +1,39 @@
-### cadastrando usuário
-# @name registerUser
-POST http://localhost:8888/api/petconnet/users/register
+### cadastrando animal
+# @name registerPet
+POST http://localhost:8888/api/petconnet/pets/register
+Content-Type: application/json
+
+{
+  "name": "Pandora",
+  "type": "cachorro",
+  "age": 2,
+  "raca": "N/A"
+}
+
+### listando animais cadastrados
+# @name listPets
+GET http://localhost:8888/api/petconnet/pets/list
+Content-Type: application/json
+
+### buscando animal por ID
+# @name getPetById
+GET http://localhost:8888/api/petconnet/pets/4
+Content-Type: application/json
+
+### atualizando animal por ID
+# @name updatePetById
+PUT http://localhost:8888/api/petconnet/pets/5
 Content-Type: application/json
 
 {
   "name": "Suzi",
-  "username": "suzi@email.com",
-  "password": "12e@56T8",
-  "phone_number": "11998765432"
+  "type": "gato",
+  "age": 4,
+  "raca": "N/A",
+  "user": 1
 }
 
-### listando usuários cadastrados
-# @name listUsers
-GET http://localhost:8888/api/petconnet/users/list
-Content-Type: application/json
-
-### buscando usuário por ID
-# @name getUserById
-GET http://localhost:8888/api/petconnet/users/4
-Content-Type: application/json
-
-### atualizando usuário por ID
-# @name updateUserById
-PUT http://localhost:8888/api/petconnet/users/5
-Content-Type: application/json
-
-{
-  "name": "Suzi M",
-  "username": "suzi@email.com",
-  "password": "12e@56T8",
-  "phone_number": "11998765432"
-}
-
-### excluindo usuário por ID
-# @name deleteUserById
-DELETE http://localhost:8888/api/petconnet/users/3
+### excluindo animal por ID
+# @name deletePetById
+DELETE http://localhost:8888/api/petconnet/pets/3
 Content-Type: application/json
