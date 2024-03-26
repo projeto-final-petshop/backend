@@ -22,15 +22,14 @@ Content-Type: application/json
 
 ### atualizando animal por ID
 # @name updatePetById
-PUT http://localhost:8888/api/petconnet/pets/5
+PUT http://localhost:8888/api/petconnet/pets/2
 Content-Type: application/json
 
 {
-  "name": "Suzi",
+  "name": "Rian",
   "type": "gato",
-  "age": 4,
-  "raca": "N/A",
-  "user": 1
+  "age": 5,
+  "raca": "N/A"
 }
 
 ### excluindo animal por ID

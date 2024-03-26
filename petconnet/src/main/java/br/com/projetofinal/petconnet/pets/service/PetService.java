@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -45,9 +46,24 @@ public class PetService {
         return PetMapper.petMapper().toPetResponse(pet);
     }
 
+    @Transactional
+    public PetResponse updatePetById(Long id, PetRequest request) {
+        Pets pet = findPetById(id);
+        updatePetData(request, pet);
+        return PetMapper.petMapper().toPetResponse(pet);
+    }
+
     private Pets findPetById(Long id) {
         return petRepository.findById(id)
                 .orElseThrow(PetNotFoundException::new);
+    }
+
+    private void updatePetData(PetRequest request, Pets pet) {
+        pet.setName(request.getName());
+        pet.setType(request.getType());
+        pet.setAge(request.getAge());
+        pet.setRaca(request.getRaca());
+        pet.setUpdatedAt(LocalDateTime.now());
     }
 
 

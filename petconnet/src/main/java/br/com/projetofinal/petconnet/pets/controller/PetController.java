@@ -35,4 +35,11 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<PetResponse> updatePetById(@PathVariable Long id,
+                                                     @RequestBody PetRequest request) {
+        PetResponse response = petService.updatePetById(id, request);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
 }
