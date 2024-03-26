@@ -34,5 +34,5 @@ Content-Type: application/json
 
 ### excluindo animal por ID
 # @name deletePetById
-DELETE http://localhost:8888/api/petconnet/pets/3
+DELETE http://localhost:8888/api/petconnet/pets/5
 Content-Type: application/json

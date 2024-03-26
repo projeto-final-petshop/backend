@@ -1,6 +1,7 @@
 package br.com.projetofinal.petconnet.pets.service;
 
 import br.com.projetofinal.petconnet.exceptions.errors.pets.PetNotFoundException;
+import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToDeletePetException;
 import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToRegisterPetException;
 import br.com.projetofinal.petconnet.pets.dto.PetRequest;
 import br.com.projetofinal.petconnet.pets.dto.PetResponse;
@@ -51,6 +52,16 @@ public class PetService {
         Pets pet = findPetById(id);
         updatePetData(request, pet);
         return PetMapper.petMapper().toPetResponse(pet);
+    }
+
+    public void deletePet(Long id) {
+        Pets pet = findPetById(id);
+        try {
+            petRepository.delete(pet);
+        } catch (UnableToDeletePetException ex) {
+            log.error("Erro ao tentar excluir Pet.");
+            throw ex;
+        }
     }
 
     private Pets findPetById(Long id) {

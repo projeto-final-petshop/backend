@@ -42,4 +42,10 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PetResponse> deletePetById(@PathVariable Long id) {
+        petService.deletePet(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

@@ -2,6 +2,7 @@ package br.com.projetofinal.petconnet.exceptions.handler;
 
 import br.com.projetofinal.petconnet.exceptions.dto.ErrorResponse;
 import br.com.projetofinal.petconnet.exceptions.errors.pets.PetNotFoundException;
+import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToDeletePetException;
 import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToRegisterPetException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,20 @@ public class PetExceptionHandler {
                         "Verifique o ID e tente novamente.")
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(UnableToDeletePetException.class)
+    public ResponseEntity<ErrorResponse> handlerUnableToDeletePetException(UnableToDeletePetException ex) {
+        log.error("Não foi possível remover o Pet selecionado: ", ex);
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(500)
+                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message("Ops, não foi possível excluir o Pet selecionado. " +
+                        "Tente novamente mais tarde.")
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
     }
 
 
