@@ -1,7 +1,7 @@
 package br.com.projetofinal.petconnet.users.service;
 
-import br.com.projetofinal.petconnet.exceptions.UnableToUpdateUserException;
-import br.com.projetofinal.petconnet.exceptions.UserNotFoundException;
+import br.com.projetofinal.petconnet.exceptions.errors.UnableToUpdateUserException;
+import br.com.projetofinal.petconnet.exceptions.errors.UserNotFoundException;
 import br.com.projetofinal.petconnet.users.dto.UserRequest;
 import br.com.projetofinal.petconnet.users.dto.UserResponse;
 import br.com.projetofinal.petconnet.users.entity.Users;
@@ -33,7 +33,7 @@ public class UserHelper {
 
     public Users findUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public void updateUserData(UserRequest request, Users user) {

@@ -1,6 +1,6 @@
 package br.com.projetofinal.petconnet.users.service;
 
-import br.com.projetofinal.petconnet.exceptions.UnableToDeleteUserException;
+import br.com.projetofinal.petconnet.exceptions.errors.UnableToDeleteUserException;
 import br.com.projetofinal.petconnet.users.dto.UserRequest;
 import br.com.projetofinal.petconnet.users.dto.UserResponse;
 import br.com.projetofinal.petconnet.users.entity.Users;
