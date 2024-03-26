@@ -25,15 +25,15 @@ public class Users {
     /**
      * Nome do usuário deve ter no mínimo 3 caracteres
      */
-    @Size(min = 3)
     @Column(nullable = false)
+    @Size(min = 3)
     private String name;
 
     /**
      * O username é o email do usuário e deve ser um email válido.
      */
-    @Email
     @Column(nullable = false, unique = true)
+    @Email
     private String username;
 
     /**
@@ -42,8 +42,8 @@ public class Users {
      * <p>
      * Exemplos de senhas válidas: <br> - Senha123! <br> - Abc123$d <br> - Teste@123 <br> - _JoaoSilva2023
      */
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     @Column(nullable = false)
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String password;
 
     /**
@@ -55,8 +55,8 @@ public class Users {
      * Exemplos de números de telefone válidos: <br> - +551199998888 <br> - 551199998888 <br> - 1234567890 <br> -
      * +9876543210
      */
+    @Column(nullable = false, length = 14)
     @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
-    @Column(nullable = false)
     private String phoneNumber;
 
     /**

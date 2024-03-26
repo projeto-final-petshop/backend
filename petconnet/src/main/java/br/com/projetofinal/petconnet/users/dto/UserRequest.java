@@ -1,8 +1,6 @@
 package br.com.projetofinal.petconnet.users.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,15 +12,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserRequest {
 
-    @Size(min = 3)
+    @NotBlank
+    @Size
     private String name;
 
+    @NotBlank
     @Email
     private String username;
 
+    @NotBlank
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String password;
 
+    @NotBlank
     @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
     private String phoneNumber;
 
