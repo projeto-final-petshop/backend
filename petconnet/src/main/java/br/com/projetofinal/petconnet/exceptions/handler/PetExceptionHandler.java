@@ -88,7 +88,7 @@ public class UserExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(404)
                 .error(HttpStatus.NOT_FOUND)
-                .message("Ops, não encontramos nenhum Usuário com esse ID. " +
+                .message("Ops, não encontramos nenhum usuário com esse ID. " +
                         "Verifique o ID e tente novamente.")
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
