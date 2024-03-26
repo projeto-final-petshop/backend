@@ -17,7 +17,7 @@ Content-Type: application/json
 
 ### buscando usuário por ID
 # @name getUserById
-GET http://localhost:8888/api/petconnet/users/5
+GET http://localhost:8888/api/petconnet/users/4
 Content-Type: application/json
 
 ### atualizando usuário por ID
