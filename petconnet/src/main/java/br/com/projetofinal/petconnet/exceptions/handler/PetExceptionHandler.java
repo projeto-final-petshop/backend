@@ -18,6 +18,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PetExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        log.error("Erro interno no servidor: ", ex);
+        var errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(500)
+                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message("Ocorreu um erro inesperado. Tente novamente mais tarde.")
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
     /**
      * Não foi possível salvar Pet
      *
