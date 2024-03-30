@@ -1,12 +1,12 @@
-package br.com.projetofinal.petconnet.address.helper;
+package br.com.projetofinal.petconnet.app.address.helper;
 
-import br.com.projetofinal.petconnet.address.dto.AddressRequest;
-import br.com.projetofinal.petconnet.address.dto.AddressResponse;
-import br.com.projetofinal.petconnet.address.dto.UpdateAddressRequest;
-import br.com.projetofinal.petconnet.address.entity.Address;
-import br.com.projetofinal.petconnet.address.repository.AddressRepository;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressNotFoundException;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressValidationException;
+import br.com.projetofinal.petconnet.app.address.dto.AddressRequest;
+import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;
+import br.com.projetofinal.petconnet.app.address.dto.UpdateAddressRequest;
+import br.com.projetofinal.petconnet.app.address.entity.Address;
+import br.com.projetofinal.petconnet.app.address.repository.AddressRepository;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressNotFoundException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressValidationException;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.pets.entity;
+package br.com.projetofinal.petconnet.app.pets.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

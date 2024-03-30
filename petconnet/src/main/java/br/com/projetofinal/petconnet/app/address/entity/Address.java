@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.address.entity;
+package br.com.projetofinal.petconnet.app.address.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;

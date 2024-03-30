@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.pets.entity.enums;
+package br.com.projetofinal.petconnet.app.pets.entity.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

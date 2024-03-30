@@ -1,11 +1,11 @@
-package br.com.projetofinal.petconnet.address.web;
+package br.com.projetofinal.petconnet.app.address.web;
 
-import br.com.projetofinal.petconnet.address.dto.AddressRequest;
-import br.com.projetofinal.petconnet.address.dto.AddressResponse;
-import br.com.projetofinal.petconnet.address.dto.UpdateAddressRequest;
-import br.com.projetofinal.petconnet.address.service.AddressService;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressNotFoundException;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressValidationException;
+import br.com.projetofinal.petconnet.app.address.dto.AddressRequest;
+import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;
+import br.com.projetofinal.petconnet.app.address.dto.UpdateAddressRequest;
+import br.com.projetofinal.petconnet.app.address.service.AddressService;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressNotFoundException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

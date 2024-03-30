@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.address.dto;
+package br.com.projetofinal.petconnet.app.address.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,9 +1,8 @@
-package br.com.projetofinal.petconnet.pets.dto.respose;
+package br.com.projetofinal.petconnet.app.pets.dto.respose;
 
-import br.com.projetofinal.petconnet.pets.entity.Pets;
-import br.com.projetofinal.petconnet.pets.entity.enums.PetActivityLevelEnum;
-import br.com.projetofinal.petconnet.pets.entity.enums.PetSocializationEnum;
-import br.com.projetofinal.petconnet.pets.entity.enums.PetTrainingEnum;
+import br.com.projetofinal.petconnet.app.pets.entity.enums.PetActivityLevelEnum;
+import br.com.projetofinal.petconnet.app.pets.entity.enums.PetSocializationEnum;
+import br.com.projetofinal.petconnet.app.pets.entity.enums.PetTrainingEnum;
 import lombok.*;
 
 import java.util.List;

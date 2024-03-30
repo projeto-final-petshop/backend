@@ -1,6 +1,6 @@
-package br.com.projetofinal.petconnet.address.client;
+package br.com.projetofinal.petconnet.app.address.client;
 
-import br.com.projetofinal.petconnet.address.dto.AddressResponse;
+import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;
 import feign.FeignException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

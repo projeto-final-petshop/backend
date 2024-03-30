@@ -1,6 +1,5 @@
-package br.com.projetofinal.petconnet.pets.dto.respose;
+package br.com.projetofinal.petconnet.app.pets.dto.respose;
 
-import br.com.projetofinal.petconnet.pets.entity.Pets;
 import lombok.*;
 
 import java.time.LocalDateTime;

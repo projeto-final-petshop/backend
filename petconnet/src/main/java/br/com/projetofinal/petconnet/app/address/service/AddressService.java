@@ -1,15 +1,15 @@
-package br.com.projetofinal.petconnet.address.service;
+package br.com.projetofinal.petconnet.app.address.service;
 
-import br.com.projetofinal.petconnet.address.client.ViaCepClient;
-import br.com.projetofinal.petconnet.address.dto.AddressRequest;
-import br.com.projetofinal.petconnet.address.dto.AddressResponse;
-import br.com.projetofinal.petconnet.address.dto.UpdateAddressRequest;
-import br.com.projetofinal.petconnet.address.entity.Address;
-import br.com.projetofinal.petconnet.address.helper.AddressHelper;
-import br.com.projetofinal.petconnet.address.mapper.AddressMapper;
-import br.com.projetofinal.petconnet.address.repository.AddressRepository;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressNotFoundException;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressValidationException;
+import br.com.projetofinal.petconnet.app.address.client.ViaCepClient;
+import br.com.projetofinal.petconnet.app.address.dto.AddressRequest;
+import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;
+import br.com.projetofinal.petconnet.app.address.dto.UpdateAddressRequest;
+import br.com.projetofinal.petconnet.app.address.entity.Address;
+import br.com.projetofinal.petconnet.app.address.helper.AddressHelper;
+import br.com.projetofinal.petconnet.app.address.mapper.AddressMapper;
+import br.com.projetofinal.petconnet.app.address.repository.AddressRepository;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressNotFoundException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressValidationException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

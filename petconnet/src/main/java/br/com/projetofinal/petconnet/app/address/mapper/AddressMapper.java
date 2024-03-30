@@ -1,8 +1,8 @@
-package br.com.projetofinal.petconnet.address.mapper;
+package br.com.projetofinal.petconnet.app.address.mapper;
 
-import br.com.projetofinal.petconnet.address.dto.AddressRequest;
-import br.com.projetofinal.petconnet.address.dto.AddressResponse;
-import br.com.projetofinal.petconnet.address.entity.Address;
+import br.com.projetofinal.petconnet.app.address.dto.AddressRequest;
+import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;
+import br.com.projetofinal.petconnet.app.address.entity.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;

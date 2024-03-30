@@ -1,11 +1,9 @@
-package br.com.projetofinal.petconnet.pets.dto.respose;
+package br.com.projetofinal.petconnet.app.pets.dto.respose;
 
-import br.com.projetofinal.petconnet.owner.OwnerResponse;
-import br.com.projetofinal.petconnet.pets.entity.PetDetails;
-import br.com.projetofinal.petconnet.pets.entity.enums.PetSexEnum;
-import br.com.projetofinal.petconnet.pets.entity.enums.PetSizeEnum;
-import br.com.projetofinal.petconnet.pets.entity.enums.PetSpeciesEnum;
-import br.com.projetofinal.petconnet.pets.entity.enums.PetTrainingEnum;
+import br.com.projetofinal.petconnet.app.pets.entity.enums.PetSexEnum;
+import br.com.projetofinal.petconnet.app.pets.entity.enums.PetSizeEnum;
+import br.com.projetofinal.petconnet.app.pets.entity.enums.PetSpeciesEnum;
+import br.com.projetofinal.petconnet.app.pets.entity.enums.PetTrainingEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

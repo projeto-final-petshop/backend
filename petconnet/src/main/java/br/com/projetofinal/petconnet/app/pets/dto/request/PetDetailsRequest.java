@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.pets.dto.request;
+package br.com.projetofinal.petconnet.app.pets.dto.request;
 
 import lombok.*;
 

@@ -1,13 +1,13 @@
-package br.com.projetofinal.petconnet.pets.service;
+package br.com.projetofinal.petconnet.app.pets.service;
 
-import br.com.projetofinal.petconnet.exceptions.errors.pets.PetNotFoundException;
-import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToDeletePetException;
-import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToRegisterPetException;
-import br.com.projetofinal.petconnet.pets.dto.request.PetRequest;
-import br.com.projetofinal.petconnet.pets.dto.respose.PetResponse;
-import br.com.projetofinal.petconnet.pets.entity.Pets;
-import br.com.projetofinal.petconnet.pets.mapper.PetMapper;
-import br.com.projetofinal.petconnet.pets.repository.PetRepository;
+import br.com.projetofinal.petconnet.app.pets.dto.respose.PetResponse;
+import br.com.projetofinal.petconnet.core.exceptions.errors.pets.PetNotFoundException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.pets.UnableToDeletePetException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.pets.UnableToRegisterPetException;
+import br.com.projetofinal.petconnet.app.pets.dto.request.PetRequest;
+import br.com.projetofinal.petconnet.app.pets.entity.Pets;
+import br.com.projetofinal.petconnet.app.pets.mapper.PetMapper;
+import br.com.projetofinal.petconnet.app.pets.repository.PetRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
