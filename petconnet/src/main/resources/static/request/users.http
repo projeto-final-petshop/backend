@@ -1,5 +1,5 @@
 ### Cadastrar usuário
-POST http://localhost:8082/api/petconnet/users/register
+POST http://localhost:8888/api/petconnet/users/register
 Content-Type: application/json
 
 {
@@ -10,19 +10,19 @@ Content-Type: application/json
 }
 
 ### Buscar usuário por ID /{id}
-GET http://localhost:8082/api/petconnet/users/1
+GET http://localhost:8888/api/petconnet/users/1
 Content-Type: application/json
 
 ### Buscar Usuário por Username /search/username/{username}
-GET http://localhost:8082/api/petconnet/users/search/username/juliane@email.com
+GET http://localhost:8888/api/petconnet/users/search/username/juliane@email.com
 Content-Type: application/json
 
 ### Listar Todos os Usuários /list
-GET http://localhost:8082/api/petconnet/users/list
+GET http://localhost:8888/api/petconnet/users/list
 Content-Type: application/json
 
 ### Atualizar usuário
-PUT http://localhost:8082/api/petconnet/users/3
+PUT http://localhost:8888/api/petconnet/users/3
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### Desativar usuário
-POST http://localhost:8082/api/petconnet/users/1/disable
+POST http://localhost:8888/api/petconnet/users/1/disable
 
 ### Ativar usuário
-POST http://localhost:8082/api/petconnet/users/3/activate
+POST http://localhost:8888/api/petconnet/users/3/activate
