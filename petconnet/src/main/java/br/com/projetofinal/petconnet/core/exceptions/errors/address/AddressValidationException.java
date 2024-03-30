@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.exceptions.errors.address;
+package br.com.projetofinal.petconnet.core.exceptions.errors.address;
 
 public class AddressValidationException extends RuntimeException {
 

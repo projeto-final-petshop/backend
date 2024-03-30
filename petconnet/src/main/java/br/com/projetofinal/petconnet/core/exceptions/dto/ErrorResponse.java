@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.exceptions.dto;
+package br.com.projetofinal.petconnet.core.exceptions.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

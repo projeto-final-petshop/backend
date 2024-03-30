@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.core;
+package br.com.projetofinal.petconnet.core.security;
 
-public class PetConnectConfig {
+public class ApiSecurityConfig {
 }

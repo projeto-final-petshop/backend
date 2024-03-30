@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.exceptions.errors.pets;
+package br.com.projetofinal.petconnet.core.exceptions.errors.pets;
 
 public class UnableToRegisterPetException extends RuntimeException {
     public UnableToRegisterPetException() {
