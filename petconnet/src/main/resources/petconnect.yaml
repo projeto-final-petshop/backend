@@ -1,9 +1,170 @@
 openapi: 3.0.3
 info:
-  title: Title
-  description: Title
+  title: API Petconnect
+  description: API Petconnect
   version: 1.0.0
 servers:
-  - url: 'https'
+  - url: 'http://localhost:8888/api/v1'
+tags:
+  - name: user
+    description: "API de Usuários"
+  - name: pet
+    description: "API de Pets"
 paths:
+  /users/register:
+    post:
+      summary: "Cadastrar Usuário"
+      description: "Cadastrar usuário"
+      tags:
+        - user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: "Usuário cadastrado com sucesso!"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+components:
+  schemas:
+    UserRequest:
+      description: "Payload de entrada - request"
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 3
+          example: 'Maria Fifi'
+          description: 'Informe o nome completo. O nome do usuário não pode ser nulo, em branco ou vazio. 
+          E deve, ter no mínimo 3 caracteres.'
+        username:
+          type: string
+          example: 'example@email.com'
+          description: 'O nome do usuário não pode ser nulo, em branco ou vazio. O username de deve ser um email válido.'
+        password:
+          type: string
+          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          example: 'Te5te1@3'
+          description: 'A senha deve ter no mínimo 8 caracteres, conter pelo menos uma letra maiúscula, uma 
+          letra minúscula, um número e um caracter especial.'
+        phoneNumber:
+          type: string
+          pattern: '^(\+?)([0-9]{1,14})$'
+          minLength: 1
+          maxLength: 14
+          example: '+5511998765432'
+          description: 'Formato pardão E.164. Este regex verifica apenas a formatação do número de telefone. 
+          Não garante que o número seja válido ou que pertença a um país específico.'
+    UserResponse:
+      description: "Payload de saída - response"
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: 'Maria Fifi'
+        username:
+          type: string
+          example: 'example@email.com'
+        phoneNumber:
+          type: string
+          example: '+5511998765432'
+        active:
+          type: boolean
+          example: true
+          description: 'O usuário ao se cadastrar no sistema será automaticamente incluído como ativo (true). 
+          Quando for excluir a conta é passado para o status inativo (false).'
+        createAt:
+          type: string
+          format: date-time
+          example: '2024-03-26T09:27:45.47294'
+        updateAt:
+          type: string
+          format: date-time
+          example: '2024-03-26T09:29:10.616397'
+    PetRequest:
+      description: "Payload de entrada - request"
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Bob'
+        type:
+          type: string
+          example: 'Gato'
+        age:
+          type: integer
+          format: int32
+          example: 3
+        breed:
+          type: string
+          example: 'Siamês'
+        color:
+          type: string
+          example: 'Preto'
+    PetResponse:
+      description: "Payload de saída - response"
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: 'Bob'
+        type:
+          type: string
+          example: 'Gato'
+        age:
+          type: integer
+          format: int32
+          example: 3
+        breed:
+          type: string
+          example: 'Siamês'
+        color:
+          type: string
+          example: 'Preto'
+        createAt:
+          type: string
+          format: date-time
+          example: '2024-03-26T09:27:45.47294'
+        updateAt:
+          type: string
+          format: date-time
+          example: '2024-03-26T09:29:10.616397'
+    ErrorReseponse:
+      description: "Payload de saída - response"
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-03-26T12:24:23.666+00:00'
+        status:
+          type: integer
+          format: int32
+          example: 500
+        error:
+          type: string
+          example: 'Internal Server Error'
+        message:
+          type: string
+          example: 'Erro interno no servidor. Tente novamente mais tarde.'
+
+
+
+
+
   
