@@ -1,38 +1,38 @@
-### cadastrando usuário
-# @name registerUser
-POST http://localhost:8888/api/petconnet/users/register
+### Cadastrar usuário
+POST http://localhost:8082/api/petconnet/users/register
 Content-Type: application/json
 
 {
-  "name": "Lucas",
-  "username": "lucasvaliati@email.com",
-  "password": "12e@56T8",
-  "phone_number": "11998765432"
+  "username": "julianevaliati@email.com",
+  "name": "Juliane Maran",
+  "phoneNumber": "5541992199488",
+  "password": "Ju1!@n36"
 }
 
-### listando usuários cadastrados
-# @name listUsers
-GET http://localhost:8888/api/petconnet/users/list
+### Buscar usuário por ID /{id}
+GET http://localhost:8082/api/petconnet/users/1
 Content-Type: application/json
 
-### buscando usuário por ID
-# @name getUserById
-GET http://localhost:8888/api/petconnet/users/2
+### Buscar Usuário por Username /search/username/{username}
+GET http://localhost:8082/api/petconnet/users/search/username/juliane@email.com
 Content-Type: application/json
 
-### atualizando usuário por ID
-# @name updateUserById
-PUT http://localhost:8888/api/petconnet/users/2
+### Listar Todos os Usuários /list
+GET http://localhost:8082/api/petconnet/users/list
+Content-Type: application/json
+
+### Atualizar usuário
+PUT http://localhost:8082/api/petconnet/users/3
 Content-Type: application/json
 
 {
-  "name": "Lucas Valiati",
-  "username": "lucasvaliati@email.com",
-  "password": "12e@56T8",
-  "phone_number": "11998765432"
+  "username": "suzi@gmail.com",
+  "name": "Suzi Maran",
+  "phone_number": "+5541992199488"
 }
 
-### excluindo usuário por ID
-# @name deleteUserById
-DELETE http://localhost:8888/api/petconnet/users/3
-Content-Type: application/json
+### Desativar usuário
+POST http://localhost:8082/api/petconnet/users/1/disable
+
+### Ativar usuário
+POST http://localhost:8082/api/petconnet/users/3/activate
