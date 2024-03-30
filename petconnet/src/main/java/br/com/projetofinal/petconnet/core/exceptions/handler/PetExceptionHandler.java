@@ -1,9 +1,9 @@
-package br.com.projetofinal.petconnet.exceptions.handler;
+package br.com.projetofinal.petconnet.core.exceptions.handler;
 
-import br.com.projetofinal.petconnet.exceptions.dto.ErrorResponse;
-import br.com.projetofinal.petconnet.exceptions.errors.pets.PetNotFoundException;
-import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToDeletePetException;
-import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToRegisterPetException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.pets.PetNotFoundException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.pets.UnableToDeletePetException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.pets.UnableToRegisterPetException;
+import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

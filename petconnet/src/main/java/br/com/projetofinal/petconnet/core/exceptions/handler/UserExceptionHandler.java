@@ -1,7 +1,9 @@
-package br.com.projetofinal.petconnet.exceptions.handler;
+package br.com.projetofinal.petconnet.core.exceptions.handler;
 
-import br.com.projetofinal.petconnet.exceptions.dto.ErrorResponse;
-import br.com.projetofinal.petconnet.exceptions.errors.users.*;
+import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorResponse;
+import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorStatus;
+import br.com.projetofinal.petconnet.core.exceptions.errors.users.*;
+import br.com.projetofinal.petconnet.core.exceptions.errors.users.newusers.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -75,21 +77,18 @@ public class UserExceptionHandler {
     }
 
     /**
-     * Usuário não encontrado.
-     *
-     * @param ex
-     *
-     * @return
+     * 404 - NOT_FOUND
+     * <p>
+     * Usuário não encontrado. Verifique o username ou ID.
      */
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlerUserNotFoundException(UserNotFoundException ex) {
-        log.error("Usuário não encontrado: ", ex);
-        ErrorResponse errorResponse = ErrorResponse.builder()
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerUsernameNotFoundException(UsernameNotFoundException ex) {
+        log.error("Exception Handler --- Usuário não encontrado: ", ex);
+        var errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(404)
                 .error(HttpStatus.NOT_FOUND)
-                .message("Ops, não encontramos nenhum Usuário com esse ID. " +
-                        "Verifique o ID e tente novamente.")
+                .message(ErrorStatus.USERNAME_NOT_FOUND_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
@@ -118,16 +117,93 @@ public class UserExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(EmailAlreadyRegisteredException.class)
-    public ResponseEntity<ErrorResponse> handlerEmailAlreadyRegisteredException(EmailAlreadyRegisteredException ex) {
-        log.error("Campo obrigatório: ", ex);
-        ErrorResponse errorResponse = ErrorResponse.builder()
+    /**
+     * 409 - CONFLICT
+     * <p>
+     * Username (email) já cadastrado
+     */
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlerUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
+        log.error("Exception Handler --- Email já cadastrado: ", ex);
+        var errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(409)
+                .error(HttpStatus.CONFLICT)
+                .message(ErrorStatus.USERNAME_ALREADY_EXISTS_EXCEPTION.getMesages())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    /**
+     * 400 - Bad Request
+     * <p>
+     * Campo inválido ou não preenchido
+     */
+    @ExceptionHandler(InvalidFieldException.class)
+    public ResponseEntity<ErrorResponse> handlerInvalidFieldException(InvalidFieldException ex) {
+        log.error("Exception Handler --- Erro ao cadastrar usuário: ", ex);
+        var errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(400)
                 .error(HttpStatus.BAD_REQUEST)
-                .message("Email já cadastrado!")
+                .message(ErrorStatus.INVALID_FIELD_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    /**
+     * 403 - FORBIDDEN
+     * <p>
+     * Usuário inativo.
+     */
+    @ExceptionHandler(InactiveUserException.class)
+    public ResponseEntity<ErrorResponse> handlerInactiveUserException(InactiveUserException ex) {
+        log.error("Exception Handler --- Usuário inativo: ", ex);
+        var errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(403)
+                .error(HttpStatus.FORBIDDEN)
+                .message(ErrorStatus.INACTIVE_USER_EXCEPTION.getMesages())
+                .build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    /**
+     * 500 - INTERNAL_SERVER_ERROR
+     * <p>
+     * Falha ao ativar o usuário.
+     * <p>
+     * Ativar usuário = activate user
+     */
+    @ExceptionHandler(FailedToActivateUserException.class)
+    public ResponseEntity<ErrorResponse> handlerFailedToActivateUserException(FailedToActivateUserException ex) {
+        log.error("Exception Handler --- Erro ao ativar usuário:", ex);
+        var errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(500)
+                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message(ErrorStatus.FAILED_TO_ACTIVATE_USER_EXCEPTION.getMesages())
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    /**
+     * 500 - INTERNAL_SERVER_ERROR
+     * <p>
+     * Falha ao desativar o usuário.
+     * <p>
+     * Inativar usuário = Inactivate user
+     */
+    @ExceptionHandler(FailedToInactivateUserException.class)
+    public ResponseEntity<ErrorResponse> handlerFailedToInactivateUserException(FailedToInactivateUserException ex) {
+        log.error("Exception Handler --- Erro ao desativar usuário:", ex);
+        var errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(500)
+                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message(ErrorStatus.FAILED_TO_INACTIVATE_USER_EXCEPTION.getMesages())
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
 }

@@ -1,8 +1,8 @@
-package br.com.projetofinal.petconnet.exceptions.handler;
+package br.com.projetofinal.petconnet.core.exceptions.handler;
 
-import br.com.projetofinal.petconnet.exceptions.dto.ErrorResponse;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressNotFoundException;
-import br.com.projetofinal.petconnet.exceptions.errors.address.AddressValidationException;
+import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorResponse;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressNotFoundException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
