@@ -34,3 +34,7 @@ management:
 logging:
   level:
     web: DEBUG
+
+feign-client:
+  name: viacep
+  url: https://viacep.com.br/ws
