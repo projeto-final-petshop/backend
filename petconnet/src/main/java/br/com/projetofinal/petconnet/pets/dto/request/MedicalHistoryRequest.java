@@ -1,6 +1,5 @@
-package br.com.projetofinal.petconnet.pets.entity;
+package br.com.projetofinal.petconnet.pets.dto.request;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -13,34 +12,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class MedicalHistory {
+public class MedicalHistoryRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long medicalHistoryId;
-
-    @OneToOne
-    private Pets pet;
-
-    @ElementCollection(targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
+//    private PetRequest pet;
     private List<String> vaccinations;
-
-    @ElementCollection(targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
     private List<String> deworming;
-
-    @ElementCollection(targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
     private List<String> diseases;
-
-    @ElementCollection(targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
     private List<String> allergies;
-
-    @ElementCollection(targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
     private List<String> medications;
 
 }

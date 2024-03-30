@@ -1,6 +1,5 @@
-package br.com.projetofinal.petconnet.pets.dto.respose;
+package br.com.projetofinal.petconnet.pets.dto.request;
 
-import br.com.projetofinal.petconnet.pets.entity.Pets;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetActivityLevelEnum;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetSocializationEnum;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetTrainingEnum;
@@ -16,10 +15,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BehavioralTraitsResponse {
+public class BehavioralTraitsResquest {
 
-    private Long behavioralTraitsId;
-    private PetResponse pet;
+//    private PetRequest pet;
     private String personality;
     private PetActivityLevelEnum activityLevel;
     private PetSocializationEnum socialization;

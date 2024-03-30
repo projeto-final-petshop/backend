@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PetSocialization { // Não há necessidade de classe enum separada
+public enum PetSocializationEnum { // Não há necessidade de classe enum separada
 
     /**
      * PT: Amigável (confortável perto de pessoas e outros animais)

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PetActivityLevel {
+public enum PetActivityLevelEnum {
 
     /**
      * PT: Baixa atividade - Animais de estimação com baixos níveis de energia que requerem exercício mínimo

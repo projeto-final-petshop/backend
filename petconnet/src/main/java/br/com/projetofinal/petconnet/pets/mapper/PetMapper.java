@@ -1,7 +1,7 @@
 package br.com.projetofinal.petconnet.pets.mapper;
 
-import br.com.projetofinal.petconnet.pets.dto.PetRequest;
-import br.com.projetofinal.petconnet.pets.dto.PetResponse;
+import br.com.projetofinal.petconnet.pets.dto.request.PetRequest;
+import br.com.projetofinal.petconnet.pets.dto.respose.PetResponse;
 import br.com.projetofinal.petconnet.pets.entity.Pets;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

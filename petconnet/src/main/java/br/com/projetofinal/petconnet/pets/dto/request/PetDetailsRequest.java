@@ -1,6 +1,5 @@
-package br.com.projetofinal.petconnet.pets.dto;
+package br.com.projetofinal.petconnet.pets.dto.request;
 
-import br.com.projetofinal.petconnet.pets.entity.Pets;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,8 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PetDetailsRequest {
 
-    private Long petDetailsId;
-    private Pets pet;
+//    private PetRequest pet;
     private String breed;
     private int age;
     private LocalDateTime birthday;

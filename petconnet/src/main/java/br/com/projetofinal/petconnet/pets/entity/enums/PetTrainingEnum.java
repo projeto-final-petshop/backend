@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum PetTraining {
+public enum PetTrainingEnum {
 
     /**
      * PT: Treinado (aprendeu comandos básicos e responde bem) <br> EN: Trained (has learned basic commands and responds

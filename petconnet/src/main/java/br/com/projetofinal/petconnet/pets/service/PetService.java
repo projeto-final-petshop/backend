@@ -3,8 +3,8 @@ package br.com.projetofinal.petconnet.pets.service;
 import br.com.projetofinal.petconnet.exceptions.errors.pets.PetNotFoundException;
 import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToDeletePetException;
 import br.com.projetofinal.petconnet.exceptions.errors.pets.UnableToRegisterPetException;
-import br.com.projetofinal.petconnet.pets.dto.PetRequest;
-import br.com.projetofinal.petconnet.pets.dto.PetResponse;
+import br.com.projetofinal.petconnet.pets.dto.request.PetRequest;
+import br.com.projetofinal.petconnet.pets.dto.respose.PetResponse;
 import br.com.projetofinal.petconnet.pets.entity.Pets;
 import br.com.projetofinal.petconnet.pets.mapper.PetMapper;
 import br.com.projetofinal.petconnet.pets.repository.PetRepository;
@@ -71,9 +71,6 @@ public class PetService {
 
     private void updatePetData(PetRequest request, Pets pet) {
         pet.setName(request.getName());
-        pet.setType(request.getType());
-        pet.setAge(request.getAge());
-        pet.setRaca(request.getRaca());
         pet.setUpdatedAt(LocalDateTime.now());
     }
 

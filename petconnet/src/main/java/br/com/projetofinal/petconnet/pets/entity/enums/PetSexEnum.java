@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PetSex {
+public enum PetSexEnum {
 
     /**
      * PT: Macho

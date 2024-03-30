@@ -1,5 +1,11 @@
-package br.com.projetofinal.petconnet.pets.dto;
+package br.com.projetofinal.petconnet.pets.dto.respose;
 
+import br.com.projetofinal.petconnet.owner.OwnerResponse;
+import br.com.projetofinal.petconnet.pets.entity.PetDetails;
+import br.com.projetofinal.petconnet.pets.entity.enums.PetSexEnum;
+import br.com.projetofinal.petconnet.pets.entity.enums.PetSizeEnum;
+import br.com.projetofinal.petconnet.pets.entity.enums.PetSpeciesEnum;
+import br.com.projetofinal.petconnet.pets.entity.enums.PetTrainingEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +19,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PetResponse {
 
-    private Long id;
+    private Long petId;
     private String name;
-    private String type;
-    private Integer age;
-    private String breed;
-    private String color;
+    private PetSexEnum sex;
+    private PetSizeEnum size;
+    private PetSpeciesEnum species;
+    private PetTrainingEnum training;
+//    private PetDetails details;
+//    private OwnerResponse owner;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

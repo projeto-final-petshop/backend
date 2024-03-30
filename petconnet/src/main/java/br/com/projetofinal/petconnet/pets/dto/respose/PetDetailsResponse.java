@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.pets.dto.request;
+package br.com.projetofinal.petconnet.pets.dto.respose;
 
 import br.com.projetofinal.petconnet.pets.entity.Pets;
 import lombok.*;
@@ -14,10 +14,10 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetDetailsRequest {
+public class PetDetailsResponse {
 
     private Long petDetailsId;
-    private Pets pet;
+//    private Pets pet;
     private String breed;
     private int age;
     private LocalDateTime birthday;

@@ -1,11 +1,10 @@
-package br.com.projetofinal.petconnet.pets.dto;
+package br.com.projetofinal.petconnet.pets.dto.request;
 
-import br.com.projetofinal.petconnet.pets.entity.Owner;
-import br.com.projetofinal.petconnet.pets.entity.PetDetails;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetSexEnum;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetSizeEnum;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetSpeciesEnum;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetTrainingEnum;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +15,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PetRequest {
+
+    @NotBlank(message = "Nome do animal de estimação é obrigatório")
     private String name;
+
+    @NotBlank(message = "Sexo do animal de estimação é obrigatório")
     private PetSexEnum sex;
+
+    @NotBlank(message = "Tamanho do animal de estimação é obrigatório")
     private PetSizeEnum size;
+
+    @NotBlank(message = "Espécie do animal de estimação é obrigatório")
     private PetSpeciesEnum species;
+
     private PetTrainingEnum training;
-    private PetDetails details;
-    private Owner owner;
+
+//    private PetDetailsRequest details;
+
+//    private OwnerRequest owner;
+
 }

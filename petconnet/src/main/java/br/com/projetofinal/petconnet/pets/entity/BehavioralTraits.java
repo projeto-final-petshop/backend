@@ -1,30 +1,38 @@
 package br.com.projetofinal.petconnet.pets.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 /**
- * EN: Medical information (vaccinations, deworming, diseases, etc.)
+ * EN: Behavioral characteristics (personality, activityLevel, etc.)
  */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class MedicalHistory {
+//@Entity
+public class BehavioralTraits {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long behavioralTraitsId;
 
-    @OneToOne
-    private Pets pet;
+//    @OneToOne
+//    private Pets pet;
 
-    @ElementCollection(targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
-    private List<String> vaccinations;
+    private String personality;
+
+//    @Enumerated(EnumType.STRING)
+//    private PetActivityLevelEnum activityLevel;
+//
+//    @Enumerated(EnumType.STRING)
+//    private PetSocializationEnum socialization;
+//
+//    @Enumerated(EnumType.STRING)
+//    private PetTrainingEnum training;
+
+//    @ElementCollection(targetClass = String.class)
+//    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
+//    private List<String> unwantedBehaviors;
 
 }

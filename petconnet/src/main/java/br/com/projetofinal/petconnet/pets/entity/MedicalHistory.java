@@ -1,36 +1,43 @@
 package br.com.projetofinal.petconnet.pets.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 
-import java.util.List;
-
 /**
- * EN: Owner contact details
+ * EN: Medical information (vaccinations, deworming, diseases, etc.)
  */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Owner {
+//@Entity
+public class MedicalHistory {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long medicalHistoryId;
 
-    private String name;
+//    @OneToOne
+//    private Pets pet;
 
-    private String address;
-
-    private String phoneNumber;
-
-    @Email
-    private String email;
-
-    @OneToMany(mappedBy = "owner")
-    private List<Pets> pets;
+//    @ElementCollection(targetClass = String.class)
+//    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
+//    private List<String> vaccinations;
+//
+//    @ElementCollection(targetClass = String.class)
+//    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
+//    private List<String> deworming;
+//
+//    @ElementCollection(targetClass = String.class)
+//    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
+//    private List<String> diseases;
+//
+//    @ElementCollection(targetClass = String.class)
+//    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
+//    private List<String> allergies;
+//
+//    @ElementCollection(targetClass = String.class)
+//    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
+//    private List<String> medications;
 
 }

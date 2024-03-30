@@ -1,7 +1,7 @@
 package br.com.projetofinal.petconnet.pets.controller;
 
-import br.com.projetofinal.petconnet.pets.dto.PetRequest;
-import br.com.projetofinal.petconnet.pets.dto.PetResponse;
+import br.com.projetofinal.petconnet.pets.dto.request.PetRequest;
+import br.com.projetofinal.petconnet.pets.dto.respose.PetResponse;
 import br.com.projetofinal.petconnet.pets.service.PetService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

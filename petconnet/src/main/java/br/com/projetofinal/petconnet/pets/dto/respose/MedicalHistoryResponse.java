@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.pets.dto.request;
+package br.com.projetofinal.petconnet.pets.dto.respose;
 
 import br.com.projetofinal.petconnet.pets.entity.Pets;
 import lombok.*;
@@ -13,9 +13,10 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicalHistoryRequest {
+public class MedicalHistoryResponse {
 
-    private Pets pet;
+    private Long medicalHistoryId;
+//    private Pets pet;
     private List<String> vaccinations;
     private List<String> deworming;
     private List<String> diseases;

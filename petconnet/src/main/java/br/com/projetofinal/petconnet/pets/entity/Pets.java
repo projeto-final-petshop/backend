@@ -7,6 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+/**
+ * EN: Core pet information (id, name, species, etc.)
+ */
 @Getter
 @Setter
 @Builder
@@ -17,17 +20,27 @@ public class Pets {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long petId;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String type;
+//    @Enumerated(EnumType.STRING)
+//    private PetSexEnum sex;
+//
+//    @Enumerated(EnumType.STRING)
+//    private PetSizeEnum size;
+//
+//    @Enumerated(EnumType.STRING)
+//    private PetSpeciesEnum species;
+//
+//    @Enumerated(EnumType.STRING)
+//    private PetTrainingEnum training;
 
-    private Integer age;
-
-    private String raca;
+//    @OneToOne(mappedBy = "pet", cascade = CascadeType.ALL)
+//    private PetDetails details;
+//
+//    @ManyToOne
+//    private Owner owner;
 
     @CreationTimestamp
     @Column(updatable = false)

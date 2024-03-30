@@ -1,9 +1,9 @@
-package br.com.projetofinal.petconnet.pets.entity;
+package br.com.projetofinal.petconnet.pets.dto.respose;
 
+import br.com.projetofinal.petconnet.pets.entity.Pets;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetActivityLevelEnum;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetSocializationEnum;
 import br.com.projetofinal.petconnet.pets.entity.enums.PetTrainingEnum;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -16,29 +16,14 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class BehavioralTraits {
+public class BehavioralTraitsResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long behavioralTraitsId;
-
-    @OneToOne
-    private Pets pet;
-
+//    private PetResponse pet;
     private String personality;
-
-    @Enumerated(EnumType.STRING)
     private PetActivityLevelEnum activityLevel;
-
-    @Enumerated(EnumType.STRING)
     private PetSocializationEnum socialization;
-
-    @Enumerated(EnumType.STRING)
     private PetTrainingEnum training;
-
-    @ElementCollection(targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "medical_history_id"))
     private List<String> unwantedBehaviors;
 
 }
