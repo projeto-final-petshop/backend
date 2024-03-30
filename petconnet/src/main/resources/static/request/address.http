@@ -1,0 +1,4 @@
+### listando animais cadastrados
+# @name listPets
+GET http://localhost:8888/api/petconnet/pets/list
+Content-Type: application/json
