@@ -1,0 +1,23 @@
+{
+  "pet_details_id": 1,
+  "breed": "Golden Retriever",
+  "age": 2,
+  "birthday": "01/01/2022",
+  "weight": 25.0,
+  "coat_color": "Golden",
+  "castrated": true,
+  "microchip": "1234567890",
+  "veterinary_history": "Healthy check-up on 2024-03-27",
+  "vaccinations": [
+    "Rabies",
+    "Distemper",
+    "Parvovirus"
+  ],
+  "deworming": [
+    "February 2024"
+  ],
+  "diseases": [],
+  "allergies": [],
+  "medications": [],
+  "photo": "https://example.com/pet_photo.jpg"
+}
