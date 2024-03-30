@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.app.users.dto;
+package br.com.projetofinal.petconnet.app.users.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

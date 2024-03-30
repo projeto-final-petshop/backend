@@ -1,5 +1,6 @@
-package br.com.projetofinal.petconnet.app.users.dto;
+package br.com.projetofinal.petconnet.app.users.dto.response;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,20 +18,16 @@ public class UserResponse {
 
     private Long id;
 
-    private String name;
-
+    @Email
     private String username;
 
-    private String password;
+    private String name;
 
     private String phoneNumber;
 
     private Boolean active;
 
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
-
 }

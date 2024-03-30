@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.users.entity;
+package br.com.projetofinal.petconnet.app.users.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -25,15 +25,15 @@ public class Users {
     /**
      * Nome do usuário deve ter no mínimo 3 caracteres
      */
-    @Column(nullable = false)
     @Size(min = 3)
+    @Column(nullable = false)
     private String name;
 
     /**
      * O username é o email do usuário e deve ser um email válido.
      */
-    @Column(nullable = false, unique = true)
     @Email
+    @Column(nullable = false, unique = true)
     private String username;
 
     /**
@@ -67,7 +67,6 @@ public class Users {
      * O banco de dados deverá ficar responsável por monitorar, caso a conta não seja ativa dentro de um determinado
      * para prazo (ex.: 30 dias) os dados são excluídos automaticamente do banco de dados.
      */
-    @Column(nullable = false)
     private Boolean active;
 
     @CreationTimestamp
