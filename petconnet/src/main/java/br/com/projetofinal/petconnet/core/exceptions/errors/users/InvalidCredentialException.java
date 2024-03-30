@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.exceptions.errors.users;
+package br.com.projetofinal.petconnet.core.exceptions.errors.users;
 
 public class InvalidCredentialException extends RuntimeException {
 

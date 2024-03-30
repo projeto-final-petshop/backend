@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.users.dto;
+package br.com.projetofinal.petconnet.app.users.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
