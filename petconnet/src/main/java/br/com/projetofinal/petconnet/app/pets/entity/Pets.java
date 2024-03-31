@@ -24,23 +24,11 @@ public class Pets {
 
     private String name;
 
-//    @Enumerated(EnumType.STRING)
-//    private PetSexEnum sex;
-//
-//    @Enumerated(EnumType.STRING)
-//    private PetSizeEnum size;
-//
-//    @Enumerated(EnumType.STRING)
-//    private PetSpeciesEnum species;
-//
-//    @Enumerated(EnumType.STRING)
-//    private PetTrainingEnum training;
+    private String owner; // tutor do animal
 
-//    @OneToOne(mappedBy = "pet", cascade = CascadeType.ALL)
-//    private PetDetails details;
-//
-//    @ManyToOne
-//    private Owner owner;
+    private String breed; // raça
+
+    private String color;
 
     @CreationTimestamp
     @Column(updatable = false)
