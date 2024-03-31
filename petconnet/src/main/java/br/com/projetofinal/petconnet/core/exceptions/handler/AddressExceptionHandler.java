@@ -1,6 +1,7 @@
 package br.com.projetofinal.petconnet.core.exceptions.handler;
 
 import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorResponse;
+import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorStatus;
 import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressNotFoundException;
 import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressValidationException;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class AddressExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(400)
                 .error(HttpStatus.BAD_REQUEST)
-                .message("Campo inválido: verifique se o campo está preenchido corretamente!")
+                .message(ErrorStatus.ADDRESS_VALIDATION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
@@ -36,8 +37,7 @@ public class AddressExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(404)
                 .error(HttpStatus.NOT_FOUND)
-                .message("Ops, não encontramos nenhum endereço com esse CEP. " +
-                        "Verifique o CEP e tente novamente. ")
+                .message(ErrorStatus.ADDRESS_NOT_FOUND.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }

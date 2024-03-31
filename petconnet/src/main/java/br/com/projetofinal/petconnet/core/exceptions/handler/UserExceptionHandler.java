@@ -27,13 +27,12 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(InvalidCredentialException.class)
     public ResponseEntity<ErrorResponse> handlerInvalidCredentialException(InvalidCredentialException ex) {
-        log.error("Credenciais inválidas: ", ex);
+        log.error("Exception Handler --- Credenciais inválidas: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(400)
                 .error(HttpStatus.BAD_REQUEST)
-                .message("Ops, parece que suas credenciais estão incorretas. " +
-                        "Verifique o username e password e tente novamente.")
+                .message(ErrorStatus.INVALID_CREDENTIAL_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
@@ -47,12 +46,12 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(UnableToDeleteUserException.class)
     public ResponseEntity<ErrorResponse> handlerUnableToDeleteUserException(UnableToDeleteUserException ex) {
-        log.error("Não foi possível remover o usuário: ", ex);
+        log.error("Exception Handler --- Não foi possível remover o usuário: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(500)
                 .error(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Ops, não foi possível remover sua conta. Tente novamente mais tarde.")
+                .message(ErrorStatus.UNABLE_TO_DELETE_USER_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
@@ -66,12 +65,12 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(UnableToUpdateUserException.class)
     public ResponseEntity<ErrorResponse> handlerUnableToUpdateUserException(UnableToUpdateUserException ex) {
-        log.error("Não foi possível atualizar o usuário: ", ex);
+        log.error("Exception Handler --- Não foi possível atualizar o usuário: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(500)
                 .error(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Ops, não foi possível atualizar seus dados. Tente novamente mais tarde.")
+                .message(ErrorStatus.UNABLE_TO_UPDATE_USER_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }

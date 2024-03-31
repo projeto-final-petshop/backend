@@ -1,6 +1,7 @@
 package br.com.projetofinal.petconnet.core.exceptions.handler;
 
 import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorResponse;
+import br.com.projetofinal.petconnet.core.exceptions.dto.ErrorStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(500)
                 .error(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Ocorreu um erro inesperado. Tente novamente mais tarde.")
+                .message(ErrorStatus.GENERIC_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
