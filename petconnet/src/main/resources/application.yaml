@@ -9,7 +9,7 @@ spring:
   devtools:
     add-properties: true
   datasource:
-    url: jdbc:mysql://localhost:3306/petconnet?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=America/Sao_Paulo
+    url: jdbc:mysql://localhost:3306/petconnet?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=America/Sao_Paulo
     username: root
     password: root
   jpa:
