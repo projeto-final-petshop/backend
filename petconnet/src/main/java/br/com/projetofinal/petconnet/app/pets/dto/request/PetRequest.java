@@ -1,6 +1,8 @@
 package br.com.projetofinal.petconnet.app.pets.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +14,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PetRequest {
 
-    @NotBlank(message = "Nome do animal de estimação é obrigatório")
+    @NotBlank
+    @Size(min = 3)
     private String name;
 
+    @PositiveOrZero
+    private Integer age;
 
-//    private PetDetailsRequest details;
+    private String breed;
 
-//    private OwnerRequest owner;
+    private String color;
+
+    @Size(min = 3)
+    private String species;
 
 }

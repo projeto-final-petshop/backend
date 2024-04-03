@@ -16,5 +16,4 @@ public class PetNotFoundException extends RuntimeException {
     public PetNotFoundException(Throwable cause) {
         super(cause);
     }
-    
 }

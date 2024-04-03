@@ -13,8 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PetResponse {
 
-    private Long petId;
+    private Long id;
     private String name;
+    private Integer age;
+    private String breed;
+    private String color;
+    private String species;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
