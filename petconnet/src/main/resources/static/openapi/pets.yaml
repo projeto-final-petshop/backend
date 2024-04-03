@@ -4,7 +4,7 @@ info:
   description: API REST Pets
   version: 1.0.0
 servers:
-  - url: 'http://localhost:8083/api/petconnet'
+  - url: 'http://localhost:8888/api/petconnet'
 tags:
   - name: pet
     description: 'Tudo sobre seu Pet'

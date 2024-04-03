@@ -1,5 +1,5 @@
 ### Buscar endereço por CEP
-GET http://localhost:8888/api/petconnet/address/111111
+GET http://localhost:8888/api/petconnet/address/80320090
 Accept: application/json
 
 ### Listar endereços cadastrados

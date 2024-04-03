@@ -1,38 +1,30 @@
-### cadastrando animal
-# @name registerPet
+### Register Pet
 POST http://localhost:8888/api/petconnet/pets/register
 Content-Type: application/json
 
 {
-  "name": "Pandora",
-  "type": "cachorro",
-  "age": 2,
-  "raca": "N/A"
+  "name": "Rian",
+  "age": 5,
+  "breed": "N/A",
+  "color": "Preto",
+  "species": "Gato"
 }
 
-### listando animais cadastrados
-# @name listPets
+### Search Pet By ID
+GET http://localhost:8888/api/petconnet/pets/search/2
+
+### List All Pets
 GET http://localhost:8888/api/petconnet/pets/list
-Content-Type: application/json
 
-### buscando animal por ID
-# @name getPetById
-GET http://localhost:8888/api/petconnet/pets/5
-Content-Type: application/json
+### Remove Pet By ID
+DELETE http://localhost:8888/api/petconnet/pets/1
 
-### atualizando animal por ID
-# @name updatePetById
+### Register Pet
 PUT http://localhost:8888/api/petconnet/pets/2
 Content-Type: application/json
 
 {
-  "name": "Rian",
-  "type": "gato",
+  "name": "Suzi",
   "age": 5,
-  "raca": "N/A"
+  "species": "Gata"
 }
-
-### excluindo animal por ID
-# @name deletePetById
-DELETE http://localhost:8888/api/petconnet/pets/5
-Content-Type: application/json

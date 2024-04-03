@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "username": "julianevaliati@email.com",
   "name": "Juliane Maran",
-  "phoneNumber": "5541992199488",
+  "phone_number": "5541992199488",
   "password": "Ju1!@n36"
 }
 
@@ -14,7 +14,7 @@ GET http://localhost:8888/api/petconnet/users/1
 Content-Type: application/json
 
 ### Buscar Usuário por Username /search/username/{username}
-GET http://localhost:8888/api/petconnet/users/search/username/juliane@email.com
+GET http://localhost:8888/api/petconnet/users/search/username/julianevaliati@email.com
 Content-Type: application/json
 
 ### Listar Todos os Usuários /list
@@ -35,4 +35,4 @@ Content-Type: application/json
 POST http://localhost:8888/api/petconnet/users/1/disable
 
 ### Ativar usuário
-POST http://localhost:8888/api/petconnet/users/3/activate
+POST http://localhost:8888/api/petconnet/users/2/activate
