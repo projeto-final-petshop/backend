@@ -60,10 +60,15 @@ public enum ErrorStatus {
 
     // -------------------------------------- PET -------------------------------------------------------
 
-    /**
-     * Status: 404 <br> Error: Not Found
-     */
     PET_NOT_FOUND_EXCEPTION("Pet não encontrado. Verifique o ID e tente novamente."),
+
+    PET_REGISTRATION_EXCEPTION("Erro ao Cadastrar Pet. Tente novamente mais tarde."),
+
+    PET_LIST_EXCEPTION("Erro ao Listar Pet. Tente novamente mais tarde."),
+
+    PET_UPDATE_EXCEPTION("Erro ao Atualizar Pet. Tente novamente mais tarde."),
+
+    PET_REMOVE_EXCEPTION("Erro ao Remover Pet. Tente novamente mais tarde."),
 
     // -------------------------------------- GENERIC -------------------------------------------------------
 
