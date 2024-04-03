@@ -9,9 +9,9 @@ import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressNotFo
 import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressValidationException;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @AllArgsConstructor
