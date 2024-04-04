@@ -1,0 +1,304 @@
+openapi: 3.0.3
+info:
+  title: API REST Users
+  description: API REST Users
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8082/api/petconnet/users'
+tags:
+  - name: users
+    description: Usuários
+paths:
+  /register:
+    post:
+      summary: 'Cadastrar usuário'
+      description: 'Cadastrar um novo usuário'
+      tags:
+        - users
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '201':
+          description: 'Usuário cadastrado com sucesso!'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterUserResponse'
+        '409':
+          description: 'Já existe um usuário cadastrado com este email.'
+        '500':
+          description: 'Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.'
+  /{id}:
+    get:
+      summary: 'Buscar usuário por ID'
+      description: ''
+      tags:
+        - users
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único do Usuário
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Dados do usuário solicitado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: 'Usuário não encontrado.'
+        '500':
+          description: 'Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.'
+    put:
+      summary: 'Atualizar usuário'
+      description: ''
+      tags:
+        - users
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único do Usuário
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Usuário atualizado com sucesso'
+        '404':
+          description: 'Usuário não encontrado.'
+        '409':
+          description: 'Já existe um usuário cadastrado com este email.'
+        '500':
+          description: 'Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.'
+  /list:
+    get:
+      summary: 'Listar Todos os Usuários'
+      description: ''
+      tags:
+        - users
+      operationId: getAllUsers
+      parameters:
+        - name: id
+          in: path
+          description: 'Identificador único do Usuário'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Lista de Usuários cadastrados'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /search/username/{username}:
+    get:
+      summary: 'Buscar Usuário por Username'
+      description: ''
+      tags:
+        - users
+      operationId: getUserByUsername
+      parameters:
+        - name: username
+          in: path
+          description: 'E-mail do usuário'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Dados do usuário informado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /{id}/disable:
+    get:
+      summary: 'Desativar o Usuário'
+      description: ''
+      tags:
+        - users
+      operationId: disableUser
+      parameters:
+        - name: id
+          in: path
+          description: 'Identificador único do usuário'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 'Dados do usuário informado'
+  /{id}/activate:
+    get:
+      summary: 'Reativar usuário'
+      description: ''
+      tags:
+        - users
+      operationId: activateUser
+      parameters:
+        - name: id
+          in: path
+          description: 'Identificador único do usuário'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 'Dados do usuário informado'
+components:
+  schemas:
+    RegisterUserRequest:
+      description: 'Cadastrar usuário'
+      type: object
+      required:
+        - username
+        - name
+        - phoneNumber
+        - password
+      properties:
+        username:
+          type: string
+          example: 'example@email.com'
+          description: |-
+            O e-mail deve ser validado. O email deve ter o formato: example@email.com.
+            No banckend deve ter utilizar uma bilbioteca para fazer a validação do formato `@Email`.
+            O campo é obrigatório. Não pode estar vazio, em branco ou nulo.
+        name:
+          type: string
+          minLength: 3
+          example: ''
+          description: |-
+            Nome do usuário. Deve ter no mínimo 3 caracteres. Caso contrário é lnaçado uma exception.
+            O campo é obrigatório. Não pode estar vazio, em branco ou nulo.
+        phoneNumber:
+          type: string
+          pattern: '^(\+?)([0-9]{1,14})$'
+          minLength: 1
+          maxLength: 14
+          example: ''
+          description: |-
+            O número de telefone deve seguir o padrão E.164.  
+            O regex não valida o número, não valida o DDI e o DDD do país.  
+            O sinal de `+` é opcional ao cadatrar o número.
+            Caso o campo seja vazio/nulo ou o número for inválido, deve lançar uma exception.
+            O campo é obrigatório. Não pode estar vazio, em branco ou nulo.
+        password:
+          type: string
+          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          example: ''
+          description: |-
+            A senha deve segui o padrão:   
+              - ter no mínimo 8 caracteres; 
+              - ter no mínimo 1 letra maiúscula; 
+              - ter no mínimo 1 letra minúscula;
+              - ter no mínimo 1 número;
+              - ter no mínimo 1 caracter especial.
+            O campo é obrigatório. Não pode estar vazio, em branco ou nulo.
+    RegisterUserResponse:
+      description: 'Retorna os dados do usuário cadastrado.'
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: 'example@email.com'
+        name:
+          type: string
+          example: ''
+        phoneNumber:
+          type: string
+          example: ''
+        active:
+          type: boolean
+          example: true
+          description: |-
+            Ao cadastrar o usuário, automaticamente deve ser incluído como usuário ativo.   
+            Ou seja, o status do usuário deve ser igual a `true`
+        createAt:
+          type: string
+          format: date-time
+          example: '2024-03-26T09:27:45.47294'
+          description: |-
+            O usuário ao se cadastrar na aplicação e salvar os dados.  
+            No banco de dados deve ser armazenado, automaticamente, a data e hora.
+    UpdateUserRequest:
+      description: 'Dados que o usuário pode atualizar'
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'example@email.com'
+          description: 'O e-mail deve ser validado. O email deve ter o formato: example@email.com'
+        name:
+          type: string
+          minLength: 3
+          example: ''
+          description: 'Nome do usuário. Deve ter no mínimo 3 caracteres. Caso contrário é lnaçado uma exception.'
+        phoneNumber:
+          type: string
+          pattern: '^(\+?)([0-9]{1,14})$'
+          minLength: 1
+          maxLength: 14
+          example: ''
+          description: |-
+            O número de telefone deve seguir o padrão E.164.  
+            O regex não valida o número, não valida o DDI e o DDD do país.  
+            O sinal de `+` é opcional ao cadatrar o número.
+            Caso o campo seja vazio/nulo ou o número for inválido, deve lançar uma exception.
+    UserResponse:
+      description: 'Dados do usuário'
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: 'example@email.com'
+        name:
+          type: string
+          example: ''
+        phoneNumber:
+          type: string
+          example: ''
+        active:
+          type: boolean
+          example: true
+          description: |-
+            Ao cadastrar o usuário, automaticamente deve ser incluído como usuário ativo.   
+            Ou seja, o status do usuário deve ser igual a `true`
+        createAt:
+          type: string
+          format: date-time
+          example: '2024-03-26T09:27:45.47294'
+          description: |-
+            O usuário ao se cadastrar na aplicação e salvar os dados.  
+            No banco de dados deve ser armazenado, automaticamente, a data e hora.
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2024-03-26T09:27:45.47294'
+          description: |-
+            O usuário ao atualizar os dados na aplicação e salvar os dados.  
+            No banco de dados deve ser armazenado, automaticamente, a data e hora.
