@@ -1,0 +1,22 @@
+volumes:
+  db:
+
+services:
+  db:
+    image: mysql:8.0.36
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=petconnet
+      - MYSQL_PASSWORD=root
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8088:8080
