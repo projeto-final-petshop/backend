@@ -1,7 +1,24 @@
 volumes:
   db:
 
+networks:
+  petshop:
+
 services:
+  maven:
+    image: maven:3.9-eclipse-temurin-21-jammy
+    container_name: maven
+    volumes:
+      - ./petconnet:/app
+    working_dir: /app
+    command: mvn spring-boot:run -Dspring-boot.run.profiles=docker
+    ports:
+      - 8888:8888
+    networks:
+      - petshop
+    depends_on:
+      - db
+
   db:
     image: mysql:8.0.36
     container_name: db
@@ -9,10 +26,18 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=petconnet
       - MYSQL_PASSWORD=root
+    # Check if the database is ready
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
     volumes:
       - db:/var/lib/mysql
     ports:
       - 3306:3306
+    networks:
+      - petshop
 
   adminer:
     image: adminer
@@ -20,3 +45,5 @@ services:
     restart: always
     ports:
       - 8088:8080
+    networks:
+      - petshop
