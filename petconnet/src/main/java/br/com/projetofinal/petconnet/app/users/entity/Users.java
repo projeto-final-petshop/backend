@@ -61,9 +61,9 @@ public class Users {
      * Exemplos de números de telefone válidos: <br> - +551199998888 <br> - 551199998888 <br> - 1234567890 <br> -
      * +9876543210
      */
-    @Column(length = 14)
-    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
-    private String phoneNumber;
+//    @Column(length = 14)
+//    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
+//    private String phoneNumber;
 
     /**
      * O usuário ao se cadastrar no sistema será automaticamente incluido como ativo = true

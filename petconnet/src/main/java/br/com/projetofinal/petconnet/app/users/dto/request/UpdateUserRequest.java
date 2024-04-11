@@ -24,7 +24,7 @@ public class UpdateUserRequest {
     @CPF
     private String documentNumber;
 
-    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
-    private String phoneNumber;
+//    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
+//    private String phoneNumber;
 
 }

@@ -22,8 +22,6 @@ spring:
     date-format: "dd/MM/yyyy HH:mm:ss" # Formato de data e hora padrão
     locale: pt-BR # Localidade para formatação
     time-zone: America/Sao_Paulo # Fuso horário padrão
-    serialization-inclusion: non_null # Incluir apenas propriedades não nulas na serialização
-    property-naming-strategy: SNAKE_CASE # Usar nomes de chaves em snake_case
 
 management:
   endpoints:

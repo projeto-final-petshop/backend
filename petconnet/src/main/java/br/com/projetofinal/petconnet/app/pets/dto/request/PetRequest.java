@@ -25,6 +25,8 @@ public class PetRequest {
 
     private String color;
 
+    private String birthdate;
+
     private String animalType;
 
 }

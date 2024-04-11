@@ -34,6 +34,8 @@ public class Pets {
 
     private String color;
 
+    private String birthdate;
+
     private String animalType;
 
     @CreationTimestamp

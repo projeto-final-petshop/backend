@@ -241,7 +241,7 @@ public class UserHelper {
         }
         validateUserIsActive(user);
         user.setName(request.getName());
-        user.setPhoneNumber(request.getPhoneNumber());
+//        user.setPhoneNumber(request.getPhoneNumber());
         user.setUpdatedAt(LocalDateTime.now());
     }
 

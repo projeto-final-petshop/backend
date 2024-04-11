@@ -21,8 +21,8 @@ public class RegisterUserRequest {
     @Size(min = 3)
     private String name;
 
-    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
-    private String phoneNumber;
+//    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
+//    private String phoneNumber;
 
     @CPF
     private String documentNumber;

@@ -11,8 +11,7 @@ public class LoginService {
     private final UserRepository userRepository;
 
     public boolean login(LoginRequest request) {
-        // TODO: implementar a lógica verificar se o username existe.
-        // TODO: se o usuário não exister ou estiver incorreto deve retornar uma exception
+        System.out.println("Login request: " + request.getUsername());
         return userRepository.findByUsernameAndPassword(request.getUsername(), request.getPassword()) != null;
     }
 
