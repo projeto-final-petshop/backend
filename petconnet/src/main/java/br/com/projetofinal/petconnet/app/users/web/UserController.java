@@ -84,8 +84,7 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable(name = "id") Long id,
                                              @RequestBody UpdateUserRequest request) {
         userService.updateUser(id, request);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Dados ATUALIZADO com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
@@ -119,8 +118,7 @@ public class UserController {
     @PostMapping("/{id}/disable")
     public ResponseEntity<String> disableUser(@PathVariable(name = "id") Long id) {
         userService.disableUser(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Usuário DESATIVADO com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
@@ -139,8 +137,7 @@ public class UserController {
     @PostMapping("/{id}/activate")
     public ResponseEntity<String> activateUser(@PathVariable(name = "id") Long id) {
         userService.activateUser(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Usuário ATIVADO com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

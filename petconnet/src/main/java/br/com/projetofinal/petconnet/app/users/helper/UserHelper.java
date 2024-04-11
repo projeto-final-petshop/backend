@@ -44,6 +44,13 @@ public class UserHelper {
         }
     }
 
+    public void validateDocumentNumberExists(String documentNumber) {
+        if (documentNumberExists(documentNumber)) {
+            log.warn("User Service --- Usuário com o email {} já existe.", documentNumber);
+            throw new DocumentNumberAlreadyExistsException();
+        }
+    }
+
     // -------------------- Métodos relacionados a cadastro de usuário --------------------
 
     /**
@@ -89,6 +96,10 @@ public class UserHelper {
      */
     private boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
+    }
+
+    private boolean documentNumberExists(String documentNumber) {
+        return userRepository.findByDocumentNumber(documentNumber).isPresent();
     }
 
     /**

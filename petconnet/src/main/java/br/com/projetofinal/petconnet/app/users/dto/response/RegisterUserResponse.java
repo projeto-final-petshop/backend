@@ -23,6 +23,8 @@ public class RegisterUserResponse {
 
     private String phoneNumber;
 
+    private String documentNumber;
+
     private Boolean active;
 
     private LocalDateTime createdAt;

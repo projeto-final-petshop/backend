@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
 
@@ -26,15 +27,21 @@ public class Users {
      * Nome do usuário deve ter no mínimo 3 caracteres
      */
     @Size(min = 3)
-    @Column(nullable = false)
     private String name;
 
     /**
      * O username é o email do usuário e deve ser um email válido.
      */
     @Email
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
+
+    /**
+     * O número de documento é o CPF do usuário e deve ser um CPF válido.
+     */
+    @CPF
+    @Column(unique = true)
+    private String documentNumber;
 
     /**
      * A senha deve ter no mínimo 8 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e
@@ -42,7 +49,6 @@ public class Users {
      * <p>
      * Exemplos de senhas válidas: <br> - Senha123! <br> - Abc123$d <br> - Teste@123 <br> - _JoaoSilva2023
      */
-    @Column(nullable = false)
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String password;
 
@@ -55,7 +61,7 @@ public class Users {
      * Exemplos de números de telefone válidos: <br> - +551199998888 <br> - 551199998888 <br> - 1234567890 <br> -
      * +9876543210
      */
-    @Column(nullable = false, length = 14)
+    @Column(length = 14)
     @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
     private String phoneNumber;
 
@@ -70,7 +76,6 @@ public class Users {
     private Boolean active;
 
     @CreationTimestamp
-    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
