@@ -6,6 +6,7 @@ import br.com.projetofinal.petconnet.app.users.dto.response.RegisterUserResponse
 import br.com.projetofinal.petconnet.app.users.dto.response.UserResponse;
 import br.com.projetofinal.petconnet.app.users.entity.Users;
 import br.com.projetofinal.petconnet.app.users.helper.UserHelper;
+import br.com.projetofinal.petconnet.app.users.mapper.UserMapper;
 import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,7 @@ public class UserService {
         userHelper.validateDocumentNumberExists(request.getDocumentNumber());
         Users savedUser = userHelper.createUser(request);
         log.info("User Service --- Usuário cadastrado com sucesso: {}", savedUser);
-        return userHelper.toRegisterUserResponse(savedUser);
+        return UserMapper.userMapper().toRegisterUserResponse(savedUser);
     }
 
     /**

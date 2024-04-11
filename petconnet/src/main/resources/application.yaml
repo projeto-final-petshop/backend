@@ -1,7 +1,7 @@
 server:
   port: 8888
   servlet:
-    context-path: /api/petconnet
+    context-path: /api/v1
 
 spring:
   application:

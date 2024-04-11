@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pets")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class PetController {
 
     private final PetService petService;
