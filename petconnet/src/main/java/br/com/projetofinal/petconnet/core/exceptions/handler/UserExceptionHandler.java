@@ -134,6 +134,23 @@ public class UserExceptionHandler {
     }
 
     /**
+     * 409 - CONFLICT
+     * <p>
+     * Número de documento (CPF) já cadastrado
+     */
+    @ExceptionHandler(DocumentNumberAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlerDocumentNumberAlreadyExistsException(DocumentNumberAlreadyExistsException ex) {
+        log.error("Exception Handler --- Número de documento (CPF) já cadastrado: ", ex);
+        var errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(409)
+                .error(HttpStatus.CONFLICT)
+                .message(ErrorStatus.DOCUMENT_NUMBER_ALREADY_EXISTS_EXCEPTION.getMesages())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    /**
      * 400 - Bad Request
      * <p>
      * Campo inválido ou não preenchido

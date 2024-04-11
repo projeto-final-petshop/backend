@@ -34,7 +34,11 @@ public enum ErrorStatus {
     /**
      * Status: 409 <br> Error: Conflict
      */
-    USERNAME_ALREADY_EXISTS_EXCEPTION("Username (email) já cadastrado. Tente outro username/email."),
+    USERNAME_ALREADY_EXISTS_EXCEPTION("Username (email) já cadastrado."),
+    /**
+     * Status: 409 <br> Error: Conflict
+     */
+    DOCUMENT_NUMBER_ALREADY_EXISTS_EXCEPTION("Número de documento (CPF) já cadastrado."),
     /**
      * Status: 500 <br> Error: Internal Server Error
      */
