@@ -18,7 +18,7 @@ public class PetResponse {
     private Integer age;
     private String breed;
     private String color;
-    private String species;
+    private String animalType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

@@ -5,8 +5,8 @@ Content-Type: application/json
 {
   "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
   "name": "Mirella Gabrielly da Rocha",
-  "phoneNumber": "83987881658",
-  "documentNumber": "83747383408",
+  "phone_number": "83987881658",
+  "document_number": "83747383408",
   "password": "Ju1!@n36"
 }
 
@@ -29,8 +29,8 @@ Content-Type: application/json
 {
   "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
   "name": "Mirella Gabrielly da Rocha",
-  "phoneNumber": "83987881658",
-  "documentNumber": "83747383408"
+  "phone_number": "83987881658",
+  "document_number": "83747383408"
 }
 
 ### Desativar usuário

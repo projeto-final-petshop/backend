@@ -7,7 +7,7 @@ Content-Type: application/json
   "age": 5,
   "breed": "N/A",
   "color": "Preto",
-  "species": "Gato"
+  "animal_type": "cat"
 }
 
 ### Search Pet By ID
@@ -24,7 +24,9 @@ PUT http://localhost:8888/api/petconnet/pets/2
 Content-Type: application/json
 
 {
-  "name": "Suzi",
+  "name": "Rian",
   "age": 5,
-  "species": "Gata"
+  "breed": "N/A",
+  "color": "Preto",
+  "animal_type": "cat"
 }

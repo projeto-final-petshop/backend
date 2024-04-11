@@ -18,7 +18,7 @@ public class PetHelper {
         pet.setAge(request.getAge());
         pet.setBreed(request.getBreed());
         pet.setColor(request.getColor());
-        pet.setSpecies(request.getSpecies());
+        pet.setAnimalType(request.getAnimalType());
     }
 
     public Pets findById(Long id) {

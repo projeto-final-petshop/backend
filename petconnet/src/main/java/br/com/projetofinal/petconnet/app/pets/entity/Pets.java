@@ -34,8 +34,7 @@ public class Pets {
 
     private String color;
 
-    @Size(min = 3)
-    private String species;
+    private String animalType;
 
     @CreationTimestamp
     @Column(updatable = false)
