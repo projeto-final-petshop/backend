@@ -1,0 +1,8 @@
+### Efetuar login - Entrar no sistema
+POST http://localhost:8888/api/v1/login
+Content-Type: application/json
+
+{
+  "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
+  "password": "Ju1!@n36"
+}
