@@ -3,9 +3,10 @@ POST http://localhost:8888/api/petconnet/users/register
 Content-Type: application/json
 
 {
-  "username": "julianevaliati@email.com",
-  "name": "Juliane Maran",
-  "phone_number": "5541992199488",
+  "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
+  "name": "Mirella Gabrielly da Rocha",
+  "phoneNumber": "83987881658",
+  "documentNumber": "83747383408",
   "password": "Ju1!@n36"
 }
 
@@ -26,9 +27,10 @@ PUT http://localhost:8888/api/petconnet/users/3
 Content-Type: application/json
 
 {
-  "username": "suzi@gmail.com",
-  "name": "Suzi Maran",
-  "phone_number": "+5541992199488"
+  "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
+  "name": "Mirella Gabrielly da Rocha",
+  "phoneNumber": "83987881658",
+  "documentNumber": "83747383408"
 }
 
 ### Desativar usuário

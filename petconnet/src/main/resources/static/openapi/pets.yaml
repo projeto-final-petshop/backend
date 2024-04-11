@@ -31,13 +31,47 @@ paths:
 components:
   schemas:
     PetRequest:
+      description: 'Formulário de cadastro e atualização do Pet'
+      type: object
       required:
         - name
-      type: object
       properties:
         name:
           type: string
           example: 'Bob'
+          description: |-
+            Nome do animal de estimação. O campo é obrigatório. Não pode estar vazio, em branco ou nulo.
+        age:
+          type: integer
+          format: int32
+          example: 2
+          minimum: 0
+          description: |-
+            Deve ser um número positivo igual ou maior que zero. (opcional)
+        color:
+          type: string
+          example: 'Branco'
+          description: |-
+            Deve ser a cor do animal. Pode ser uma ou mais cores. (opcional)
+        breed:
+          type: string
+          example: 'Malteses (opcional)'
+          description: |-
+            Raça do animal.
+        animalType:
+          type: string
+          example: 'Dog'
+          description: |-
+            Tipo de animal: dog, cat ou other. (opcional)
+        birthdate:
+          type: string
+          format: date-time
+          description: 'Data de nascimento do animal (opcional)'
+        userId:
+          type: integer
+          format: int64
+          example: 2
+          description: 'ID do usuário (tutor) do animal.'
     PetResponse:
       required:
         - name
@@ -50,5 +84,22 @@ components:
         name:
           type: string
           example: 'Bob'
+        age:
+          type: integer
+          format: int32
+          example: 2
+        color:
+          type: string
+          example: 'Branco'
+        breed:
+          type: string
+          example: 'Malteses'
+        animalType:
+          type: string
+          example: 'Dog'
+        userId:
+          type: integer
+          format: int64
+          example: 2
 
   
