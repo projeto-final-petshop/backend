@@ -1,13 +1,16 @@
 package br.com.projetofinal.petconnet.app.pets.entity;
 
+import br.com.projetofinal.petconnet.app.users.entity.Users;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * EN: Core pet information (id, name, species, etc.)
@@ -25,24 +28,33 @@ public class Pets {
     private Long id;
 
     @Size(min = 3)
+    @Column(nullable = false)
     private String name;
-
-    @PositiveOrZero
-    private Integer age;
 
     private String breed;
 
     private String color;
 
-    private String birthdate;
+    @PastOrPresent
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date birthdate;
 
     private String animalType;
 
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private AnimalType animalType;
+
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, columnDefinition = "datetime")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(updatable = false, columnDefinition = "datetime")
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "user_id")
+    private Users user;
 
 }

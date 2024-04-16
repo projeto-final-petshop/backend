@@ -4,6 +4,7 @@ import br.com.projetofinal.petconnet.app.pets.dto.request.PetRequest;
 import br.com.projetofinal.petconnet.app.pets.dto.respose.PetResponse;
 import br.com.projetofinal.petconnet.app.pets.entity.Pets;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -20,8 +21,12 @@ public interface PetMapper {
         return INSTANCE;
     }
 
+    @Mapping(source = "user.id", target = "userId")
     PetResponse petToPetResponse(Pets pet);
 
+    @Mapping(source = "birthdate",
+            target = "birthdate",
+            dateFormat = "yyyy-MM-dd")
     Pets petRequestToPet(PetRequest request);
 
     List<PetResponse> petListToPetResponseList(List<Pets> petList);
