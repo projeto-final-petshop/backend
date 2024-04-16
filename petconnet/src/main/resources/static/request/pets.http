@@ -1,32 +1,33 @@
 ### Register Pet
-POST http://localhost:8888/api/petconnet/pets/register
+POST http://localhost:8888/api/v1/pets/register
 Content-Type: application/json
 
 {
-  "name": "Rian",
-  "age": 5,
-  "breed": "N/A",
-  "color": "Preto",
-  "animal_type": "cat"
+  "name": "Rex",
+  "breed": "Golden Retriever",
+  "color": "Golden",
+  "birthdate": "31/12/2020",
+  "animalType": "Dog",
+  "userId": 1
 }
 
 ### Search Pet By ID
-GET http://localhost:8888/api/petconnet/pets/search/2
+GET http://localhost:8888/api/v1/pets/search/2
 
 ### List All Pets
-GET http://localhost:8888/api/petconnet/pets/list
+GET http://localhost:8888/api/v1/pets/list
 
 ### Remove Pet By ID
-DELETE http://localhost:8888/api/petconnet/pets/1
+DELETE http://localhost:8888/api/v1/pets/1
 
 ### Register Pet
-PUT http://localhost:8888/api/petconnet/pets/2
+PUT http://localhost:8888/api/v1/pets/2
 Content-Type: application/json
 
 {
-  "name": "Rian",
-  "age": 5,
-  "breed": "N/A",
-  "color": "Preto",
-  "animal_type": "cat"
+  "name": "Rex",
+  "breed": "Golden Retriever",
+  "color": "Golden",
+  "birthdate": "2020-01-01",
+  "animalType": "Dog"
 }

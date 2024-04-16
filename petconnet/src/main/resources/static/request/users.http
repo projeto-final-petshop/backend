@@ -5,8 +5,7 @@ Content-Type: application/json
 {
   "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
   "name": "Mirella Gabrielly da Rocha",
-  "phone_number": "83987881658",
-  "document_number": "83747383408",
+  "documentNumber": "83747383408",
   "password": "Ju1!@n36"
 }
 
@@ -23,14 +22,14 @@ GET http://localhost:8888/api/v1/users/list
 Content-Type: application/json
 
 ### Atualizar usuário
-PUT http://localhost:8888/api/v1/users/3
+PUT http://localhost:8888/api/v1/users/1
 Content-Type: application/json
 
 {
+  "id": 1,
   "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
   "name": "Mirella Gabrielly da Rocha",
-  "phone_number": "83987881658",
-  "document_number": "83747383408"
+  "documentNumber": "83747383408"
 }
 
 ### Desativar usuário
@@ -38,3 +37,7 @@ POST http://localhost:8888/api/v1/users/1/disable
 
 ### Ativar usuário
 POST http://localhost:8888/api/v1/users/2/activate
+
+### Buscar usuário e listar seus pets
+GET http://localhost:8888/api/v1/users/1/pets
+Content-Type: application/json
