@@ -325,7 +325,7 @@ paths:
         - name: petId
           in: path
           required: true
-          description: ''O ID do animal de estimação a ser excluído.'
+          description: 'O ID do animal de estimação a ser excluído.'
           schema:
             type: integer
             format: int64
