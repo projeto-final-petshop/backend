@@ -28,6 +28,10 @@ public enum ErrorStatus {
      */
     INACTIVE_USER_EXCEPTION("Usuário inativo. Ative a conta para atualizar seus dados."),
     /**
+     * Status: 403 <br> Error: Forbidden
+     */
+    UNAUTHORIZED_ACCESS_EXCEPTION("Usuário não autorizado!"),
+    /**
      * Status: 404 <br> Error: Not Found
      */
     USERNAME_NOT_FOUND_EXCEPTION("Usuário não encontrado. Verifique o ID ou username e tente novamente."),

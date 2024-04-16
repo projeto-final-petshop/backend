@@ -29,9 +29,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerInvalidCredentialException(InvalidCredentialException ex) {
         log.error("Exception Handler --- Credenciais inválidas: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(400)
-                .error(HttpStatus.BAD_REQUEST)
+                .code(400)
+                .status(HttpStatus.BAD_REQUEST)
                 .message(ErrorStatus.INVALID_CREDENTIAL_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -48,9 +47,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerUnableToDeleteUserException(UnableToDeleteUserException ex) {
         log.error("Exception Handler --- Não foi possível remover o usuário: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.UNABLE_TO_DELETE_USER_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -67,9 +65,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerUnableToUpdateUserException(UnableToUpdateUserException ex) {
         log.error("Exception Handler --- Não foi possível atualizar o usuário: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.UNABLE_TO_UPDATE_USER_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -84,9 +81,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerUsernameNotFoundException(UsernameNotFoundException ex) {
         log.error("Exception Handler --- Usuário não encontrado: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(404)
-                .error(HttpStatus.NOT_FOUND)
+                .code(404)
+                .status(HttpStatus.NOT_FOUND)
                 .message(ErrorStatus.USERNAME_NOT_FOUND_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -96,9 +92,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerInvalidUserException(InvalidUserException ex) {
         log.error("Usuário inválido: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(400)
-                .error(HttpStatus.BAD_REQUEST)
+                .code(400)
+                .status(HttpStatus.BAD_REQUEST)
                 .message("Campo inválido: verifique se o campo está preenchido corretamente!")
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -108,9 +103,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerRequiredFieldException(RequiredFieldException ex) {
         log.error("Campo obrigatório: ", ex);
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(400)
-                .error(HttpStatus.BAD_REQUEST)
+                .code(400)
+                .status(HttpStatus.BAD_REQUEST)
                 .message("Campo obrigatório!")
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -125,9 +119,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
         log.error("Exception Handler --- Email já cadastrado: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(409)
-                .error(HttpStatus.CONFLICT)
+                .code(409)
+                .status(HttpStatus.CONFLICT)
                 .message(ErrorStatus.USERNAME_ALREADY_EXISTS_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
@@ -142,9 +135,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerDocumentNumberAlreadyExistsException(DocumentNumberAlreadyExistsException ex) {
         log.error("Exception Handler --- Número de documento (CPF) já cadastrado: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(409)
-                .error(HttpStatus.CONFLICT)
+                .code(409)
+                .status(HttpStatus.CONFLICT)
                 .message(ErrorStatus.DOCUMENT_NUMBER_ALREADY_EXISTS_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
@@ -159,12 +151,27 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerInvalidFieldException(InvalidFieldException ex) {
         log.error("Exception Handler --- Erro ao cadastrar usuário: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(400)
-                .error(HttpStatus.BAD_REQUEST)
+                .code(400)
+                .status(HttpStatus.BAD_REQUEST)
                 .message(ErrorStatus.INVALID_FIELD_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    /**
+     * 403 - FORBIDDEN
+     * <p>
+     * Usuário inativo.
+     */
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> handlerUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        log.error("Exception Handler --- Usuário não autorizado: ", ex);
+        var errorResponse = ErrorResponse.builder()
+                .code(403)
+                .status(HttpStatus.FORBIDDEN)
+                .message(ErrorStatus.UNAUTHORIZED_ACCESS_EXCEPTION.getMesages())
+                .build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     /**
@@ -176,9 +183,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerInactiveUserException(InactiveUserException ex) {
         log.error("Exception Handler --- Usuário inativo: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(403)
-                .error(HttpStatus.FORBIDDEN)
+                .code(403)
+                .status(HttpStatus.FORBIDDEN)
                 .message(ErrorStatus.INACTIVE_USER_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
@@ -195,9 +201,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerFailedToActivateUserException(FailedToActivateUserException ex) {
         log.error("Exception Handler --- Erro ao ativar usuário:", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.FAILED_TO_ACTIVATE_USER_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -214,9 +219,8 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerFailedToInactivateUserException(FailedToInactivateUserException ex) {
         log.error("Exception Handler --- Erro ao desativar usuário:", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.FAILED_TO_INACTIVATE_USER_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

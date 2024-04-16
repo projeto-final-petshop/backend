@@ -20,9 +20,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         log.error("Erro interno no servidor: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.GENERIC_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

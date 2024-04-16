@@ -1,19 +1,19 @@
 package br.com.projetofinal.petconnet.core.exceptions.errors.users.newusers;
 
-public class UsernameNotFoundException extends RuntimeException {
+public class UnauthorizedAccessException extends RuntimeException {
 
-    public UsernameNotFoundException() {
+    public UnauthorizedAccessException() {
     }
 
-    public UsernameNotFoundException(String message) {
+    public UnauthorizedAccessException(String message) {
         super(message);
     }
 
-    public UsernameNotFoundException(String message, Throwable cause) {
+    public UnauthorizedAccessException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UsernameNotFoundException(Throwable cause) {
+    public UnauthorizedAccessException(Throwable cause) {
         super(cause);
     }
 }

@@ -22,9 +22,8 @@ public class AddressExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerAddressValidationException(AddressValidationException ex) {
         log.error("Dados inválidos: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(400)
-                .error(HttpStatus.BAD_REQUEST)
+                .code(400)
+                .status(HttpStatus.BAD_REQUEST)
                 .message(ErrorStatus.ADDRESS_VALIDATION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -34,9 +33,8 @@ public class AddressExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerAddressNotFoundException(AddressNotFoundException ex) {
         log.error("Endereço não encontrado: ", ex);
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(404)
-                .error(HttpStatus.NOT_FOUND)
+                .code(404)
+                .status(HttpStatus.NOT_FOUND)
                 .message(ErrorStatus.ADDRESS_NOT_FOUND.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

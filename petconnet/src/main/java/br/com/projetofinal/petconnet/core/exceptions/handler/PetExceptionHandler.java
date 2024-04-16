@@ -21,9 +21,8 @@ public class PetExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         log.error("Erro interno no servidor: {}", ex.getMessage());
         var errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.GENERIC_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -33,9 +32,8 @@ public class PetExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerPetNotFoundException(PetNotFoundException ex) {
         log.error("Pet não econtrado: {}", ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(404)
-                .error(HttpStatus.NOT_FOUND)
+                .code(404)
+                .status(HttpStatus.NOT_FOUND)
                 .message(ErrorStatus.PET_NOT_FOUND_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -45,9 +43,8 @@ public class PetExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerPetRegistrationException(PetRegistrationException ex) {
         log.error("Erro ao cadastrar Pet: {}", ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.PET_REGISTRATION_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -57,9 +54,8 @@ public class PetExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerPetListException(PetListException ex) {
         log.error("Erro ao Listar Pet: {}", ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.PET_LIST_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -69,9 +65,8 @@ public class PetExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerPetUpdateException(PetUpdateException ex) {
         log.error("Erro ao atualizar pet: {}", ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.PET_UPDATE_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -81,9 +76,8 @@ public class PetExceptionHandler {
     public ResponseEntity<ErrorResponse> handlerPetRemoveException(PetRemoveException ex) {
         log.error("Erro ao remover pet: {}", ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(500)
-                .error(HttpStatus.INTERNAL_SERVER_ERROR)
+                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ErrorStatus.PET_REMOVE_EXCEPTION.getMesages())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
