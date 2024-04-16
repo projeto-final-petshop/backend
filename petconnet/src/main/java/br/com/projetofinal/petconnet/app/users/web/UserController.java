@@ -3,8 +3,10 @@ package br.com.projetofinal.petconnet.app.users.web;
 import br.com.projetofinal.petconnet.app.users.dto.request.RegisterUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.request.UpdateUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.response.RegisterUserResponse;
+import br.com.projetofinal.petconnet.app.users.dto.response.UserListResponse;
 import br.com.projetofinal.petconnet.app.users.dto.response.UserResponse;
 import br.com.projetofinal.petconnet.app.users.service.UserService;
+import br.com.projetofinal.petconnet.core.exceptions.errors.users.newusers.UsernameNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,9 +63,9 @@ public class UserController {
      * @return Retorna um {@link ResponseEntity} contendo o objeto de resposta do usuário e código HTTP 200 (OK) se
      * encontrado, caso contrário, retorna um erro apropriado.
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable(name = "id") Long id) {
-        UserResponse response = userService.getUserById(id);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable(name = "userId") Long userId) {
+        UserResponse response = userService.getUserById(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -81,10 +83,10 @@ public class UserController {
      * @return Retorna um {@link ResponseEntity} com código HTTP 200 (OK) e uma mensagem de sucesso caso a atualização
      * seja realizada com sucesso, caso contrário, retorna um erro apropriado.
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable(name = "id") Long id,
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable(name = "userId") Long userId,
                                              @RequestBody UpdateUserRequest request) {
-        userService.updateUser(id, request);
+        userService.updateUser(userId, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -97,48 +99,26 @@ public class UserController {
      * @return Retorna um {@link ResponseEntity} contendo o objeto de resposta do usuário e código HTTP 200 (OK) se
      * encontrado, caso contrário, retorna um erro apropriado.
      */
-    @GetMapping("/search/username/{username}")
+    @GetMapping("/{username}")
     public ResponseEntity<UserResponse> getUserByUsername(@PathVariable(name = "username") String username) {
         UserResponse response = userService.getUserByUsername(username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    /**
-     * End point para desativar um usuário.
-     * <p>
-     * Observação: o retorno pode ser Status HTTP 204 No Content, que é o adequado para <b>desativar</b>  o usuário.
-     * Porém, para retornar a mensagem informando que os dados foram atualizados, foi utilizado o Status 200 OK. Bem
-     * como poderia ser utilizado o Método DELETE ou PUT para atualizar o campo {@code active}
-     *
-     * @param id
-     *         Identificador do usuário.
-     *
-     * @return Retorna um {@link ResponseEntity} com código HTTP 200 (OK) e uma mensagem de sucesso caso a desativação
-     * seja realizada com sucesso, caso contrário, retorna um erro apropriado.
-     */
-    @PostMapping("/{id}/disable")
-    public ResponseEntity<String> disableUser(@PathVariable(name = "id") Long id) {
-        userService.disableUser(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @GetMapping("/{userId}/pets")
+    public ResponseEntity<UserListResponse> getUserAndPets(@PathVariable(name = "userId") Long userId) {
+        UserListResponse response = userService.getUserAndPets(userId);
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * End point para ativar um usuário.
-     * <p>
-     * Observação: o retorno pode ser Status HTTP 204 No Content, que é o adequado para <b>ativar</b> o usuário. Porém,
-     * para retornar a mensagem informando que os dados foram atualizados, foi utilizado o Status 200 OK. Bem como
-     * poderia ser utilizado o Método DELETE ou PUT para atualizar o campo {@code active}
-     *
-     * @param id
-     *         Identificador do usuário.
-     *
-     * @return Retorna um {@link ResponseEntity} com código HTTP 200 (OK) e uma mensagem de sucesso caso a ativação seja
-     * realizada com sucesso, caso contrário, retorna um erro apropriado.
-     */
-    @PostMapping("/{id}/activate")
-    public ResponseEntity<String> activateUser(@PathVariable(name = "id") Long id) {
-        userService.activateUser(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.noContent().build();
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

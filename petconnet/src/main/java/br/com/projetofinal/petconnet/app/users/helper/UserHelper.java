@@ -68,7 +68,6 @@ public class UserHelper {
      */
     public Users createUser(RegisterUserRequest request) {
         Users user = UserMapper.userMapper().toUsers(request);
-        activateUser(user);
         user.setCreatedAt(LocalDateTime.now());
         return saveUser(user);
     }
@@ -100,16 +99,6 @@ public class UserHelper {
 
     private boolean documentNumberExists(String documentNumber) {
         return userRepository.findByDocumentNumber(documentNumber).isPresent();
-    }
-
-    /**
-     * Ativa o usuário recém-criado.
-     *
-     * @param user
-     *         Objeto {@link Users} representando o usuário a ser ativado.
-     */
-    private void activateUser(Users user) {
-        user.setActive(true);
     }
 
     /**
@@ -239,7 +228,6 @@ public class UserHelper {
             validateUsernameExists(request.getUsername());
             user.setUsername(request.getUsername());
         }
-        validateUserIsActive(user);
         user.setName(request.getName());
 //        user.setPhoneNumber(request.getPhoneNumber());
         user.setUpdatedAt(LocalDateTime.now());
@@ -256,22 +244,6 @@ public class UserHelper {
     public UserResponse handleUserUpdate(Users user) {
         Users savedUser = userRepository.save(user);
         return UserMapper.userMapper().toUserResponse(savedUser);
-    }
-
-    /**
-     * Valida se o usuário está ativo antes de realizar a atualização.
-     *
-     * @param user
-     *         Objeto {@link Users} representando o usuário.
-     *
-     * @throws InactiveUserException
-     *         Se o usuário estiver inativo.
-     */
-    private void validateUserIsActive(Users user) {
-        if (!Boolean.TRUE.equals(user.getActive())) {
-            log.warn("User Service --- Usuário com ID {} está inativo.", user.getId());
-            throw new InactiveUserException();
-        }
     }
 
     // -------------------- Métodos relacionados a ativação e desativação de usuário --------------------
@@ -293,33 +265,6 @@ public class UserHelper {
         } catch (UsernameNotFoundException e) {
             log.error("User Service --- Usuário não encontrado com ID: {}", id, e);
             throw new UsernameNotFoundException();
-        }
-    }
-
-    /**
-     * Define o status de ativo ou inativo para o usuário.
-     *
-     * @param user
-     *         Objeto {@link Users} representando o usuário.
-     * @param active
-     *         Flag indicando se o usuário deve ser ativado (true) ou desativado (false).
-     *
-     * @throws FailedToInactivateUserException
-     *         Se ocorrer algum erro durante a desativação do usuário.
-     */
-    public void setUserActiveStatus(Users user, boolean active) {
-        try {
-            user.setActive(active);
-            userRepository.save(user);
-            log.info("User Service --- Usuário {} com sucesso: {}",
-                    (active ? "ativado" : "desativado"), user.getId());
-        } catch (Exception e) {
-            log.error("User Service --- Erro ao {} usuário: {}",
-                    (active ? "ativar" : "desativar"), user.getId(), e);
-            if (active) {
-                throw new FailedToActivateUserException();
-            }
-            throw new FailedToInactivateUserException();
         }
     }
 

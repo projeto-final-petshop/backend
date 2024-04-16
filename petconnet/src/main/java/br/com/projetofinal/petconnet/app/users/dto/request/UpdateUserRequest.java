@@ -15,6 +15,8 @@ import org.hibernate.validator.constraints.br.CPF;
 @NoArgsConstructor
 public class UpdateUserRequest {
 
+    private Long id;
+
     @Email
     private String username;
 
@@ -23,8 +25,5 @@ public class UpdateUserRequest {
 
     @CPF
     private String documentNumber;
-
-//    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
-//    private String phoneNumber;
 
 }

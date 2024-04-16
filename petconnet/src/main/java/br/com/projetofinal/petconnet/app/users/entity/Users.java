@@ -1,5 +1,6 @@
 package br.com.projetofinal.petconnet.app.users.entity;
 
+import br.com.projetofinal.petconnet.app.pets.entity.Pets;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -52,33 +54,15 @@ public class Users {
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String password;
 
-    /**
-     * Este regex é específico para o formato E.164.
-     * <p>
-     * Este regex verifica apenas a formatação do número de telefone. Não garante que o número seja válido ou que
-     * pertença a um país específico.
-     * <p>
-     * Exemplos de números de telefone válidos: <br> - +551199998888 <br> - 551199998888 <br> - 1234567890 <br> -
-     * +9876543210
-     */
-//    @Column(length = 14)
-//    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
-//    private String phoneNumber;
-
-    /**
-     * O usuário ao se cadastrar no sistema será automaticamente incluido como ativo = true
-     * <p>
-     * Quando for excluir a conta é passado para inativo = false
-     * <p>
-     * O banco de dados deverá ficar responsável por monitorar, caso a conta não seja ativa dentro de um determinado
-     * para prazo (ex.: 30 dias) os dados são excluídos automaticamente do banco de dados.
-     */
-    private Boolean active;
+    @OneToMany(mappedBy = "user")
+    private List<Pets> pet;
 
     @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "datetime")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(updatable = false, columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 
 }

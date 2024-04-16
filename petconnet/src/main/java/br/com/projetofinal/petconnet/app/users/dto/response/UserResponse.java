@@ -18,30 +18,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserResponse {
 
-    @JsonProperty("user_id")
     private Long id;
 
     @Email
-    @JsonProperty("username")
     private String username;
 
-    @JsonProperty("name")
     private String name;
 
-//    @JsonProperty("phone_number")
-//    private String phoneNumber;
-
     @CPF
-    @JsonProperty("document_number")
     private String documentNumber;
 
-    @JsonProperty("active")
-    private Boolean active;
-
-    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
-    @JsonProperty("update_at")
     private LocalDateTime updatedAt;
 
 }

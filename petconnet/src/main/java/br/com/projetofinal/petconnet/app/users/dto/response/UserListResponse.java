@@ -1,6 +1,6 @@
-package br.com.projetofinal.petconnet.app.users.dto.request;
+package br.com.projetofinal.petconnet.app.users.dto.response;
 
-import br.com.projetofinal.petconnet.app.pets.dto.respose.PetResponse;
+import br.com.projetofinal.petconnet.app.pets.dto.respose.PetListResponse;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +20,6 @@ public class UserListResponse {
     @Size(min = 3)
     private String name;
 
-    private List<PetResponse> pets;
+    private List<PetListResponse> pets;
 
 }

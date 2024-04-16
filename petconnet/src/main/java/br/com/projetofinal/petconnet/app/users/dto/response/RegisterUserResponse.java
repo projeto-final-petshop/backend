@@ -23,13 +23,8 @@ public class RegisterUserResponse {
 
     private String name;
 
-//    @Pattern(regexp = "^(\\+?)([0-9]{1,14})$")
-//    private String phoneNumber;
-
     @CPF
     private String documentNumber;
-
-    private Boolean active;
 
     private LocalDateTime createdAt;
 
