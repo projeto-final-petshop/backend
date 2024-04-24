@@ -390,9 +390,17 @@ paths:
               schema:
                 type: object
                 properties:
-                  token:
+                  id:
+                    type: integer
+                    format: int64
+                    description: 'Identificador do usuário'
+                    example: 1
+                  username:
                     type: string
-                    description: 'Token JWT para autenticação'
+                    description: 'Nome de usuário ou endereço de e-mail para login'
+                  password:
+                    type: string
+                    description: 'Senha do usuário'
         '401':
           $ref: "#/components/responses/401"
   /auth/logout:
