@@ -10,6 +10,7 @@ import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
 import br.com.projetofinal.petconnet.core.exceptions.errors.users.newusers.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,8 @@ public class UserHelper {
      * Repositório de usuários injetado por construtor.
      */
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Valida se um nome de usuário já existe.
@@ -68,6 +71,7 @@ public class UserHelper {
      */
     public Users createUser(RegisterUserRequest request) {
         Users user = UserMapper.userMapper().toUsers(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         return saveUser(user);
     }

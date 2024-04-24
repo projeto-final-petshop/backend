@@ -413,6 +413,98 @@ paths:
                   message:
                     type: string
                     description: 'Acesso não autorizado.'
+  /address/{cep}/json:
+    get:
+      summary: 'Recupera um endereço a partir do CEP informado.'
+      description: 'Consulta um endereço específico por CEP.'
+      tags: [ address ]
+      parameters:
+        - in: path
+          name: cep
+          required: true
+          schema:
+            type: string
+            pattern: '^\\d{8}$'
+      responses:
+        '200':
+          description: 'Endereço encontrado com sucesso!'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressResponse"
+        '400':
+          description: 'Solicitação inválida (dados incorretos).'
+  /address/register:
+    post:
+      summary: 'Cadastra um novo endereço'
+      description: 'Cria um novo endereço a partir dos dados informados no corpo da requisição.'
+      tags: [ address ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressRequest'
+      responses:
+        '201':
+          description: 'Endereço cadastrado com sucesso'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+        '400':
+          description: Erro na validação do endereço
+  /address/list:
+    get:
+      summary: 'Recupera uma lista de todos os endereços.'
+      description: 'Obtém todos os endereços cadastrados no sistema.'
+      tags: [ address ]
+      responses:
+        '200':
+          description: 'Lista de endereços recuperada com sucesso.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AddressResponse"
+  /address/{id}:
+    put:
+      summary: 'Atualiza um endereço existente'
+      description: 'Atualiza os dados de um endereço cadastrado.'
+      tags: [ address ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Identificador único do endereço'
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAddressRequest'
+      responses:
+        '204':
+          description: 'Endereço atualizado com sucesso'
+    delete:
+      summary: 'Exclui um endereço'
+      description: 'Exclui o endereço cadastrado com o identificador informado.'
+      tags: [ address ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Identificador único do endereço'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 'Endereço excluído com sucesso'
 components:
   schemas:
     RegisterUserRequest:
@@ -691,7 +783,8 @@ components:
           example: 'Golden'
         animalType:
           type: array
-          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. 
+          Posteriormente será incluído um enum.'
           example: 'DOG'
           items:
             $ref: '#/components/schemas/AnimalType'
@@ -754,7 +847,8 @@ components:
           example: 'Golden'
         animalType:
           type: array
-          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. 
+          Posteriormente será incluído um enum.'
           example: 'DOG'
           items:
             $ref: '#/components/schemas/AnimalType'
@@ -780,7 +874,8 @@ components:
           example: '2024-04-15T13:15:39'
     AnimalType:
       type: string
-      description: 'Tipo do animal (e.g., Cachorro, Gato, Coelho, Pássaro, Peixe e outros). Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+      description: 'Tipo do animal (e.g., Cachorro, Gato, Coelho, Pássaro, Peixe e outros). 
+      Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
       enum:
         - DOG
         - CAT
@@ -788,6 +883,85 @@ components:
         - BIRD
         - FISH
         - OTHER
+    AddressRequest:
+      type: object
+      properties:
+        cep:
+          type: string
+          format: cep
+          pattern: "^\\d{8}$"  # Regular expression for 8-digit CEP format
+          example: '01001000'
+          description: 'CEP a ser cadastrado (obrigatório).'
+        numero:
+          type: string
+          example: '123'
+          description: 'Número do endereço.'
+    AddressResponse:
+      type: object
+      properties:
+        cep:
+          type: string
+          format: cep
+          pattern: "^\\d{8}$"  # Regular expression for 8-digit CEP format
+          example: '01001000'
+          description: 'Código de Endereçamento Postal (CEP) no formato brasileiro (8 dígitos).'
+        logradouro:
+          type: string
+          example: 'Praça da Sé'
+          description: 'Nome do logradouro (rua, avenida, etc.).'
+        complemento:
+          type: string
+          example: 'lado ímpar'
+          description: 'Complemento do endereço (opcional).'
+        bairro:
+          type: string
+          example: 'Sé'
+          description: 'Bairro onde o endereço se localiza.'
+        localidade:
+          type: string
+          example: 'São Paulo'
+          description: 'Cidade onde o endereço se localiza.'
+        uf:
+          type: string
+          example: 'SP'
+          description: 'Sigla da Unidade Federativa do endereço.'
+        numero:
+          type: string
+          example: '123'
+          description: 'Número do endereço.'
+    UpdateAddressRequest:
+      type: object
+      properties:
+        cep:
+          type: string
+          format: cep  # Custom format for CEP (optional)
+          pattern: "^\\d{8}$"
+          example: '01001000'
+          description: 'CEP do endereço (opcional para atualização).'
+        logradouro:
+          type: string
+          example: 'Praça da Sé'
+          description: 'Nome do logradouro (opcional para atualização).'
+        complemento:
+          type: string
+          example: 'lado ímpar'
+          description: 'Complemento do endereço (opcional para atualização).'
+        bairro:
+          type: string
+          example: 'Sé'
+          description: 'Bairro do endereço (opcional para atualização).'
+        localidade:
+          type: string
+          example: 'São Paulo'
+          description: 'Cidade do endereço (opcional para atualização).'
+        uf:
+          type: string
+          example: 'SP'
+          description: 'Sigla da UF do endereço (opcional para atualização).'
+        numero:
+          type: string
+          example: '123'
+          description: 'Número do endereço (opcional para atualização).'
     ErrorResponse:
       type: object
       properties:

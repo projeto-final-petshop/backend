@@ -1,0 +1,364 @@
+openapi: 3.0.3
+info:
+  title: 'API Petconnect'
+  description: |-
+    
+    ## Validações dos Campos
+    
+    ### `id`, `createdAt`, `updatedAt`
+    * Estes campos são gerados automaticamente pelo sistema e não pode ser preenchido manualmente.
+    
+    As mensagens de erro e os status estão na planilha .xls anexa.
+
+  version: 1.0.1
+servers:
+  - url: 'http://localhost:8888/api/v1'
+tags:
+  - name: pet
+    description: "API de Pets"
+paths:
+  /pets/register:
+    post:
+      summary: 'Registre um novo animal de estimação'
+      description: 'Cria um novo animal de estimação associado a um usuário.'
+      tags: [ pet ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetRequest'
+      responses:
+        '200':
+          description: 'Animal de estimação cadastrado com sucesso.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+  /pets/{petId}:
+    get:
+      summary: 'Encontre animal de estimação por ID'
+      description: 'Recupera informações de um animal de estimação específico com base em seu identificador exclusivo.'
+      tags: [ pet ]
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: 'O ID do animal de estimação a ser recuperado.'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Animal de estimação recuperado com sucesso.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    put:
+      summary: 'Atualizar informações sobre animais de estimação'
+      description: 'Atualiza as informações de um animal de estimação específico.'
+      tags: [ pet ]
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: 'O ID do animal de estimação a ser recuperado.'
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetUpdateRequest'
+      responses:
+        '200':
+          description: 'Informações do animal de estimação atualizadas com sucesso'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      summary: 'Excluir animal de estimação por ID'
+      description: 'Exclui um animal de estimação com base em seu identificador exclusivo.'
+      tags: [ pet ]
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: 'O ID do animal de estimação a ser excluído.'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Animal de estimação excluído com sucesso.'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /pets/list:
+    get:
+      summary: 'Liste todos os animais de estimação'
+      description: 'Recupera uma lista de todos os animais de estimação registrados.'
+      tags: [ pet ]
+      responses:
+        '200':
+          description: 'Lista de animais de estimação recuperados com sucesso.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+components:
+  schemas:
+    PetListResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: |-
+            Identificador único e imutável do pet. 
+            Este ID é utilizado para referenciar o pet de forma interna no sistema e não deve ser alterado.
+          example: 1
+        name:
+          type: string
+          description: 'Nome do pet'
+          example: 'Rex'
+        breed:
+          type: string
+          description: 'Raça do pet'
+          example: 'Golden Retriever'
+        color:
+          type: string
+          description: 'Cor do pet'
+          example: 'Golden'
+        animalType:
+          type: string
+          description: 'Tipo de animal'
+          example: 'Dog'
+        birthdate:
+          type: string
+          format: date
+          description: 'Data de nascimento do pet'
+          example: '31/12/2020'
+        createdAt:
+          type: string
+          format: date-time
+          description: |-
+            Data e hora exatas da criação do usuário no sistema. 
+            Esta informação é registrada automaticamente e não pode ser alterada.
+          example: "2024-04-15T13:15:39"
+        updatedAt:
+          type: string
+          format: date-time
+          description: |-
+            Data e hora da última atualização das informações do pet no sistema. 
+            Esta informação é atualizada automaticamente a cada alteração nos dados do pet.
+          example: "2024-04-15T13:15:39"
+    PetRequest:
+      type: object
+      required:
+        - name
+        - animalType
+      properties:
+        name:
+          type: string
+          description: 'Nome do pet'
+          minLength: 3
+          example: 'Rex'
+        breed:
+          type: string
+          description: 'Raça do pet (opcional)'
+          example: 'Golden Retriever'
+        color:
+          type: string
+          description: 'Cor do pet (opcional)'
+          example: 'Golden'
+        animalType:
+          type: array
+          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+          example: 'DOG'
+          items:
+            $ref: '#/components/schemas/AnimalType'
+        birthdate:
+          type: string
+          format: date
+          description: 'Data de nascimento do pet (opcional)'
+          example: '31/12/2020'
+        userId:
+          type: integer
+          format: int64
+          description: 'Identificador do usuário dono do pet'
+          example: 1
+    PetUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 'Identificador único do pet (gerado automaticamente)'
+        name:
+          type: string
+          description: 'Nome do pet'
+        breed:
+          type: string
+          description: 'Raça do pet (opcional)'
+        color:
+          type: string
+          description: 'Cor do pet (opcional)'
+        animalType:
+          type: string
+          description: 'Tipo do animal (e.g., Cachorro, Gato)'
+        birthdate:
+          type: string
+          format: date
+          description: 'Data de nascimento do pet'
+        userId:
+          type: integer
+          format: int64
+    PetResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 'Identificador único do pet (gerado automaticamente)'
+          example: 2
+        name:
+          type: string
+          minLength: 3
+          description: 'Nome do pet'
+          example: 'Rex'
+        breed:
+          type: string
+          description: 'Raça do pet (opcional)'
+          example: 'Golden Retriever'
+        color:
+          type: string
+          description: 'Cor do pet (opcional)'
+          example: 'Golden'
+        animalType:
+          type: array
+          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+          example: 'DOG'
+          items:
+            $ref: '#/components/schemas/AnimalType'
+        birthdate:
+          type: string
+          format: date
+          description: 'Data de nascimento do pet'
+          example: '31/12/2020'
+        userId:
+          type: integer
+          format: int64
+          description: 'Identificador do usuário dono do pet'
+          example: 1
+        createdAt:
+          type: string
+          format: date-time
+          description: 'Data e hora de criação do registro do pet (gerado automaticamente)'
+          example: '2024-04-15T13:15:39'
+        updatedAt:
+          type: string
+          format: date-time
+          description: 'Data e hora da última atualização do registro do pet (gerado automaticamente)'
+          example: '2024-04-15T13:15:39'
+    AnimalType:
+      type: string
+      description: 'Tipo do animal (e.g., Cachorro, Gato, Coelho, Pássaro, Peixe e outros). Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+      enum:
+        - DOG
+        - CAT
+        - RABBIT
+        - BIRD
+        - FISH
+        - OTHER
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 'Código de erro HTTP'
+          example: 500
+        status:
+          type: string
+          description: 'Descrição do status HTTP'
+          example: 'Internal Server Error'
+        message:
+          type: string
+          description: 'Mensagem de erro detalhada'
+          example: 'Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.'
+  responses:
+    '400':
+      description: 'Bad Request'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '401':
+      description: 'Unauthorized'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '403':
+      description: 'Forbidden'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '404':
+      description: 'Not Found'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '409':
+      description: 'Conflict'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '500':
+      description: 'Internal Server Error'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

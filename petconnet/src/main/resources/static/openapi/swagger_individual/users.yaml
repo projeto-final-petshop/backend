@@ -3,27 +3,25 @@ info:
   title: 'API Petconnect'
   description: |-
     
-    ## Validações dos Campos para Users e Pets
+    ## Validações dos Campos
     
     ### `id`, `createdAt`, `updatedAt`
     * Estes campos são gerados automaticamente pelo sistema e não pode ser preenchido manualmente.
     
-    ## Validações dos Campos para Users
-    
-    ### `username`
+    ### `username` (email do usuário)
     * Deve ser único no sistema.
-    * Deve seguir um formato de email válido (ex: exemplo@email.com)
+    * Deve seguir um formato de email válido 
     * Não deve conter caracteres especiais ou espaços em branco.
-    ### `name`
+    ### `name` (nome do usuário)
     * Deve ter no mínimo 3 caracteres.
     * Deve conter nome e sobrenome.
     * Não deve conter apenas números ou símbolos.
     * Não deve conter caracteres especiais que não sejam permitidos (ex: &, #, @).
-    ### `documentNumber`
+    ### `documentNumber` (número de documento tipo CPF)
     * Deve ter exatamente 11 caracteres.
     * Deve ser um número de CPF válido (formato e dígito verificador corretos).
     * Não deve conter letras ou caracteres especiais.
-    ### `password`
+    ### `password` (senha)
     * **Comprimento mínimo de 8 caracteres**: 
       Essa medida ajuda a aumentar a complexidade da senha, tornando-a mais difícil de ser adivinhada por meio de ataques de força bruta.
     * **Inclusão de pelo menos uma letra maiúscula**: 
@@ -34,8 +32,10 @@ info:
       A utilização de números aumenta ainda mais a complexidade da senha, tornando-a mais resistente a ataques.
     * **Inclusão de pelo menos um caractere especial**: 
       A presença de caracteres especiais, como `!@#$%^&*()-+`, contribui para a aleatoriedade da senha e dificulta sua predição.
+    
+    As mensagens de erro e os status estão na planilha .xls anexa.
 
-  version: 1.0.0
+  version: 1.0.1
 servers:
   - url: 'http://localhost:8888/api/v1'
 tags:
@@ -46,8 +46,7 @@ paths:
     post:
       summary: 'Registra um novo usuário'
       description: 'Cadastra um novo usuário no sistema.'
-      tags:
-        - user
+      tags: [ user ]
       operationId: 'registerUser'
       requestBody:
         required: true
@@ -68,11 +67,10 @@ paths:
           $ref: "#/components/responses/409"
         '500':
           $ref: "#/components/responses/500"
-  /users/{id}:
+  /users/{userId}:
     put:
       summary: 'Atualiza um usuário existente'
-      tags:
-        - user
+      tags: [ user ]
       operationId: 'updateUser'
       requestBody:
         required: true
@@ -81,7 +79,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateUserRequest"
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           description: 'Identificador único do usuário'
@@ -109,11 +107,10 @@ paths:
           $ref: "#/components/responses/500"
     get:
       summary: 'Recupera um usuário pelo ID'
-      tags:
-        - user
+      tags: [ user ]
       operationId: 'getUserById'
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           description: 'Identificador único do usuário'
@@ -135,11 +132,34 @@ paths:
           $ref: "#/components/responses/404"
         '500':
           $ref: "#/components/responses/500"
+    delete:
+      summary: 'Excluir usuário por ID'
+      description: 'Exclui um usuário com base em seu identificador exclusivo.'
+      tags: [ user ]
+      operationId: 'deleteUser'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: 'O ID do usuário a ser excluído.'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 'User deleted successfully.'
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
   /users/list:
     get:
       summary: 'Recupera uma lista de todos os usuários'
-      tags:
-        - user
+      tags: [ user ]
       operationId: 'getAllUsers'
       responses:
         '200':
@@ -159,8 +179,7 @@ paths:
   /users/{userId}/pets:
     get:
       summary: 'Recupera um usuário e seus pets associados'
-      tags:
-        - user
+      tags: [ user ]
       operationId: 'getUserAndPets'
       parameters:
         - name: userId
@@ -189,8 +208,7 @@ paths:
     get:
       summary: 'Obter usuário por email'
       description: 'Recupera informações de um usuário específico com base em seu email.'
-      tags:
-        - user
+      tags: [ user ]
       operationId: 'getUserByUsername'
       parameters:
         - name: username
@@ -223,6 +241,7 @@ components:
         - name
         - documentNumber
         - password
+        - confirmPassword
       properties:
         username:
           type: string
@@ -259,6 +278,17 @@ components:
             Senha do usuário para autenticação na plataforma.
             Para garantir a segurança da conta, a senha deve conter no mínimo 8 caracteres, 
             incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial. 
+            Evite senhas fáceis de adivinhar, como datas de nascimento ou nomes de familiares.
+          example: '96L3@9f0'
+        confirmPassword:
+          type: string
+          format: password
+          minLength: 8
+          pattern: "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$"
+          description: |-
+            Confirmação da senha do usuário para autenticação na plataforma.
+            Para garantir a segurança da conta, a senha deve conter no mínimo 8 caracteres, 
+            incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.
             Evite senhas fáceis de adivinhar, como datas de nascimento ou nomes de familiares.
           example: '96L3@9f0'
     UpdateUserRequest:
@@ -437,9 +467,11 @@ components:
           description: 'Cor do pet'
           example: 'Golden'
         animalType:
-          type: string
-          description: 'Tipo de animal'
-          example: 'Dog'
+          type: array
+          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+          example: 'DOG'
+          items:
+            $ref: '#/components/schemas/AnimalType'
         birthdate:
           type: string
           format: date
@@ -459,6 +491,16 @@ components:
             Data e hora da última atualização das informações do pet no sistema. 
             Esta informação é atualizada automaticamente a cada alteração nos dados do pet.
           example: "2024-04-15T13:15:39"
+    AnimalType:
+      type: string
+      description: 'Tipo do animal (e.g., Cachorro, Gato, Coelho, Pássaro, Peixe e outros). Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+      enum:
+        - DOG
+        - CAT
+        - RABBIT
+        - BIRD
+        - FISH
+        - OTHER
     ErrorResponse:
       type: object
       properties:
