@@ -1,5 +1,9 @@
 package br.com.projetofinal.petconnet.core.security;
 
+import br.com.projetofinal.petconnet.core.security.jwt.JwtAuthenticationFilter;
+import br.com.projetofinal.petconnet.core.security.jwt.JwtProvider;
+import br.com.projetofinal.petconnet.core.security.service.CustomUserDetailsServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -8,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
@@ -22,7 +27,11 @@ import java.util.Collections;
  * autorização, CORS e CSRF.
  */
 @Configuration
+@AllArgsConstructor
 public class ApiSecurityConfig {
+
+    private final JwtProvider jwtProvider;
+    private final CustomUserDetailsServiceImpl userDetailsService;
 
     /**
      * Define a cadeia de filtros de segurança padrão.
@@ -75,13 +84,15 @@ public class ApiSecurityConfig {
                     return config;
                 }))
                 .csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)
-                        .ignoringRequestMatchers("/api/v1/**", "/users/register")
+                        .ignoringRequestMatchers("/api/v1/**", "/users/register", "/auth/login", "/login")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), ExceptionTranslationFilter.class)
+                .exceptionHandling(Customizer.withDefaults())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/actuator/**", "/address/**", "/pets/**",
                                 "/users/list", "/users/{userId}/**", "/users/{username}").authenticated()
-                        .requestMatchers("/api/v1/**", "/users/register", "/login").permitAll())
+                        .requestMatchers("/api/v1/**", "/users/register", "/login", "/auth/login").permitAll())
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
@@ -99,6 +110,11 @@ public class ApiSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtProvider, userDetailsService);
     }
 
 }
