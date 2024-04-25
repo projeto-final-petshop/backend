@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
-@CrossOrigin("*")
 public class UserController {
 
     /**
@@ -63,9 +62,9 @@ public class UserController {
      * @return Retorna um {@link ResponseEntity} contendo o objeto de resposta do usuário e código HTTP 200 (OK) se
      * encontrado, caso contrário, retorna um erro apropriado.
      */
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable(name = "userId") Long userId) {
-        UserResponse response = userService.getUserById(userId);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable(name = "id") Long id) {
+        UserResponse response = userService.getUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -83,10 +82,10 @@ public class UserController {
      * @return Retorna um {@link ResponseEntity} com código HTTP 200 (OK) e uma mensagem de sucesso caso a atualização
      * seja realizada com sucesso, caso contrário, retorna um erro apropriado.
      */
-    @PutMapping("/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable(name = "userId") Long userId,
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable(name = "id") Long id,
                                              @RequestBody UpdateUserRequest request) {
-        userService.updateUser(userId, request);
+        userService.updateUser(id, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -105,16 +104,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/{userId}/pets")
-    public ResponseEntity<UserListResponse> getUserAndPets(@PathVariable(name = "userId") Long userId) {
-        UserListResponse response = userService.getUserAndPets(userId);
+    @GetMapping("/{id}/pets")
+    public ResponseEntity<UserListResponse> getUserAndPets(@PathVariable(name = "id") Long id) {
+        UserListResponse response = userService.getUserAndPets(id);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") Long id) {
         try {
-            userService.deleteUser(userId);
+            userService.deleteUser(id);
             return ResponseEntity.noContent().build();
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.notFound().build();

@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -32,4 +34,5 @@ public class UserResponse {
 
     private LocalDateTime updatedAt;
 
+    private List<List<GrantedAuthority>> authorities;
 }

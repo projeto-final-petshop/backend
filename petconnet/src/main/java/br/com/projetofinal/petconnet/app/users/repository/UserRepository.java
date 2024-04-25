@@ -27,6 +27,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     Users findByUsernameAndPassword(String username, String password);
 
-    Optional<Object> findByDocumentNumber(String documentNumber);
+    Optional<Users> findByDocumentNumber(String documentNumber);
 
 }

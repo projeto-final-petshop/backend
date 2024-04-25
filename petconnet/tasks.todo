@@ -1,0 +1,8 @@
+TODO: Implementar Remember
+TODO: Implementar exclusão de cookies (JSESSIONID) ao efetuar o Logout
+TODO: Implementar token jwt
+TODO: Logado com sucesso > gerar token, guardar no redis
+TODO: Logado sem sucesso
+
+
+LOGIN > DASHBOARD DO USUÁRIO

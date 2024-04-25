@@ -9,6 +9,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Users {
+public class Users implements UserDetails {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,5 +67,23 @@ public class Users {
     @UpdateTimestamp
     @Column(updatable = false, columnDefinition = "datetime")
     private LocalDateTime updatedAt;
+
+    @Transient
+    private boolean accountNonExpired;
+
+    @Transient
+    private boolean accountNonLocked;
+
+    @Transient
+    private boolean credentialsNonExpired;
+
+    @Transient
+    private boolean enabled;
+
+    @Transient
+    private List<GrantedAuthority> authorities;
+
+    @Transient
+    private String role;
 
 }
