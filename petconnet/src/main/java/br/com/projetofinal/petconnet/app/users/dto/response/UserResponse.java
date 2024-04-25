@@ -26,7 +26,7 @@ public class UserResponse {
     private String name;
 
     @CPF
-    private String documentNumber;
+    private String cpf;
 
     private LocalDateTime createdAt;
 

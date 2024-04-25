@@ -43,7 +43,7 @@ public class Users {
      */
     @CPF
     @Column(unique = true)
-    private String documentNumber;
+    private String cpf;
 
     /**
      * A senha deve ter no mínimo 8 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e

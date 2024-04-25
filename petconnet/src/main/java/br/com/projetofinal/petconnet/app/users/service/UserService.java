@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Classe responsável por operações de usuário.
@@ -59,7 +58,7 @@ public class UserService {
         log.info("[ User Service - createUser ] --- Cadastrando um novo usuário com username {}",
                 request.getUsername());
         userHelper.validateUsernameExists(request.getUsername());
-        userHelper.validateDocumentNumberExists(request.getDocumentNumber());
+        userHelper.validateDocumentNumberExists(request.getCpf());
         Users savedUser = userHelper.createUser(request);
         log.info("[ User Service - createUser ] --- Usuário cadastrado com sucesso: {}", savedUser);
         return UserMapper.userMapper().toRegisterUserResponse(savedUser);

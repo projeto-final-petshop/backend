@@ -22,7 +22,7 @@ public class RegisterUserRequest {
     private String name;
 
     @CPF
-    private String documentNumber;
+    private String cpf;
 
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String password;
