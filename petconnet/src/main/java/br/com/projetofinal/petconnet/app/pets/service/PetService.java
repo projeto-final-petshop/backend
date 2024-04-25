@@ -7,7 +7,7 @@ import br.com.projetofinal.petconnet.app.pets.entity.Pets;
 import br.com.projetofinal.petconnet.app.pets.helper.PetHelper;
 import br.com.projetofinal.petconnet.app.pets.mapper.PetMapper;
 import br.com.projetofinal.petconnet.app.pets.repository.PetRepository;
-import br.com.projetofinal.petconnet.app.users.entity.Users;
+import br.com.projetofinal.petconnet.app.users.entity.User;
 import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
 import br.com.projetofinal.petconnet.core.exceptions.errors.pets.PetListException;
 import br.com.projetofinal.petconnet.core.exceptions.errors.pets.PetNotFoundException;
@@ -33,7 +33,7 @@ public class PetService {
     @Transactional
     public PetResponse createPet(PetRequest petRequest) {
 
-        Users user = userRepository.findById(petRequest.getUserId())
+        User user = userRepository.findById(petRequest.getUserId())
                 .orElseThrow(UsernameNotFoundException::new);
 
         Pets pet = PetMapper.petMapper().petRequestToPet(petRequest);

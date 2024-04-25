@@ -1,16 +1,16 @@
 package br.com.projetofinal.petconnet.app.users.repository;
 
-import br.com.projetofinal.petconnet.app.users.entity.Users;
+import br.com.projetofinal.petconnet.app.users.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 /**
- * Repositório para operações com a entidade {@link Users}.
+ * Repositório para operações com a entidade {@link User}.
  * <p>
  * Provê métodos para persistir, recuperar e excluir usuários do banco de dados.
  */
-public interface UserRepository extends JpaRepository<Users, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsername(String username);
 
@@ -20,13 +20,13 @@ public interface UserRepository extends JpaRepository<Users, Long> {
      * @param username
      *         Email do usuáiro
      *
-     * @return Retorna um {@link Optional} contendo o objeto {@link Users} encontrado, ou vazio se o usuário não for
+     * @return Retorna um {@link Optional} contendo o objeto {@link User} encontrado, ou vazio se o usuário não for
      * encontrado.
      */
-    Optional<Users> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
-    Users findByUsernameAndPassword(String username, String password);
+    User findByUsernameAndPassword(String username, String password);
 
-    Optional<Object> findByDocumentNumber(String documentNumber);
+    Optional<User> findByCpf(String documentNumber);
 
 }

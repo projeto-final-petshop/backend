@@ -8,7 +8,7 @@ import br.com.projetofinal.petconnet.app.users.dto.request.UpdateUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.response.RegisterUserResponse;
 import br.com.projetofinal.petconnet.app.users.dto.response.UserListResponse;
 import br.com.projetofinal.petconnet.app.users.dto.response.UserResponse;
-import br.com.projetofinal.petconnet.app.users.entity.Users;
+import br.com.projetofinal.petconnet.app.users.entity.User;
 import br.com.projetofinal.petconnet.app.users.helper.UserHelper;
 import br.com.projetofinal.petconnet.app.users.mapper.UserMapper;
 import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
@@ -59,7 +59,7 @@ public class UserService {
                 request.getUsername());
         userHelper.validateUsernameExists(request.getUsername());
         userHelper.validateDocumentNumberExists(request.getCpf());
-        Users savedUser = userHelper.createUser(request);
+        User savedUser = userHelper.createUser(request);
         log.info("[ User Service - createUser ] --- Usuário cadastrado com sucesso: {}", savedUser);
         return UserMapper.userMapper().toRegisterUserResponse(savedUser);
     }
@@ -72,7 +72,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
         log.info("[ User Service - getAllUsers ] --- Listando todos os usuários");
-        List<Users> users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
         return userHelper.toUserResponseList(users);
     }
 
@@ -89,7 +89,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUserById(Long id) {
         log.info("[ User Service - getUserById ] --- Buscando usuário com ID: {}", id);
-        Users user = userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("[ User Service - getUserById ] --- Usuário com o ID {} não encontrado.", id);
                     return new UsernameNotFoundException();
@@ -112,7 +112,7 @@ public class UserService {
     @Transactional
     public void updateUser(Long id, UpdateUserRequest request) {
         log.info("[ User Service - updateUser ] --- Atualizando usuário com ID: {}", id);
-        Users user = userHelper.findAndValidateUser(id);
+        User user = userHelper.findAndValidateUser(id);
         userHelper.updateUserFields(user, request);
         log.info("[ User Service - updateUser ] --- Usuário atualizado com sucesso: {}", user);
         userHelper.handleUserUpdate(user);
@@ -131,14 +131,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUserByUsername(String username) {
         log.info("[ User Service - getUserByUsername ] --- Buscando usuário com username: {}", username);
-        Users user = userHelper.findUserByUsername(username);
+        User user = userHelper.findUserByUsername(username);
         return userHelper.toUserResponse(user);
     }
 
     @Transactional(readOnly = true)
     public UserListResponse getUserAndPets(Long userId) {
 
-        Users user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.error("[ User Service - getUserAndPets ] --- Usuário com o ID {} não encontrado.", userId);
                     return new UsernameNotFoundException();
@@ -171,7 +171,7 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long userId) {
-        Users user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.error("[ User Service - deleteUser ] --- Usuário com o ID {} não encontrado.", userId);
                     return new UsernameNotFoundException();

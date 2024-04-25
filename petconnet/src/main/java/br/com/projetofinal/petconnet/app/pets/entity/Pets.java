@@ -1,6 +1,6 @@
 package br.com.projetofinal.petconnet.app.pets.entity;
 
-import br.com.projetofinal.petconnet.app.users.entity.Users;
+import br.com.projetofinal.petconnet.app.users.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
@@ -55,6 +55,6 @@ public class Pets {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
-    private Users user;
+    private User user;
 
 }

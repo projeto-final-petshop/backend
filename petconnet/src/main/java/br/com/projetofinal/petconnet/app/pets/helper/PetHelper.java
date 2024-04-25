@@ -3,7 +3,7 @@ package br.com.projetofinal.petconnet.app.pets.helper;
 import br.com.projetofinal.petconnet.app.pets.dto.request.PetRequest;
 import br.com.projetofinal.petconnet.app.pets.entity.Pets;
 import br.com.projetofinal.petconnet.app.pets.repository.PetRepository;
-import br.com.projetofinal.petconnet.app.users.entity.Users;
+import br.com.projetofinal.petconnet.app.users.entity.User;
 import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
 import br.com.projetofinal.petconnet.core.exceptions.errors.pets.PetNotFoundException;
 import br.com.projetofinal.petconnet.core.exceptions.errors.users.newusers.UsernameNotFoundException;
@@ -24,7 +24,7 @@ public class PetHelper {
 
     public Pets saveUserAndPet(Pets pet) {
         Long userId = pet.getUser().getId();
-        Users user = userRepository.findById(userId).orElseThrow(UsernameNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UsernameNotFoundException::new);
         pet.setUser(user);
         return petRepository.save(pet);
     }

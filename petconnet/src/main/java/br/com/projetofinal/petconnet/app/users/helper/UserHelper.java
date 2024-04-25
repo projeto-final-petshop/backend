@@ -4,7 +4,7 @@ import br.com.projetofinal.petconnet.app.users.dto.request.RegisterUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.request.UpdateUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.response.RegisterUserResponse;
 import br.com.projetofinal.petconnet.app.users.dto.response.UserResponse;
-import br.com.projetofinal.petconnet.app.users.entity.Users;
+import br.com.projetofinal.petconnet.app.users.entity.User;
 import br.com.projetofinal.petconnet.app.users.mapper.UserMapper;
 import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
 import br.com.projetofinal.petconnet.core.exceptions.errors.users.newusers.*;
@@ -62,15 +62,15 @@ public class UserHelper {
      * @param request
      *         Objeto contendo os dados do usuário a ser cadastrado.
      *
-     * @return Retorna o objeto {@link Users} representando o usuário cadastrado.
+     * @return Retorna o objeto {@link User} representando o usuário cadastrado.
      *
      * @throws UsernameAlreadyExistsException
      *         Se o username informado já existir.
      * @throws InvalidFieldException
      *         Se houver algum erro de validação nos dados do usuário.
      */
-    public Users createUser(RegisterUserRequest request) {
-        Users user = UserMapper.userMapper().toUsers(request);
+    public User createUser(RegisterUserRequest request) {
+        User user = UserMapper.userMapper().toUsers(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         return saveUser(user);
@@ -81,11 +81,11 @@ public class UserHelper {
      * cadastro de usuário.
      *
      * @param savedUser
-     *         Objeto {@link Users} representando o usuário cadastrado.
+     *         Objeto {@link User} representando o usuário cadastrado.
      *
      * @return Retorna o objeto {@link RegisterUserResponse} contendo os dados do usuário cadastrado.
      */
-    public RegisterUserResponse toRegisterUserResponse(Users savedUser) {
+    public RegisterUserResponse toRegisterUserResponse(User savedUser) {
         return UserMapper.userMapper().toRegisterUserResponse(savedUser);
     }
 
@@ -102,21 +102,21 @@ public class UserHelper {
     }
 
     private boolean documentNumberExists(String documentNumber) {
-        return userRepository.findByDocumentNumber(documentNumber).isPresent();
+        return userRepository.findByCpf(documentNumber).isPresent();
     }
 
     /**
      * Salva o usuário no banco de dados.
      *
      * @param user
-     *         Objeto {@link Users} representando o usuário a ser salvo.
+     *         Objeto {@link User} representando o usuário a ser salvo.
      *
-     * @return Retorna o objeto {@link Users} representando o usuário salvo no banco de dados.
+     * @return Retorna o objeto {@link User} representando o usuário salvo no banco de dados.
      *
      * @throws InvalidFieldException
      *         Se houver algum erro de validação nos dados do usuário.
      */
-    private Users saveUser(Users user) throws InvalidFieldException {
+    private User saveUser(User user) throws InvalidFieldException {
         try {
             return userRepository.save(user);
         } catch (InvalidFieldException e) {
@@ -133,12 +133,12 @@ public class UserHelper {
      * @param id
      *         Identificador do usuário.
      *
-     * @return Retorna o objeto {@link Users} representando o usuário encontrado.
+     * @return Retorna o objeto {@link User} representando o usuário encontrado.
      *
      * @throws UsernameNotFoundException
      *         Se o usuário não for encontrado.
      */
-    public Users findUserById(Long id) {
+    public User findUserById(Long id) {
         log.info("User Service --- Buscando usuário com ID {}", id);
         return userRepository.findById(id)
                 .orElseThrow(() -> {
@@ -153,12 +153,12 @@ public class UserHelper {
      * @param username
      *         Email de usuário.
      *
-     * @return Retorna o objeto {@link Users} representando o usuário encontrado.
+     * @return Retorna o objeto {@link User} representando o usuário encontrado.
      *
      * @throws UsernameNotFoundException
      *         Se o usuário não for encontrado.
      */
-    public Users findUserByUsername(String username) {
+    public User findUserByUsername(String username) {
         log.info("User Service --- Buscando usuário com username {}", username);
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> {
@@ -168,28 +168,28 @@ public class UserHelper {
     }
 
     /**
-     * Converte um objeto {@link Users} para um objeto {@link UserResponse}. <br> Utilizado na resposta da API para
+     * Converte um objeto {@link User} para um objeto {@link UserResponse}. <br> Utilizado na resposta da API para
      * operações de busca de usuário.
      *
      * @param user
-     *         Objeto {@link Users} representando o usuário.
+     *         Objeto {@link User} representando o usuário.
      *
      * @return Retorna o objeto {@link UserResponse} contendo os dados do usuário.
      */
-    public UserResponse toUserResponse(Users user) {
+    public UserResponse toUserResponse(User user) {
         return UserMapper.userMapper().toUserResponse(user);
     }
 
     /**
-     * Converte uma lista de objetos {@link Users} para uma lista de objetos {@link UserResponse}. <br> Utilizado na
+     * Converte uma lista de objetos {@link User} para uma lista de objetos {@link UserResponse}. <br> Utilizado na
      * resposta da API para listagem de usuários.
      *
      * @param users
-     *         Lista de objetos {@link Users} representando os usuários.
+     *         Lista de objetos {@link User} representando os usuários.
      *
      * @return Retorna a lista de objetos {@link UserResponse} contendo os dados dos usuários.
      */
-    public List<UserResponse> toUserResponseList(List<Users> users) {
+    public List<UserResponse> toUserResponseList(List<User> users) {
         return UserMapper.userMapper().toUserResponseList(users);
     }
 
@@ -201,13 +201,13 @@ public class UserHelper {
      * @param id
      *         Identificador do usuário.
      *
-     * @return Retorna o objeto {@link Users} representando o usuário encontrado.
+     * @return Retorna o objeto {@link User} representando o usuário encontrado.
      *
      * @throws UsernameNotFoundException
      *         Se o usuário não for encontrado.
      */
-    public Users findAndValidateUser(Long id) {
-        Users user = findUserById(id);
+    public User findAndValidateUser(Long id) {
+        User user = findUserById(id);
         if (user == null) {
             throw new UsernameNotFoundException();
         }
@@ -218,7 +218,7 @@ public class UserHelper {
      * Atualiza os campos do usuário com base nos dados informados.
      *
      * @param user
-     *         Objeto {@link Users} representando o usuário a ser atualizado.
+     *         Objeto {@link User} representando o usuário a ser atualizado.
      * @param request
      *         Objeto {@link UpdateUserRequest} contendo os dados de atualização.
      *
@@ -227,7 +227,7 @@ public class UserHelper {
      * @throws InactiveUserException
      *         Se o usuário estiver inativo.
      */
-    public void updateUserFields(Users user, UpdateUserRequest request) {
+    public void updateUserFields(User user, UpdateUserRequest request) {
         if (!user.getUsername().equals(request.getUsername())) {
             validateUsernameExists(request.getUsername());
             user.setUsername(request.getUsername());
@@ -241,12 +241,12 @@ public class UserHelper {
      * Trata a lógica de atualização do usuário e persisti os dados no banco.
      *
      * @param user
-     *         Objeto {@link Users} representando o usuário atualizado.
+     *         Objeto {@link User} representando o usuário atualizado.
      *
      * @return Retorna o objeto {@link UserResponse} contendo os dados do usuário atualizado.
      */
-    public UserResponse handleUserUpdate(Users user) {
-        Users savedUser = userRepository.save(user);
+    public UserResponse handleUserUpdate(User user) {
+        User savedUser = userRepository.save(user);
         return UserMapper.userMapper().toUserResponse(savedUser);
     }
 
@@ -258,12 +258,12 @@ public class UserHelper {
      * @param id
      *         Identificador do usuário.
      *
-     * @return Retorna o objeto {@link Users} representando o usuário encontrado.
+     * @return Retorna o objeto {@link User} representando o usuário encontrado.
      *
      * @throws UsernameNotFoundException
      *         Se o usuário não for encontrado.
      */
-    public Users findUserAndHandleNotFound(Long id) {
+    public User findUserAndHandleNotFound(Long id) {
         try {
             return findUserById(id);
         } catch (UsernameNotFoundException e) {

@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.app.users.web;
+package br.com.projetofinal.petconnet.app.users.controller;
 
 import br.com.projetofinal.petconnet.app.users.dto.request.RegisterUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.request.UpdateUserRequest;
