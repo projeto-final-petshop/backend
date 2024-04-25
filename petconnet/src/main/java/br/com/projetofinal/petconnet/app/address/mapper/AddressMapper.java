@@ -4,6 +4,7 @@ import br.com.projetofinal.petconnet.app.address.dto.AddressRequest;
 import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;
 import br.com.projetofinal.petconnet.app.address.entity.Address;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -20,6 +21,7 @@ public interface AddressMapper {
         return INSTANCE;
     }
 
+    @Mapping(source = "user.id", target = "userId")
     AddressResponse toAddressResponse(Address address);
 
     Address requestToAddress(AddressRequest request);

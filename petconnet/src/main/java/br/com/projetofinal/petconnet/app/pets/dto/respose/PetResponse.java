@@ -23,6 +23,7 @@ public class PetResponse {
     private String color;
     private String animalType;
     private Date birthdate;
+//    private AnimalType animalType;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

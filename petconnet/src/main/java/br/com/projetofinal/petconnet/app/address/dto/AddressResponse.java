@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressResponse {
 
+    private Long id;
+
     private String cep;
     private String logradouro;
     private String complemento;
@@ -19,5 +21,7 @@ public class AddressResponse {
     private String localidade;
     private String uf;
     private String numero;
+
+    private Long userId;
 
 }

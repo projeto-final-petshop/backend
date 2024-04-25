@@ -1,4 +1,4 @@
-package br.com.projetofinal.petconnet.app.address.web;
+package br.com.projetofinal.petconnet.app.address.controller;
 
 import br.com.projetofinal.petconnet.app.address.dto.AddressRequest;
 import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;

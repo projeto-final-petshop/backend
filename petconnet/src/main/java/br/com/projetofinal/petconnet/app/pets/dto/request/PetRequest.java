@@ -31,6 +31,8 @@ public class PetRequest {
 
     private String animalType;
 
+//    private AnimalType animalType;
+
     private Long userId;
 
 }

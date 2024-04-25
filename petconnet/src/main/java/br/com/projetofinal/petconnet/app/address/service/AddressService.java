@@ -8,8 +8,11 @@ import br.com.projetofinal.petconnet.app.address.entity.Address;
 import br.com.projetofinal.petconnet.app.address.helper.AddressHelper;
 import br.com.projetofinal.petconnet.app.address.mapper.AddressMapper;
 import br.com.projetofinal.petconnet.app.address.repository.AddressRepository;
+import br.com.projetofinal.petconnet.app.users.entity.User;
+import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
 import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressNotFoundException;
 import br.com.projetofinal.petconnet.core.exceptions.errors.address.AddressValidationException;
+import br.com.projetofinal.petconnet.core.exceptions.errors.users.newusers.UsernameNotFoundException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,8 @@ public class AddressService {
      * Cliente Feign para integração com a API de CEP.
      */
     private final ViaCepClient viaCepClient;
+
+    private final UserRepository userRepository;
 
     /**
      * Busca um endereço pelo CEP.
@@ -107,6 +112,10 @@ public class AddressService {
      */
     @Transactional
     public AddressResponse createAddress(AddressRequest request) {
+
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(UsernameNotFoundException::new);
+
         AddressHelper.validateCep(request.getCep());
         AddressResponse viaCepResponse;
         try {
@@ -115,8 +124,12 @@ public class AddressService {
             throw addressUtil.handleExternalServiceException(ex);
         }
         Address address = AddressHelper.buildAddressFromRequestAndResponse(request, viaCepResponse);
+
+        address.setUser(user);
         address = addressRepository.save(address);
+
         return AddressMapper.addressMapper().toAddressResponse(address);
+
     }
 
     /**

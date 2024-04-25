@@ -1,5 +1,6 @@
 package br.com.projetofinal.petconnet.app.users.entity;
 
+import br.com.projetofinal.petconnet.app.address.entity.Address;
 import br.com.projetofinal.petconnet.app.pets.entity.Pets;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -61,6 +62,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Pets> pet;
+
+    @OneToOne
+    private Address address;
 
     @CreationTimestamp
     @Column(updatable = false, columnDefinition = "datetime")

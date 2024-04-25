@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
   "name": "Mirella Gabrielly da Rocha",
-  "documentNumber": "83747383408",
+  "cpf": "83747383408",
   "password": "Ju1!@n36"
 }
 
@@ -32,11 +32,8 @@ Content-Type: application/json
   "documentNumber": "83747383408"
 }
 
-### Desativar usuário
-POST http://localhost:8888/api/v1/users/1/disable
-
-### Ativar usuário
-POST http://localhost:8888/api/v1/users/2/activate
+### Excluir usuário
+DELETE http://localhost:8888/api/v1/users/3
 
 ### Buscar usuário e listar seus pets
 GET http://localhost:8888/api/v1/users/1/pets

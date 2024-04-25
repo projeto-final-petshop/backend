@@ -1,5 +1,6 @@
 package br.com.projetofinal.petconnet.app.address.entity;
 
+import br.com.projetofinal.petconnet.app.users.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,7 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long addressId;
+    private Long id;
 
     @Pattern(regexp = "^\\d{8}$")
     @Column(nullable = false, length = 8)
@@ -37,5 +38,9 @@ public class Address {
     private String uf;
 
     private String numero;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "user_id")
+    private User user;
 
 }

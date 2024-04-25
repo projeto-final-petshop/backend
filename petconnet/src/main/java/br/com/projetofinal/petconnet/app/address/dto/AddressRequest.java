@@ -17,4 +17,6 @@ public class AddressRequest {
 
     private String numero;
 
+    private Long userId;
+
 }
