@@ -1,0 +1,28 @@
+### Buscar endereço por CEP
+GET http://localhost:8888/api/petconnet/address/80320090
+Accept: application/json
+
+### Listar endereços cadastrados
+GET http://localhost:8888/api/petconnet/address/list
+Accept: application/json
+
+### Cadastrar endereço
+POST http://localhost:8888/api/petconnet/address/register
+Content-Type: application/json
+
+{
+  "cep": "50010905",
+  "numero": "251"
+}
+
+### Atualizar endereço cadastrado por ID
+PUT http://localhost:8888/api/petconnet/address/3
+Content-Type: application/json
+
+{
+  "complemento": "Bloco C, Sala 301"
+}
+
+### Excluir endereço cadastrado por ID
+DELETE http://localhost:8888/api/petconnet/address/4
+Content-Type: application/json

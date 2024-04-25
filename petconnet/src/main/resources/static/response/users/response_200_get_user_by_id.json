@@ -1,0 +1,10 @@
+{
+  "id": 5,
+  "name": "Suzi M",
+  "username": "suzi@email.com",
+  "password": "12e@56T8",
+  "phone_number": "11998765432",
+  "active": true,
+  "created_at": "2024-03-26T09:27:45.47294",
+  "updated_at": "2024-03-26T09:29:10.616397"
+}

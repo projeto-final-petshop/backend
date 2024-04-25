@@ -28,7 +28,7 @@ A API utiliza arquitetura monolítica e oferece recursos para gerenciar pets, se
    `mvn clean install`
 4. Inicie a aplicação  
    `mvn spring-boot:run`
-5. A API estará disponível na URL: http://localhost:8888/api/petconnet
+5. A API estará disponível na URL: http://localhost:8888/api/v1
 
 ## Documentação
 

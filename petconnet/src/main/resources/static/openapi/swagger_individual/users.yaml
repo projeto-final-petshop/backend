@@ -1,0 +1,555 @@
+openapi: 3.0.3
+info:
+  title: 'API Petconnect'
+  description: |-
+    
+    ## Validações dos Campos
+    
+    ### `id`, `createdAt`, `updatedAt`
+    * Estes campos são gerados automaticamente pelo sistema e não pode ser preenchido manualmente.
+    
+    ### `username` (email do usuário)
+    * Deve ser único no sistema.
+    * Deve seguir um formato de email válido 
+    * Não deve conter caracteres especiais ou espaços em branco.
+    ### `name` (nome do usuário)
+    * Deve ter no mínimo 3 caracteres.
+    * Deve conter nome e sobrenome.
+    * Não deve conter apenas números ou símbolos.
+    * Não deve conter caracteres especiais que não sejam permitidos (ex: &, #, @).
+    ### `documentNumber` (número de documento tipo CPF)
+    * Deve ter exatamente 11 caracteres.
+    * Deve ser um número de CPF válido (formato e dígito verificador corretos).
+    * Não deve conter letras ou caracteres especiais.
+    ### `password` (senha)
+    * **Comprimento mínimo de 8 caracteres**: 
+      Essa medida ajuda a aumentar a complexidade da senha, tornando-a mais difícil de ser adivinhada por meio de ataques de força bruta.
+    * **Inclusão de pelo menos uma letra maiúscula**: 
+      A presença de letras maiúsculas diversifica o conjunto de caracteres possíveis, dificultando a tentativa de adivinhação da senha.
+    * **Inclusão de pelo menos uma letra minúscula**: 
+      A combinação de letras maiúsculas e minúsculas torna a senha mais robusta e segura.
+    * **Inclusão de pelo menos um número**: 
+      A utilização de números aumenta ainda mais a complexidade da senha, tornando-a mais resistente a ataques.
+    * **Inclusão de pelo menos um caractere especial**: 
+      A presença de caracteres especiais, como `!@#$%^&*()-+`, contribui para a aleatoriedade da senha e dificulta sua predição.
+    
+    As mensagens de erro e os status estão na planilha .xls anexa.
+
+  version: 1.0.1
+servers:
+  - url: 'http://localhost:8888/api/v1'
+tags:
+  - name: user
+    description: "API de Usuários"
+paths:
+  /users/register:
+    post:
+      summary: 'Registra um novo usuário'
+      description: 'Cadastra um novo usuário no sistema.'
+      tags: [ user ]
+      operationId: 'registerUser'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+      responses:
+        '201':
+          description: 'Usuário registrado com sucesso'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterUserResponse"
+        '400':
+          $ref: "#/components/responses/400"
+        '409':
+          $ref: "#/components/responses/409"
+        '500':
+          $ref: "#/components/responses/500"
+  /users/{userId}:
+    put:
+      summary: 'Atualiza um usuário existente'
+      tags: [ user ]
+      operationId: 'updateUser'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: 'Identificador único do usuário'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Usuário atualizado com sucesso'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: 'Mensagem de sucesso da atualização'
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    get:
+      summary: 'Recupera um usuário pelo ID'
+      tags: [ user ]
+      operationId: 'getUserById'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: 'Identificador único do usuário'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Usuário recuperado com sucesso'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      summary: 'Excluir usuário por ID'
+      description: 'Exclui um usuário com base em seu identificador exclusivo.'
+      tags: [ user ]
+      operationId: 'deleteUser'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: 'O ID do usuário a ser excluído.'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 'User deleted successfully.'
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /users/list:
+    get:
+      summary: 'Recupera uma lista de todos os usuários'
+      tags: [ user ]
+      operationId: 'getAllUsers'
+      responses:
+        '200':
+          description: 'Lista de usuários recuperada com sucesso'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '500':
+          $ref: "#/components/responses/500"
+  /users/{userId}/pets:
+    get:
+      summary: 'Recupera um usuário e seus pets associados'
+      tags: [ user ]
+      operationId: 'getUserAndPets'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: 'Identificador único do usuário'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Usuário e seus pets recuperados com sucesso.'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserListResponse"
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /users/{username}:
+    get:
+      summary: 'Obter usuário por email'
+      description: 'Recupera informações de um usuário específico com base em seu email.'
+      tags: [ user ]
+      operationId: 'getUserByUsername'
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: 'O email do usuário a ser recuperado'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Usuário recuperado com sucesso.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: "#/components/responses/401"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+components:
+  schemas:
+    RegisterUserRequest:
+      type: object
+      required:
+        - username
+        - name
+        - documentNumber
+        - password
+        - confirmPassword
+      properties:
+        username:
+          type: string
+          description: |-
+            Endereço de email do usuário, utilizado para autenticação e comunicação. 
+            O email deve ser único e válido, seguindo as convenções padrão de endereços eletrônicos. 
+            Este campo será utilizado para login e envio de notificações importantes.
+          format: email
+          example: 'mirella.gabrielly.darocha@jmmarcenaria.com.br'
+        name:
+          type: string
+          minLength: 3
+          description: |-
+            Nome completo do usuário, composto por nome e sobrenome. 
+            Este nome será utilizado para identificação do usuário e personalização da experiência. 
+            Evite abreviações e caracteres especiais que possam dificultar a leitura.
+          example: 'Mirella Gabrielly da Rocha'
+        documentNumber:
+          type: string
+          minLength: 11
+          maxLength: 11
+          format: cpf  # Especifique o formato personalizado utilizado para validação do CPF
+          description: |-
+            Número do CPF do usuário, utilizado para validação e fins fiscais. 
+            O CPF deve ser único, válido e seguir o formato correto (11 dígitos). 
+            Este campo é importante para garantir a segurança e confiabilidade das informações do usuário.
+          example: '83747383408'
+        password:
+          type: string
+          format: password
+          minLength: 8
+          pattern: "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$"
+          description: |-
+            Senha do usuário para autenticação na plataforma.
+            Para garantir a segurança da conta, a senha deve conter no mínimo 8 caracteres, 
+            incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial. 
+            Evite senhas fáceis de adivinhar, como datas de nascimento ou nomes de familiares.
+          example: '96L3@9f0'
+        confirmPassword:
+          type: string
+          format: password
+          minLength: 8
+          pattern: "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$"
+          description: |-
+            Confirmação da senha do usuário para autenticação na plataforma.
+            Para garantir a segurança da conta, a senha deve conter no mínimo 8 caracteres, 
+            incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.
+            Evite senhas fáceis de adivinhar, como datas de nascimento ou nomes de familiares.
+          example: '96L3@9f0'
+    UpdateUserRequest:
+      type: object
+      required:
+        - id
+        - username
+        - name
+        - documentNumber
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 'Identificador único do usuário'
+        username:
+          type: string
+          description: |-
+            Endereço de email do usuário, utilizado para autenticação e comunicação. 
+            O email deve ser único e válido, seguindo as convenções padrão de endereços eletrônicos. 
+            Este campo será utilizado para login e envio de notificações importantes.
+          format: email
+          example: 'mirella.gabrielly.darocha@jmmarcenaria.com.br'
+        name:
+          type: string
+          minLength: 3
+          description: |-
+            Nome completo do usuário, composto por nome e sobrenome. 
+            Este nome será utilizado para identificação do usuário e personalização da experiência. 
+            Evite abreviações e caracteres especiais que possam dificultar a leitura.
+          example: 'Mirella Gabrielly da Rocha'
+        documentNumber:
+          type: string
+          minLength: 11
+          maxLength: 11
+          format: cpf  # Especifique o formato personalizado utilizado para validação do CPF
+          description: |-
+            Número do CPF do usuário, utilizado para validação e fins fiscais. 
+            O CPF deve ser único, válido e seguir o formato correto (11 dígitos). 
+            Este campo é importante para garantir a segurança e confiabilidade das informações do usuário.
+          example: '83747383408'
+    RegisterUserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: |-
+            Identificador único e imutável do usuário. 
+            Este ID é utilizado para referenciar o usuário de forma interna no sistema e não deve ser alterado.
+          example: 1
+        username:
+          type: string
+          description: |-
+            Endereço de email do usuário, utilizado para autenticação e comunicação. 
+            O email deve ser único e válido, seguindo as convenções padrão de endereços eletrônicos. 
+            Este campo será utilizado para login e envio de notificações importantes.
+          format: email
+          example: 'mirella.gabrielly.darocha@jmmarcenaria.com.br'
+        name:
+          type: string
+          minLength: 3
+          description: |-
+            Nome completo do usuário, composto por nome e sobrenome. 
+            Este nome será utilizado para identificação do usuário e personalização da experiência. 
+            Evite abreviações e caracteres especiais que possam dificultar a leitura.
+          example: 'Mirella Gabrielly da Rocha'
+        documentNumber:
+          type: string
+          minLength: 11
+          maxLength: 11
+          format: cpf  # Especifique o formato personalizado utilizado para validação do CPF
+          description: |-
+            Número do CPF do usuário, utilizado para validação e fins fiscais. 
+            O CPF deve ser único, válido e seguir o formato correto (11 dígitos). 
+            Este campo é importante para garantir a segurança e confiabilidade das informações do usuário.
+          example: '83747383408'
+        createdAt:
+          type: string
+          format: date-time
+          description: |-
+            Data e hora exatas da criação do usuário no sistema. 
+            Esta informação é registrada automaticamente e não pode ser alterada.
+          example: "2024-04-15T13:15:27.65681"
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: |-
+            Identificador único e imutável do usuário. 
+            Este ID é utilizado para referenciar o usuário de forma interna no sistema e não deve ser alterado.
+          example: 1
+        username:
+          type: string
+          description: |-
+            Email do usuário para autenticação e comunicação. 
+            Certifique-se de que o email informado seja único e válido, seguindo as convenções padrão de endereços eletrônicos. 
+            Este campo será utilizado para login e envio de notificações importantes.
+          format: email
+          example: 'mirella.gabrielly.darocha@jmmarcenaria.com.br'
+        name:
+          type: string
+          minLength: 3
+          description: |-
+            Nome completo do usuário, composto por nome e sobrenome. 
+            Este nome será utilizado para identificação do usuário e personalização da experiência. 
+            Evite abreviações e caracteres especiais que possam dificultar a leitura.
+          example: 'Mirella Gabrielly da Rocha'
+        documentNumber:
+          type: string
+          minLength: 11
+          maxLength: 11
+          format: cpf  # Especifique o formato personalizado utilizado para validação do CPF
+          description: |-
+            Número do CPF do usuário, utilizado para validação e fins fiscais. 
+            O CPF deve ser único, válido e seguir o formato correto (11 dígitos). 
+            Este campo é importante para garantir a segurança e confiabilidade das informações do usuário.
+          example: '83747383408'
+        createdAt:
+          type: string
+          format: date-time
+          description: |-
+            Data e hora exatas da criação do usuário no sistema. 
+            Esta informação é registrada automaticamente e não pode ser alterada.
+          example: "2024-04-15T13:15:27.65681"
+        updatedAt:
+          type: string
+          format: date-time
+          description: |-
+            Data e hora da última atualização das informações do usuário no sistema. 
+            Esta informação é atualizada automaticamente a cada alteração nos dados do usuário.
+          example: "2024-04-15T13:15:27.65681"
+    UserListResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: |-
+            Identificador único e imutável do usuário. 
+            Este ID é utilizado para referenciar o usuário de forma interna no sistema e não deve ser alterado.
+          example: 1
+        name:
+          type: string
+          minLength: 3
+          description: |-
+            Nome completo do usuário, composto por nome e sobrenome. 
+            Este nome será utilizado para identificação do usuário e personalização da experiência. 
+            Evite abreviações e caracteres especiais que possam dificultar a leitura.
+          example: 'Mirella Gabrielly da Rocha'
+        pets:
+          type: array
+          items:
+            $ref: "#/components/schemas/PetListResponse"
+    PetListResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: |-
+            Identificador único e imutável do pet. 
+            Este ID é utilizado para referenciar o pet de forma interna no sistema e não deve ser alterado.
+          example: 1
+        name:
+          type: string
+          description: 'Nome do pet'
+          example: 'Rex'
+        breed:
+          type: string
+          description: 'Raça do pet'
+          example: 'Golden Retriever'
+        color:
+          type: string
+          description: 'Cor do pet'
+          example: 'Golden'
+        animalType:
+          type: array
+          description: 'Tipo do animal - Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+          example: 'DOG'
+          items:
+            $ref: '#/components/schemas/AnimalType'
+        birthdate:
+          type: string
+          format: date
+          description: 'Data de nascimento do pet'
+          example: '31/12/2020'
+        createdAt:
+          type: string
+          format: date-time
+          description: |-
+            Data e hora exatas da criação do usuário no sistema. 
+            Esta informação é registrada automaticamente e não pode ser alterada.
+          example: "2024-04-15T13:15:39"
+        updatedAt:
+          type: string
+          format: date-time
+          description: |-
+            Data e hora da última atualização das informações do pet no sistema. 
+            Esta informação é atualizada automaticamente a cada alteração nos dados do pet.
+          example: "2024-04-15T13:15:39"
+    AnimalType:
+      type: string
+      description: 'Tipo do animal (e.g., Cachorro, Gato, Coelho, Pássaro, Peixe e outros). Para esta primeira etapa será do tipo String. Posteriormente será incluído um enum.'
+      enum:
+        - DOG
+        - CAT
+        - RABBIT
+        - BIRD
+        - FISH
+        - OTHER
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 'Código de erro HTTP'
+          example: 500
+        status:
+          type: string
+          description: 'Descrição do status HTTP'
+          example: 'Internal Server Error'
+        message:
+          type: string
+          description: 'Mensagem de erro detalhada'
+          example: 'Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.'
+  responses:
+    '400':
+      description: 'Bad Request'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '401':
+      description: 'Unauthorized'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '403':
+      description: 'Forbidden'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '404':
+      description: 'Not Found'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '409':
+      description: 'Conflict'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '500':
+      description: 'Internal Server Error'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

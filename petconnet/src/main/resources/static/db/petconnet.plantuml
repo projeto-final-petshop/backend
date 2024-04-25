@@ -1,0 +1,29 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class pets {
+   animal_type: varchar(255)
+   birthdate: datetime(6)
+   breed: varchar(255)
+   color: varchar(255)
+   created_at: datetime
+   name: varchar(255)
+   updated_at: datetime
+   user_id: bigint
+   id: bigint
+}
+class users {
+   created_at: datetime
+   document_number: varchar(255)
+   name: varchar(255)
+   password: varchar(255)
+   updated_at: datetime
+   username: varchar(255)
+   id: bigint
+}
+
+pets   -[#595959,plain]-^  users : "user_id:id"
+@enduml
