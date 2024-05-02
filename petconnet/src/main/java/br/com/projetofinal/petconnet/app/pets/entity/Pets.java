@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -21,7 +22,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Pets {
+@Table(name = "pets")
+public class Pets implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +41,9 @@ public class Pets {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthdate;
 
-    private String animalType;
-
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private AnimalType animalType;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AnimalType animalType;
 
     @CreationTimestamp
     @Column(updatable = false, columnDefinition = "datetime")
@@ -55,6 +55,7 @@ public class Pets {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
+    @ToString.Exclude
     private User user;
 
 }

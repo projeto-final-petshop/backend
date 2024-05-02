@@ -9,19 +9,26 @@ spring:
   devtools:
     add-properties: true
   datasource:
-    url: jdbc:mysql://localhost:3306/petconnet?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=America/Sao_Paulo
+    url: jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=America/Sao_Paulo
     username: root
     password: root
   jpa:
     open-in-view: true
-    show-sql: false
+    show-sql: true # show sql
     hibernate:
       ddl-auto: update
-  # Jackson (JacksonProperties)
-  jackson:
-    date-format: "dd/MM/yyyy HH:mm:ss" # Formato de data e hora padrão
-    locale: pt-BR # Localidade para formatação
-    time-zone: America/Sao_Paulo # Fuso horário padrão
+    properties:
+      hibernate:
+        format_sql: true # format sql
+
+springdoc:
+  api-docs:
+    version: openapi_3_0
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  show-actuator: true
+  default-consumes-media-type: application/json
 
 management:
   endpoints:
@@ -32,6 +39,7 @@ management:
 logging:
   level:
     web: DEBUG
+    br.com.projetofinal.petconnet: DEBUG
 
 feign-client:
   name: viacep

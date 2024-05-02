@@ -3,10 +3,10 @@ POST http://localhost:8888/api/v1/users/register
 Content-Type: application/json
 
 {
-  "username": "mirella.gabrielly.darocha@jmmarcenaria.com.br",
   "name": "Mirella Gabrielly da Rocha",
+  "username": "mirella@gmail.com.br",
   "cpf": "83747383408",
-  "password": "Ju1!@n36"
+  "password": "Pa$$w0rd123"
 }
 
 ### Buscar usuário por ID /{id}

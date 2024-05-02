@@ -1,6 +1,5 @@
 package br.com.projetofinal.petconnet.app.address.mapper;
 
-import br.com.projetofinal.petconnet.app.address.dto.AddressRequest;
 import br.com.projetofinal.petconnet.app.address.dto.AddressResponse;
 import br.com.projetofinal.petconnet.app.address.entity.Address;
 import org.mapstruct.Mapper;
@@ -23,10 +22,6 @@ public interface AddressMapper {
 
     @Mapping(source = "user.id", target = "userId")
     AddressResponse toAddressResponse(Address address);
-
-    Address requestToAddress(AddressRequest request);
-
-    Address responseToAddress(AddressResponse response);
 
     List<AddressResponse> toAddressListResponse(List<Address> addressList);
 

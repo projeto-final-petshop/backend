@@ -1,8 +1,6 @@
 package br.com.projetofinal.petconnet.app.pets.dto.respose;
 
-import br.com.projetofinal.petconnet.app.users.dto.response.UserResponse;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.PastOrPresent;
+import br.com.projetofinal.petconnet.app.pets.entity.AnimalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +19,8 @@ public class PetResponse {
     private String name;
     private String breed;
     private String color;
-    private String animalType;
     private Date birthdate;
-//    private AnimalType animalType;
+    private AnimalType animalType;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

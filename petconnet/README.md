@@ -32,4 +32,12 @@ A API utiliza arquitetura monolítica e oferece recursos para gerenciar pets, se
 
 ## Documentação
 
-A documentação da API está dispoinível no Swagger UI em: http://localhost:8888/swagger-ui.html
+* Acessar a documentação OpenAPI: http://localhost:8080/api/v1/api-docs
+* Definições OpenAPI no formato YAML: http://localhost:8080/api/v1/swagger-ui.html
+
+### Links
+
+* [Documentando uma API REST Spring com o OpenAPI 3.0](https://medium.com/@fabio.alvaro/documentando-uma-api-rest-spring-com-o-openapi-3-0-35102c711b0e)
+* [OpenAPI3 & Spring Boot](https://springdoc.org/)
+* [MVN Repository](https://mvnrepository.com/)
+* [Spring Initializr](https://start.spring.io/)

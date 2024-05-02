@@ -4,6 +4,7 @@ import br.com.projetofinal.petconnet.app.users.dto.request.RegisterUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.request.UpdateUserRequest;
 import br.com.projetofinal.petconnet.app.users.dto.response.RegisterUserResponse;
 import br.com.projetofinal.petconnet.app.users.dto.response.UserResponse;
+import br.com.projetofinal.petconnet.app.users.entity.Roles;
 import br.com.projetofinal.petconnet.app.users.entity.User;
 import br.com.projetofinal.petconnet.app.users.mapper.UserMapper;
 import br.com.projetofinal.petconnet.app.users.repository.UserRepository;
@@ -70,10 +71,19 @@ public class UserHelper {
      *         Se houver algum erro de validação nos dados do usuário.
      */
     public User createUser(RegisterUserRequest request) {
+
         User user = UserMapper.userMapper().toUsers(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Roles.ROLE_USER);
+
+//        var authority = new Authority();
+//        authority.setName(Roles.ROLE_USER.toString());
+//        authority.setUser(user);
+//        user.getAuthorities().add(authority);
         user.setCreatedAt(LocalDateTime.now());
+
         return saveUser(user);
+
     }
 
     /**

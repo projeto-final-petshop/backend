@@ -1,5 +1,6 @@
 package br.com.projetofinal.petconnet.app.pets.dto.request;
 
+import br.com.projetofinal.petconnet.app.pets.entity.AnimalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
@@ -29,9 +30,7 @@ public class PetRequest {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthdate;
 
-    private String animalType;
-
-//    private AnimalType animalType;
+    private AnimalType animalType;
 
     private Long userId;
 

@@ -1,0 +1,24 @@
+1. Credenciais do usuário:
+TODO: O método getPassword() retorna a senha do usuário (geralmente criptografada)
+TODO: Implementar a lógica de verificação de senha personalizada no método `isCredentialsNonExpired()`
+2. Gerenciar autoridade (papéis) do usuário:
+TODO: O método getAuthorities() retorna as autoridades associadas ao usuário (por exemplo, ROLE_USER, ROLE_ADMIN).
+TODO: personalizar as autoridades com base nas regras de negócios do seu aplicativo.
+3. Personalizar informações adicionais:
+TODO: A interface UserDetails permite que você adicione informações personalizadas sobre o usuário.
+TODO: Criar métodos adicionais para recuperar essas informações, como endereço, data de nascimento, etc.
+4. Bloequio de contas:
+- O bloqueio de contas é uma medida de segurança que impede que uma conta seja usada após um número específico de
+tentativas de autenticação malsucedidas.
+- No Spring Security, você pode implementar o bloqueio de contas da seguinte maneira
+TODO: Implemente a interface `UserDetails` para o seu modelo de usuário.
+TODO: Sobrescreva o método `isAccountNonLocked()` para retornar `true` se a conta estiver desbloqueada ou `false` se estiver bloqueada
+TODO: No seu serviço de autenticação (`UserDetailsService`), verifique se a conta está bloqueada antes de autenticar o usuário. Se a conta estiver bloqueada, lance uma exceção personalizada (por exemplo, `LockedException`)
+5. Personalizar a lógica de autenticação
+TODO:
+TODO:
+
+TODO: Como posso implementar o bloqueio de contas?
+TODO: Como posso personalizar a lógica de autenticação?
+TODO: Você tem algum exemplo prático para compartilhar?
+

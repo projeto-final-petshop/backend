@@ -1,5 +1,6 @@
 package br.com.projetofinal.petconnet.app.pets.dto.respose;
 
+import br.com.projetofinal.petconnet.app.pets.entity.AnimalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class PetListResponse {
     private String name;
     private String breed;
     private String color;
-    private String animalType;
+    private AnimalType animalType;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthdate;
     private LocalDateTime createdAt;

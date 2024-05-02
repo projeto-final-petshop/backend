@@ -2,6 +2,9 @@ package br.com.projetofinal.petconnet.app.users.entity;
 
 import br.com.projetofinal.petconnet.app.address.entity.Address;
 import br.com.projetofinal.petconnet.app.pets.entity.Pets;
+import br.com.projetofinal.petconnet.core.security.model.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -11,8 +14,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,7 +25,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+@Table(name = "users")
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,12 +59,8 @@ public class User {
      * Exemplos de senhas válidas: <br> - Senha123! <br> - Abc123$d <br> - Teste@123 <br> - _JoaoSilva2023
      */
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
-    // confirmar senha - não será persistida no banco de dados, apenas para comparar
-//    @Transient
-//    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
-//    private String confirmPassword;
 
     @OneToMany(mappedBy = "user")
     private List<Pets> pet;
@@ -73,5 +75,12 @@ public class User {
     @UpdateTimestamp
     @Column(updatable = false, columnDefinition = "datetime")
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private Roles role;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Authority> authorities;
 
 }
