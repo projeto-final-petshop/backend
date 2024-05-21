@@ -1,5 +1,6 @@
 package br.com.project.petconnect.app.user.domain.entities;
 
+import br.com.project.petconnect.app.pet.domain.entities.PetEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -12,6 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Entidade JPA que representa um usuário do sistema.
@@ -115,6 +118,14 @@ public class UserEntity {
      * Papel do usuário no sistema.
      */
     private String role;
+
+    private String address;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_pet",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "pet_id"))
+    private Set<PetEntity> petSet = new HashSet<>();
 
     /**
      * Data e hora de criação do registro do usuário.

@@ -35,7 +35,7 @@ public class UserValidator {
             throws UsernameNotFoundException, InvalidIdException, ServerErrorException {
         try {
             return userRepository.findById(id)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                    .orElseThrow(UsernameNotFoundException::new);
         } catch (NumberFormatException e) {
             log.error("Formato de ID de usuário inválido: {}", e.getMessage());
             throw new InvalidIdException();

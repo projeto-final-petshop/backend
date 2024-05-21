@@ -40,6 +40,6 @@ public class PetRequest {
 
     private String description;
 
-    private Long ownerId;
+    private Long userId;
 
 }

@@ -141,3 +141,9 @@ public class User {
   que seja apresentado ao usuário.
 * Na pasta `service`: o arquivo que contém `Service`, são arquivos que possuem a lógica, onde deve incluir a validação
   de campo, como verificar se aquele campo está nulo, ou se a informação que o usuário passou já está cadastrado.
+
+---
+
+Observações:
+
+1. Entidade Owner é o dono do animal - funcionalidade que será ativada futuramente.
