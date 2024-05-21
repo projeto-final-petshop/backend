@@ -1,6 +1,5 @@
 package br.com.project.petconnect.app.owner.domain.entities;
 
-import br.com.project.petconnect.app.pet.domain.entities.PetEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,8 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -46,11 +43,11 @@ public class OwnerEntity {
 
     private String address;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "owner_pet",
-            joinColumns = @JoinColumn(name = "owner_id"),
-            inverseJoinColumns = @JoinColumn(name = "pet_id"))
-    private Set<PetEntity> petSet = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "owner_pet",
+//            joinColumns = @JoinColumn(name = "owner_id"),
+//            inverseJoinColumns = @JoinColumn(name = "pet_id"))
+//    private Set<PetEntity> petSet = new HashSet<>();
 
     @CreationTimestamp
     @JsonFormat(

@@ -40,6 +40,6 @@ public class UserRequest {
 
     private String confirmPassword;
 
-    private String role;
+    //private String role;
 
 }

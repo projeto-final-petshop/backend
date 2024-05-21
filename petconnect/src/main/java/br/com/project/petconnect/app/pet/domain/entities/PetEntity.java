@@ -1,8 +1,8 @@
 package br.com.project.petconnect.app.pet.domain.entities;
 
-import br.com.project.petconnect.app.owner.domain.entities.OwnerEntity;
 import br.com.project.petconnect.app.pet.domain.enums.Sex;
 import br.com.project.petconnect.app.petshop.domain.entities.PetShopEntity;
+import br.com.project.petconnect.app.user.domain.entities.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
@@ -52,8 +52,12 @@ public class PetEntity {
     private PetShopEntity petShop;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private OwnerEntity owner;
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "owner_id")
+//    private OwnerEntity owner;
 
     @CreationTimestamp
     @Column(updatable = false, columnDefinition = "datetime")

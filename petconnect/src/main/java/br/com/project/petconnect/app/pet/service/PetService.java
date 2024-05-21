@@ -7,8 +7,11 @@ import br.com.project.petconnect.app.pet.domain.dto.PetResponse;
 import br.com.project.petconnect.app.pet.domain.entities.PetEntity;
 import br.com.project.petconnect.app.pet.mapping.PetMapper;
 import br.com.project.petconnect.app.pet.repository.PetRepository;
+import br.com.project.petconnect.app.user.domain.entities.UserEntity;
+import br.com.project.petconnect.app.user.repository.UserRepository;
 import br.com.project.petconnect.core.exceptions.owner.OwnerNotFoundException;
 import br.com.project.petconnect.core.exceptions.pet.PetNotFoundException;
+import br.com.project.petconnect.core.exceptions.user.UsernameNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,16 +23,15 @@ import java.util.List;
 public class PetService {
 
     private final PetRepository petRepository;
-    private final OwnerRepository ownerRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public PetResponse registerPet(PetRequest request) {
 
-        OwnerEntity owner = ownerRepository
-                .findById(request.getOwnerId()).orElseThrow(OwnerNotFoundException::new);
-
+        UserEntity user = userRepository.findById(request.getUserId())
+                .orElseThrow(UsernameNotFoundException::new);
         PetEntity pet = PetMapper.petMapper().toPetEntity(request);
-        pet.setOwner(owner);
+        pet.setUser(user);
         petRepository.save(pet);
         return PetMapper.petMapper().toPetResponse(pet);
     }
