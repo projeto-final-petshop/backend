@@ -1,0 +1,13 @@
+==============================================================================
+PetConnect - Conectando você ao seu animal de estimação!
+==============================================================================
+
+* Nome: ${info.app.name}
+* Versão: ${info.app.version}
+* Descrição: ${info.app.description}
+* Diretório raiz: ${info.app.groupId}
+* Usuário: ${user.name}
+
+==============================================================================
+Acesse o PetConnect e faça parte da comunidade!
+==============================================================================

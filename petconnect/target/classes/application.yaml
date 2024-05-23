@@ -1,0 +1,57 @@
+server:
+  port: '8888'
+  tomcat:
+    connection-timeout: '2000'
+  servlet:
+    context-path: '/api/v1'
+
+spring:
+  application:
+    name: 'petconnect'
+  banner:
+    location: 'classpath:banner.txt'
+    charset: 'UTF-8'
+  # DATABASE SQL
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&useSSL=false'
+    username: 'root'
+    password: 'root'
+
+  # Spring Data JPA
+  jpa:
+    open-in-view: true
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update # none, update, create, create-drop
+
+  jackson:
+    date-format: "dd/MM/yyyy HH:mm:ss"
+    locale: 'pt-BR'
+    time-zone: 'America/Sao_Paulo'
+    default-property-inclusion: NON_NULL
+
+# LOG
+logging:
+  level:
+    org.springframework: DEBUG
+    br.com.project.petconnect: DEBUG
+
+# Informações da Aplicação
+info:
+  app:
+    name: 'petconnect'
+    version: '0.0.1-SNAPSHOT'
+    description: 'PetConnect'
+    groupId: 'br.com.project'
+    artifactId: 'petconnect'
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      cors:
+        allowed-origins: '*'
+        max-age: '1800s'
