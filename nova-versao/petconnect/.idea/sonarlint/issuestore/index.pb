@@ -67,3 +67,14 @@ Rsrc/main/java/br/com/project/petconnect/security/config/SecurityConfiguration.j
 Ysrc/main/java/br/com/project/petconnect/security/controller/AuthenticationController.java,d\f\df3b76679659eb5bd55afd5d416766775c75eaf6
 {
 Ksrc/main/java/br/com/project/petconnect/security/bootstrap/AdminSeeder.java,e\6\e6160fdd6b967ed279ee0f3fbcacda26a53a4699
+{
+Ksrc/main/java/br/com/project/petconnect/security/entities/RoleResponse.java,6\b\6b9062cae82aa364651ea0f8e2a806060cbd88ed
+r
+Bsrc/main/java/br/com/project/petconnect/openapi/OpenApiConfig.java,8\c\8c2f5a245b74b58134ebc61a09461ac47d9d07cc
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+U
+%.mvn/wrapper/maven-wrapper.properties,3\2\32e074f71d16c1e88ac02aa83592ca6ad1fd98a8
+}
+Msrc/main/java/br/com/project/petconnect/exceptions/UnauthorizedException.java,9\9\99fcf1aa44816f50c1c79663455a14a7f74ec310

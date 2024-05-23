@@ -1,27 +1,24 @@
 package br.com.project.petconnect.user.controller;
 
+import br.com.project.petconnect.user.dto.UserRequest;
+import br.com.project.petconnect.user.dto.UserResponse;
 import br.com.project.petconnect.user.entities.User;
 import br.com.project.petconnect.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Controlador responsável por operações relacionadas aos usuários.
- */
-@Tag(name = "Users", description = "Operações relacionadas aos Usuários")
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -64,6 +61,41 @@ public class UserController {
         List<User> users = userService.allUsers();
         log.info("Usuários autenticados obtidos com sucesso. Quantidad: {}", users.size());
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable(name = "userId") Long userId) {
+        UserResponse response = userService.getUserById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable(name = "userId") Long userId,
+                                             @RequestBody UserRequest request) {
+        userService.updateUser(userId, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable(name = "username") String username) {
+        UserResponse response = userService.getUserByUsername(username);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{userId}/pets")
+    public ResponseEntity<UserResponse> getUserAndPets(@PathVariable(name = "userId") Long userId) {
+        UserResponse response = userService.getUserAndPets(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.noContent().build();
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

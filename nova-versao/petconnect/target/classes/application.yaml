@@ -16,7 +16,6 @@ spring:
       ddl-auto: update
 
 springdoc:
-  packages-to-scan: br.com.project.petconnect.user.controller
   api-docs:
     enabled: true
   swagger-ui:

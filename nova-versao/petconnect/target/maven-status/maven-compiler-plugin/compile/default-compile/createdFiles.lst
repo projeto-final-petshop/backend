@@ -5,7 +5,6 @@ br\com\project\petconnect\user\dto\UserRequest$UserRequestBuilder.class
 br\com\project\petconnect\pet\dto\PetResponse.class
 br\com\project\petconnect\security\entities\Role$RoleBuilder.class
 br\com\project\petconnect\security\dto\LoginRequest$LoginRequestBuilder.class
-br\com\project\petconnect\openapi\OpenApiConfig.class
 br\com\project\petconnect\pet\dto\PetResponse$PetResponseBuilder.class
 br\com\project\petconnect\security\entities\Role.class
 br\com\project\petconnect\user\entities\User$UserBuilder.class
@@ -27,6 +26,7 @@ br\com\project\petconnect\pet\repository\PetRepository.class
 br\com\project\petconnect\security\config\ApplicationConfiguration.class
 br\com\project\petconnect\pet\dto\PetRequest.class
 br\com\project\petconnect\user\repository\UserRepository.class
+br\com\project\petconnect\exceptions\UnauthorizedException.class
 br\com\project\petconnect\PetconnectApplication.class
 br\com\project\petconnect\security\dto\LoginResponse$LoginResponseBuilder.class
 br\com\project\petconnect\security\entities\RoleResponse.class

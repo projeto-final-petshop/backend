@@ -2,7 +2,6 @@ package br.com.project.petconnect.user.entities;
 
 import br.com.project.petconnect.pet.entities.Pet;
 import br.com.project.petconnect.security.entities.Role;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -13,9 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,7 +23,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@Schema(title = "User", description = "Parâmetros necessários do usuário")
 public class User implements UserDetails {
 
     @Id
@@ -49,8 +47,8 @@ public class User implements UserDetails {
             nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Pet> pets = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Pet> pets;
 
     @CreationTimestamp
     @Column(updatable = false, columnDefinition = "datetime")
