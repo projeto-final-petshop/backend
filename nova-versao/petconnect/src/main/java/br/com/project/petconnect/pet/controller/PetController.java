@@ -3,7 +3,6 @@ package br.com.project.petconnect.pet.controller;
 import br.com.project.petconnect.pet.dto.PetRequest;
 import br.com.project.petconnect.pet.dto.PetResponse;
 import br.com.project.petconnect.pet.service.PetService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,6 +56,5 @@ public class PetController {
         List<PetResponse> response = petService.listar();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
 }

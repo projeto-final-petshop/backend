@@ -17,7 +17,7 @@ create table petshop
         unique (cnpj)
 );
 
-create table users
+create table `users`
 (
     created_at   datetime     null,
     id           bigint auto_increment
@@ -44,7 +44,7 @@ create table pets
     created_at  datetime     null,
     id          bigint auto_increment
         primary key,
-    owner_id    bigint       null,
+    user_id    bigint       null,
     updated_at  datetime     null,
     description varchar(500) null,
     breed       varchar(255) null,
@@ -53,34 +53,17 @@ create table pets
     species     varchar(255) null,
     photo       tinyblob     null,
     constraint FK6teg4kcjcnjhduguft56wcfoa
-        foreign key (owner_id) references owners (id),
+        foreign key (user_id) references users (id),
     check (`sex` between 0 and 2)
 );
 
-create table owners
+create table users_pets
 (
-    created_at   datetime     null,
-    id           bigint auto_increment
-        primary key,
-    updated_at   datetime     null,
-    address      varchar(255) null,
-    cpf          varchar(255) null,
-    email        varchar(255) not null,
-    name         varchar(255) not null,
-    phone_number varchar(255) null,
-    constraint UK_dw1w2xj1axp1le5oionrjfk7t
-        unique (email),
-    constraint UK_rfnfhfowwc6uwisbyskbee2uo
-        unique (cpf)
-);
-
-create table owner_pet
-(
-    owner_id bigint not null,
-    pet_id   bigint not null,
-    primary key (owner_id, pet_id),
+    user_id bigint not null,
+    pet_id  bigint not null,
+    primary key (user_id, pet_id),
     constraint FK1br48j7q97404pi29ow7n4jhy
-        foreign key (owner_id) references owners (id),
+        foreign key (user_id) references users (id),
     constraint FKl3eg3cidfdaowbbjblveud4s4
         foreign key (pet_id) references pets (id)
 );
