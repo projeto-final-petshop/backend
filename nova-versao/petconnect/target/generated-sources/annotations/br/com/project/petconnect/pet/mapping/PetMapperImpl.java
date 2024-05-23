@@ -3,6 +3,7 @@ package br.com.project.petconnect.pet.mapping;
 import br.com.project.petconnect.pet.dto.PetRequest;
 import br.com.project.petconnect.pet.dto.PetResponse;
 import br.com.project.petconnect.pet.entities.Pet;
+import br.com.project.petconnect.user.entities.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-23T13:01:42-0300",
+    date = "2024-05-23T19:11:54-0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.2 (Oracle Corporation)"
 )
 @Component
@@ -29,7 +30,6 @@ public class PetMapperImpl implements PetMapper {
         pet.color( petRequest.getColor() );
         pet.breed( petRequest.getBreed() );
         pet.animalType( petRequest.getAnimalType() );
-        pet.birthdate( petRequest.getBirthdate() );
 
         return pet.build();
     }
@@ -42,13 +42,13 @@ public class PetMapperImpl implements PetMapper {
 
         PetResponse.PetResponseBuilder petResponse = PetResponse.builder();
 
+        petResponse.userId( petUserId( pet ) );
         petResponse.id( pet.getId() );
         petResponse.name( pet.getName() );
         petResponse.age( pet.getAge() );
         petResponse.color( pet.getColor() );
         petResponse.breed( pet.getBreed() );
         petResponse.animalType( pet.getAnimalType() );
-        petResponse.birthdate( pet.getBirthdate() );
         petResponse.createdAt( pet.getCreatedAt() );
 
         return petResponse.build();
@@ -66,5 +66,13 @@ public class PetMapperImpl implements PetMapper {
         }
 
         return list;
+    }
+
+    private Long petUserId(Pet pet) {
+        User user = pet.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        return user.getId();
     }
 }

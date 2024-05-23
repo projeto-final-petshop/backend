@@ -1,0 +1,37 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: 'petconnect'
+  datasource:
+    url: jdbc:mysql://localhost:3306/petconnect?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: root
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: documentation
+    enabled: true
+    operations-sorter: method
+    try-it-out-enabled: true
+    filter: true
+    tags-sorter: alpha
+
+security:
+  jwt:
+    secret-key: 05955a2232d7f31a0a9879c9233e661f6e2923d5334ec67b7a64c79911407afc
+    expiration-time: 86400000 # equivale a 24h em milisegundos
+
+logging:
+  level:
+    org.springframework.boot: DEBUG
+    br.com.project.smartconnection: DEBUG

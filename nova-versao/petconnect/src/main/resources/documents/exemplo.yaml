@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: 'API de Autenticação'
+  description: 'API para autenticação usando JWT'
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8888/api/v1'
+tags:
+  - name: Auth
+    description: 'Autenticação'
+paths:
+  /auth/signup:
+    post:
+      summary: 'Cadastrar um novo usuário'
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: 'Usuário criado com sucesso'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 'Bad Request (por exemplo, dados inválidos)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/login:
+    post:
+      summary: 'Faça login do usuário e obtenha token de acesso'
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: 'Login bem-sucedido'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: 'Não autorizado (por exemplo, credenciais inválidas)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/me:
+    get:
+      summary: 'Obtenha detalhes do usuário atualmente autenticado'
+      security:
+        - bearerAuth: [ ] # Aplica o esquema de segurança 'bearerAuth'
+      responses:
+        '200':
+          description: 'Detalhes do usuário recuperados com sucesso'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: 'Não autorizado (por exemplo, JWT inválido ou expirado)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/:
+    get:
+      summary: 'Listar todos os usuários (requer privilégios de administrador)'
+      security:
+        - bearerAuth: [ ] # Aplica o esquema de segurança 'bearerAuth'
+      responses:
+        '200':
+          description: 'Lista de Usuários'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: ' Forbidden (por exemplo, permissões insuficientes)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+security:
+  - bearerAuth: [ ]
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: 'Requer token JWT no cabeçalho Authorization (Bearer)'
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 'ID do Usuário'
+          example: 2
+        name:
+          type: string
+          description: 'Nome do Usuário'
+          example: 'Rian'
+        email:
+          type: string
+          description: 'E-mail do Usuário'
+          example: 'rian@email.com'
+        password:
+          type: string
+          description: 'Senha com hash (não deve ser exposta)'
+          writeOnly: true  # Marca a senha como somente gravação por segurança
+          example: 'P4$$w0rD'
+        createdAt:
+          type: string
+          format: date-time
+          description: 'Data e hora de criação do usuário'
+          example: '2024-05-22T21:03:14.243873Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: 'Data e hora da atualização do usuário'
+          example: '2024-05-22T21:03:14.243873Z'
+        enabled:
+          type: boolean
+          description: 'Se a conta do usuário está habilitada'
+          example: true
+        authorities:
+          type: array
+          description: 'Autoridades do usuário'
+          example: [ ]
+        username:
+          type: string
+          description: 'Email do usuário'
+          example: 'rian@email.com'
+        accountNonLocked:
+          type: boolean
+          description: 'Se a conta do usuário não está bloqueada'
+          example: true
+        credentialsNonExpired:
+          type: boolean
+          description: 'Se as credenciais do usuário não expiraram'
+          example: true
+        accountNonExpired:
+          type: boolean
+          description: 'Se a conta do usuário não expirou'
+          example: true
+    UserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Nome do Usuário'
+          example: 'Rian'
+        email:
+          type: string
+          description: 'E-mail do Usuário'
+          example: 'rian@email.com'
+        password:
+          type: string
+          description: 'Senah do Usuário'
+          example: 'P4$$w0rD'
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 'E-mail do Usuário'
+          example: 'rian@email.com'
+        password:
+          type: string
+          description: 'Senha do Usuário'
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: 'Token de acesso'
+          example: 'eyJhbGciOiJIUzI1NiJ9...'
+        expiresIn:
+          type: integer
+          description: 'Tempo de expiração do token em milissegundos'
+          example: 86400000
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'Mensagem de erro'
+        code:
+          type: integer
+          description: 'Código de erro'
