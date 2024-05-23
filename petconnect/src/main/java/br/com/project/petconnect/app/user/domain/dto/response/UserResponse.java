@@ -23,6 +23,7 @@ public class UserResponse {
 
     private String cpf;
 
+    // Irá retornar o número de telefone inserido
     @JsonProperty(value = "phone_number")
     private String phoneNumber;
 

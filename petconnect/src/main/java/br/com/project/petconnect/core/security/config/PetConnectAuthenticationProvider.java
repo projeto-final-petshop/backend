@@ -1,5 +1,6 @@
 package br.com.project.petconnect.core.security.config;
 
+import br.com.project.petconnect.app.user.domain.entities.Authority;
 import br.com.project.petconnect.app.user.domain.entities.UserEntity;
 import br.com.project.petconnect.app.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Provedor de autenticação personalizado para a aplicação PetConnect.
@@ -57,22 +60,28 @@ public class PetConnectAuthenticationProvider implements AuthenticationProvider 
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
+        String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        UserEntity user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new BadCredentialsException("Usuário ou senha inválido!"));
+        Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
 
-        validatePassword(password, user.getPassword());
-
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
-        return new UsernamePasswordAuthenticationToken(username, password, authorities);
-    }
-
-    private void validatePassword(String rawPassword, String encodedPassword) {
-        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+        if (optionalUser.isPresent()) {
+            UserEntity user = optionalUser.get();
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return new UsernamePasswordAuthenticationToken(email, password,
+                        getGrantedAuthorities(user.getAuthorities()));
+            }
             throw new BadCredentialsException("Senha inválida!");
         }
+        throw new BadCredentialsException("Nenhum usuário registrado com esses dados!");
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (Authority authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return grantedAuthorities;
     }
 
     /**

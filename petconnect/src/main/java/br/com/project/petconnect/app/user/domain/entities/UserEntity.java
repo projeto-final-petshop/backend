@@ -2,6 +2,7 @@ package br.com.project.petconnect.app.user.domain.entities;
 
 import br.com.project.petconnect.app.pet.domain.entities.PetEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -54,7 +55,6 @@ public class UserEntity {
      * &#064;Size(min = 3, message = "O nome do usuário deve ter no mínimo {min} caracteres.") - Valida o tamanho mínimo
      * do nome (3 caracteres).
      */
-    @Column(nullable = false)
     @Size(min = 3, message = "O nome do usuário deve ter no mínimo {min} caracteres.")
     private String name;
 
@@ -68,7 +68,7 @@ public class UserEntity {
      * &#064;JsonProperty(access = JsonProperty.Access.WRITE_ONLY) - Indica que o campo será serializado apenas na
      * escrita (evitando expor a senha na resposta).
      */
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     @Email(message = "O nome de usuário deve ser um endereço de email válido.")
     private String email;
 
@@ -107,7 +107,6 @@ public class UserEntity {
      * incluindo uma letra maiúscula," + "uma letra minúscula, um número e um caractere especial.") - Valida a
      * complexidade da senha.
      */
-    @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
             message = "A senha deve conter no mínimo 8 caracteres, incluindo uma letra maiúscula, " +
@@ -118,6 +117,10 @@ public class UserEntity {
      * Papel do usuário no sistema.
      */
     private String role;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Authority> authorities;
 
     private String address;
 
