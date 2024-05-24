@@ -1,57 +1,37 @@
 server:
-  port: '8888'
-  tomcat:
-    connection-timeout: '2000'
-  servlet:
-    context-path: '/api/v1'
+  port: 8080
+
+  # http://localhost:8888/api/v1
 
 spring:
   application:
     name: 'petconnect'
-  banner:
-    location: 'classpath:banner.txt'
-    charset: 'UTF-8'
-  # DATABASE SQL
   datasource:
-    url: 'jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&useSSL=false'
-    username: 'root'
-    password: 'root'
-
-  # Spring Data JPA
+    url: jdbc:mysql://localhost:3306/petconnect?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: root
   jpa:
-    open-in-view: true
-    show-sql: false
-    generate-ddl: true
+    open-in-view: false
     hibernate:
-      ddl-auto: update # none, update, create, create-drop
+      ddl-auto: update
 
-  jackson:
-    date-format: "dd/MM/yyyy HH:mm:ss"
-    locale: 'pt-BR'
-    time-zone: 'America/Sao_Paulo'
-    default-property-inclusion: NON_NULL
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: documentation
+    enabled: true
+    operations-sorter: method
+    try-it-out-enabled: true
+    filter: true
+    tags-sorter: alpha
 
-# LOG
+security:
+  jwt:
+    secret-key: 05955a2232d7f31a0a9879c9233e661f6e2923d5334ec67b7a64c79911407afc
+    expiration-time: 86400000 # equivale a 24h em milisegundos
+
 logging:
   level:
-    org.springframework: DEBUG
-    br.com.project.petconnect: DEBUG
-
-# Informações da Aplicação
-info:
-  app:
-    name: 'petconnect'
-    version: '0.0.1-SNAPSHOT'
-    description: 'PetConnect'
-    groupId: 'br.com.project'
-    artifactId: 'petconnect'
-
-# Actuator
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-      cors:
-        allowed-origins: '*'
-        max-age: '1800s'
+    org.springframework.boot: DEBUG
+    br.com.project.smartconnection: DEBUG

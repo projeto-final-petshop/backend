@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V001__create_table.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V002_insert.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V003_authorities.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/pets.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/roles.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/users.sql" dialect="MySQL" />
   </component>
 </project>
