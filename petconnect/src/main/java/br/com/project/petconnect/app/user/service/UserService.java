@@ -8,11 +8,13 @@ import br.com.project.petconnect.app.user.domain.entities.UserEntity;
 import br.com.project.petconnect.app.user.mapping.UserMapper;
 import br.com.project.petconnect.app.user.repository.UserRepository;
 import br.com.project.petconnect.core.exceptions.generics.ConflictException;
+import br.com.project.petconnect.core.exceptions.generics.EmailNotFoundException;
 import br.com.project.petconnect.core.exceptions.generics.InvalidIdException;
 import br.com.project.petconnect.core.exceptions.generics.ServerErrorException;
 import br.com.project.petconnect.core.exceptions.user.InvalidPasswordException;
 import br.com.project.petconnect.core.exceptions.user.PasswordMismatchException;
 import br.com.project.petconnect.core.exceptions.user.UsernameNotFoundException;
+import br.com.project.petconnect.core.validators.CpfUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -74,6 +76,8 @@ public class UserService {
         UserEntity user = UserMapper.userMapper().toUserEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("ADMIN");
+        // adiciona máscara no cpf
+        CpfUtil.setCpf(user, request.getCpf());
         userRepository.save(user);
         log.info("Usuário cadastrado com sucesso: {}", user.getId());
         return UserMapper.userMapper().toUserResponse(user);
@@ -213,5 +217,16 @@ public class UserService {
             throw new ServerErrorException(e.getMessage());
         }
     }
+
+    public UserEntity getUser(String email) throws EmailNotFoundException, InvalidIdException {
+        try {
+            return userRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
+        } catch (NumberFormatException e) {
+            throw new InvalidIdException();
+        } catch (ServerErrorException e) {
+            throw new ServerErrorException(e.getMessage());
+        }
+    }
+
 
 }
