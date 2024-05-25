@@ -23,8 +23,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -35,6 +34,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false, columnDefinition = "tinyint not null default 0")
+    private boolean enabled;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -73,4 +75,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
