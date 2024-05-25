@@ -10,28 +10,39 @@ spring:
     location: classpath:banner.txt
     charset: UTF-8
   datasource:
-    url: jdbc:mysql://localhost:3306/petconnect?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/petconnect?serverTimezone=UTC&useSSL=false
     username: root
     password: root
   jpa:
-    open-in-view: true
+    open-in-view: false
     show-sql: false
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # validate
+      use-new-id-generator-mappings: false
     database-platform: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: false
+  #    url: jdbc:mysql://localhost:3306/petconnect?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+  #    user: root
+  #    password: root
+  #    group: true
+  #    locations: filesystem:src/main/resources/db/migration
+  #    sql-migration-prefix: V
+  #    sql-migration-separator: __
+  #    sql-migration-suffixes: .sql
   jackson:
     date-format: "dd/MM/yyyy HH:mm:ss"
     locale: 'pt-BR'
     time-zone: 'America/Sao_Paulo'
     default-property-inclusion: NON_NULL
-  #  messages:
-  #    basename: messages
-  #    fallback-to-system-locale: false
-  #    encoding: UTF-8
-#  mvc:
-#    locale:
-#      default-locale: pt
+  messages:
+    basename: messages
+    fallback-to-system-locale: false
+    encoding: UTF-8
+  mvc:
+    locale:
+      default-locale: pt
 
 security:
   jwt:
