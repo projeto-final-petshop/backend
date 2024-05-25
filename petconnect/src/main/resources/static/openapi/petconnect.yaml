@@ -1,0 +1,309 @@
+openapi: 3.0.3
+info:
+  title: 'Petconnect'
+  description: |-
+    Trabalho apresentado como requisito parcial para a disciplina de **Projeto Final I: Especificação e Design**, 
+    do curso de Bacharelado em Sistemas de Informação, da PUCPR
+    
+    * **Acadêmicos**: Gabriel, Guilherme e Juliane
+    * **Nome do Produto de Software**: PetConnect
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    name: 'Suporte'
+    email: petshop.petconnect@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+externalDocs:
+  description: 'Repositório do Projeto no GitHub'
+  url: 'https://github.com/projeto-final-petshop'
+servers:
+  - url: 'http://localhost:8888/api/v1'
+tags:
+  - name: Auth
+    description: 'Autenticação'
+  - name: User
+    description: 'Usuário'
+  - name: Pet
+    description: 'Animal de Estimação'
+  - name: PetShop
+    description: 'Loja para Animais de Estimação'
+  - name: Scheduling
+    description: 'Agendamento de Consultas e Serviços'
+paths:
+  /auth/signup:
+    post:
+      summary: 'Cadastrar usuário'
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '201':
+          description: 'Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 'Campo inválido'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 'Campo email ou CPF já cadastrado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/login:
+    post:
+      summary: 'Login'
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: 'Campo inválido'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 'Unauthorized (Não autenticado)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 'Usuário não encontrado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/me:
+    get:
+      summary: 'Detalhes do Usuário'
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 'Campo inválido'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 'Unauthorized (Não autenticado)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 'Forbidden (Não tem permissão)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 'Usuário não encontrado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/:
+    get:
+      summary: 'Listar Todos os Usuários'
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: 'Campo inválido'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 'Unauthorized (Não autenticado)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 'Forbidden (Não tem permissão)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    RegisterUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Nome do usuário'
+          example: 'Nome do Usuário'
+        email:
+          type: string
+          description: 'Email do usuário'
+          example: 'user@example.com'
+        password:
+          type: string
+          description: 'Senha do Usuário'
+          example: 'P4$$w0rD'
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 'Email do usuário'
+          example: 'user@example.com'
+        password:
+          type: string
+          description: 'Senha do Usuário'
+          example: 'P4$$w0rD'
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiJ9...'
+          description: 'Token de Autenticação'
+        expiresIn:
+          type: integer
+          example: 86400000
+          description: 'Tempo em milissegundos até o token expirar'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 'ID do usuário'
+          example: 1
+        name:
+          type: string
+          description: 'Nome do Usuário'
+          example: 'Nome do Usuário'
+        email:
+          type: string
+          description: 'Email do Usuário'
+          example: 'user@example.com'
+        password:
+          type: string
+          description: 'Senha do usuário criptografada'
+          example: '$2a$10$HzCBTX9B7cgF3syLr5OvZe6pDq5lGMqKzrs8vqnc3mFkg3gwT/mnK'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-05-25T14:00:26.067893-03:00'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2024-05-25T14:00:26.067893-03:00'
+        enabled:
+          type: boolean
+          example: true
+        accountNonExpired:
+          type: boolean
+          example: true
+        credentialsNonExpired:
+          type: boolean
+          example: true
+        accountNonLocked:
+          type: boolean
+          example: true
+        username:
+          type: string
+          example: 'user@example.com'
+        authorities:
+          type: array
+          items:
+            type: string
+    ErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "about:blank"
+        title:
+          type: string
+          example: "Forbidden"
+        status:
+          type: integer
+          example: 403
+        detail:
+          type: string
+          example: "A assinatura JWT não corresponde à assinatura computada localmente. A validade do JWT não pode ser afirmada e não deve ser confiável."
+        instance:
+          type: string
+          example: "/api/v1/users/"
+        description:
+          type: string
+          example: "A assinatura JWT é inválida"
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: [ ]

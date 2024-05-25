@@ -1,2 +1,0 @@
-GET http://localhost:8888/api/v1/users/auth/login
-Authorization: Basic julianemaran@gmail.com P4$$w0rD
