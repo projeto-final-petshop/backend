@@ -1,0 +1,1712 @@
+{
+	"info": {
+		"_postman_id": "9a9a2a90-d057-4ace-a8e9-5dbcbd5b100a",
+		"name": "__Final_Project_Petconnect",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18011610"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Sign UP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Juliane Maran\",\r\n    \"email\": \"rian@example.com\",\r\n    \"password\": \"P4$$w0rD\",\r\n    \"cpf\": \"06069043952\",\r\n    \"phoneNumber\": \"41992199488\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/api/v1/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "201",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Juliane Maran\",\r\n    \"email\": \"user@example.com\",\r\n    \"password\": \"P4$$w0rD\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/auth/signup",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 25 May 2024 17:00:26 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"name\": \"Juliane Maran\",\n    \"email\": \"user@example.com\",\n    \"password\": \"$2a$10$HzCBTX9B7cgF3syLr5OvZe6pDq5lGMqKzrs8vqnc3mFkg3gwT/mnK\",\n    \"createdAt\": \"2024-05-25T14:00:26.067893-03:00\",\n    \"updatedAt\": \"2024-05-25T14:00:26.067893-03:00\",\n    \"enabled\": true,\n    \"authorities\": [],\n    \"username\": \"user@example.com\",\n    \"accountNonLocked\": true,\n    \"credentialsNonExpired\": true,\n    \"accountNonExpired\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"rian@example.com\",\r\n    \"password\": \"P4$$w0rD\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@example.com\",\r\n    \"password\": \"P4$$w0rD\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 25 May 2024 17:02:00 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2NjU2NTIwLCJleHAiOjE3MTY3NDI5MjB9.Q2AZaaMUw1EC8nVUf7JJfLGeTGTqcnW-RXcw7QaxVPY\",\n    \"expiresIn\": 86400000\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"userx@example.com\",\r\n    \"password\": \"P4$$w0rD\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/problem+json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 25 May 2024 17:11:22 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"type\": \"about:blank\",\n    \"title\": \"Unauthorized\",\n    \"status\": 401,\n    \"detail\": \"Bad credentials\",\n    \"instance\": \"/api/v1/auth/login\",\n    \"description\": \"The username or password is incorrect\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Detalhes do usuário",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/api/v1/users/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 25 May 2024 17:05:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"name\": \"Juliane Maran\",\n    \"email\": \"user@example.com\",\n    \"password\": \"$2a$10$HzCBTX9B7cgF3syLr5OvZe6pDq5lGMqKzrs8vqnc3mFkg3gwT/mnK\",\n    \"createdAt\": \"2024-05-25T14:00:26.067893-03:00\",\n    \"updatedAt\": \"2024-05-25T14:00:26.067893-03:00\",\n    \"enabled\": true,\n    \"accountNonExpired\": true,\n    \"credentialsNonExpired\": true,\n    \"username\": \"user@example.com\",\n    \"authorities\": [],\n    \"accountNonLocked\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Detalhes de todos os usuários",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/api/v1/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 25 May 2024 17:06:45 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Juliane Maran\",\n        \"email\": \"user@example.com\",\n        \"password\": \"$2a$10$HzCBTX9B7cgF3syLr5OvZe6pDq5lGMqKzrs8vqnc3mFkg3gwT/mnK\",\n        \"createdAt\": \"2024-05-25T14:00:26.067893-03:00\",\n        \"updatedAt\": \"2024-05-25T14:00:26.067893-03:00\",\n        \"enabled\": true,\n        \"accountNonExpired\": true,\n        \"credentialsNonExpired\": true,\n        \"username\": \"user@example.com\",\n        \"authorities\": [],\n        \"accountNonLocked\": true\n    }\n]"
+						},
+						{
+							"name": "403 Forbidden",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										""
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/problem+json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 25 May 2024 17:10:07 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"type\": \"about:blank\",\n    \"title\": \"Forbidden\",\n    \"status\": 403,\n    \"detail\": \"JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.\",\n    \"instance\": \"/api/v1/users/\",\n    \"description\": \"The JWT signature is invalid\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Read",
+					"item": [
+						{
+							"name": "Listar todos os usuário",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8888/api/v1/users",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8888",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:4200"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST, PUT, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Authorization, Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "X-CSRF-TOKEN",
+											"value": "2e511765-359c-4e2c-b5f1-0f18b005c54b"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "JSESSIONID=467AEB2068B16D4390FF0015052E414F; Path=/api/v1; HttpOnly"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 26 May 2024 00:21:37 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 102,\n        \"name\": \"Juliane Maran\",\n        \"email\": \"rian@example.com\",\n        \"password\": \"$2a$10$OkPSqLBHExjHzWbHOH3H9uPsMrxEecHXsYho6mxempu0VkNw9NKjK\",\n        \"cpf\": \"06069043952\",\n        \"phoneNumber\": \"41992199488\",\n        \"active\": true,\n        \"createdAt\": \"2024-05-25T19:03:22.003457-03:00\",\n        \"updatedAt\": \"2024-05-25T19:03:22.003457-03:00\",\n        \"enabled\": true,\n        \"authorities\": [],\n        \"username\": \"rian@example.com\",\n        \"credentialsNonExpired\": true,\n        \"accountNonLocked\": true,\n        \"accountNonExpired\": true\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Buscar Usuário por Nome",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/list?name=Juliane Maran",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"list"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Juliane Maran"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8888/api/v1/users/list?name=Juliane Maran",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8888",
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"list"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "Juliane Maran"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:4200"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST, PUT, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Authorization, Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "X-CSRF-TOKEN",
+											"value": "99e401c0-f42c-4e35-a90a-3eaf04760c23"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "JSESSIONID=5E382CA981D7A6963A471B3E78DB06B2; Path=/api/v1; HttpOnly"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 26 May 2024 00:21:57 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 102,\n        \"name\": \"Juliane Maran\",\n        \"email\": \"rian@example.com\",\n        \"password\": \"$2a$10$OkPSqLBHExjHzWbHOH3H9uPsMrxEecHXsYho6mxempu0VkNw9NKjK\",\n        \"cpf\": \"06069043952\",\n        \"phoneNumber\": \"41992199488\",\n        \"active\": true,\n        \"createdAt\": \"2024-05-25T19:03:22.003457-03:00\",\n        \"updatedAt\": \"2024-05-25T19:03:22.003457-03:00\",\n        \"enabled\": true,\n        \"authorities\": [],\n        \"username\": \"rian@example.com\",\n        \"credentialsNonExpired\": true,\n        \"accountNonLocked\": true,\n        \"accountNonExpired\": true\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Pesquisar usuário: nome, email ou cpf",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/search?active=true",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"search"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Juliane Maran",
+											"disabled": true
+										},
+										{
+											"key": "email",
+											"value": "rian@example.com",
+											"disabled": true
+										},
+										{
+											"key": "cpf",
+											"value": "06069043952",
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8888/api/v1/users/search?active=true",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8888",
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"search"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "Juliane Maran",
+													"disabled": true
+												},
+												{
+													"key": "email",
+													"value": "rian@example.com",
+													"disabled": true
+												},
+												{
+													"key": "cpf",
+													"value": "06069043952",
+													"disabled": true
+												},
+												{
+													"key": "active",
+													"value": "true"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:4200"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST, PUT, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Authorization, Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "X-CSRF-TOKEN",
+											"value": "2eb53113-d718-494b-8d27-0adcbfeae62f"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "JSESSIONID=94F3CDB6AC09BAE184109808CE72818F; Path=/api/v1; HttpOnly"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 26 May 2024 00:22:15 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 102,\n    \"name\": \"Juliane Maran\",\n    \"email\": \"rian@example.com\",\n    \"password\": \"$2a$10$OkPSqLBHExjHzWbHOH3H9uPsMrxEecHXsYho6mxempu0VkNw9NKjK\",\n    \"cpf\": \"06069043952\",\n    \"phoneNumber\": \"41992199488\",\n    \"active\": true,\n    \"createdAt\": \"2024-05-25T19:03:22.003457-03:00\",\n    \"updatedAt\": \"2024-05-25T19:03:22.003457-03:00\",\n    \"enabled\": true,\n    \"authorities\": [],\n    \"username\": \"rian@example.com\",\n    \"credentialsNonExpired\": true,\n    \"accountNonLocked\": true,\n    \"accountNonExpired\": true\n}"
+								}
+							]
+						},
+						{
+							"name": "Buscar usuário Ativo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/active",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"active"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8888/api/v1/users/active",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8888",
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"active"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:4200"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST, PUT, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Authorization, Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "X-CSRF-TOKEN",
+											"value": "e60d54fc-a907-4227-b228-182153f3feb9"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "JSESSIONID=8222D4FB22907CACB577C352664E03E3; Path=/api/v1; HttpOnly"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 26 May 2024 00:22:27 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 102,\n        \"name\": \"Juliane Maran\",\n        \"email\": \"rian@example.com\",\n        \"password\": \"$2a$10$OkPSqLBHExjHzWbHOH3H9uPsMrxEecHXsYho6mxempu0VkNw9NKjK\",\n        \"cpf\": \"06069043952\",\n        \"phoneNumber\": \"41992199488\",\n        \"active\": true,\n        \"createdAt\": \"2024-05-25T19:03:22.003457-03:00\",\n        \"updatedAt\": \"2024-05-25T19:03:22.003457-03:00\",\n        \"enabled\": true,\n        \"authorities\": [],\n        \"username\": \"rian@example.com\",\n        \"credentialsNonExpired\": true,\n        \"accountNonLocked\": true,\n        \"accountNonExpired\": true\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Buscar usuário Inativo",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/inactive",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"inactive"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 OK - Lista vazia",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8888/api/v1/users/inactive",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8888",
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"inactive"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:4200"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST, PUT, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Authorization, Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "X-CSRF-TOKEN",
+											"value": "40682625-230f-4268-a0c3-4a783382db5f"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "JSESSIONID=F00358B498C511EF716545E39B66F040; Path=/api/v1; HttpOnly"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 26 May 2024 00:22:52 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "[]"
+								}
+							]
+						},
+						{
+							"name": "Buscar usuário por id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "102"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 OK - Lista vazia",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8888/api/v1/users/inactive",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8888",
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"inactive"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:4200"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST, PUT, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Authorization, Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "X-CSRF-TOKEN",
+											"value": "40682625-230f-4268-a0c3-4a783382db5f"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "JSESSIONID=F00358B498C511EF716545E39B66F040; Path=/api/v1; HttpOnly"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 26 May 2024 00:22:52 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "[]"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Update",
+					"item": [
+						{
+							"name": "Atualizar dados do usuário",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Rian Maran\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "102"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Desativar Usuário",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Rian Maran\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/:id/deactivate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":id",
+										"deactivate"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "102"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ativar Usuário",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Rian Maran\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/102/activate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"102",
+										"activate"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete",
+					"item": [
+						{
+							"name": "Excluir Usuário",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWFuQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE2Njg1MTI3LCJleHAiOjE3MTY3NzE1Mjd9.2N_qkDnpN_jeitK99EwDKgb2fZG7tX0jYRqQ8ksEGqE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Rian Maran\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/users/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "102"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
