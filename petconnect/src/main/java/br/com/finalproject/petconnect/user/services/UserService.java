@@ -1,5 +1,9 @@
 package br.com.finalproject.petconnect.user.services;
 
+import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.CpfNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
 import br.com.finalproject.petconnect.user.dto.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -7,6 +11,7 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,22 +27,26 @@ public class UserService {
     private final UserRepository userRepository;
     private final MessageUtil messageUtil;
 
+    @Transactional(readOnly = true)
     public List<User> allUsers() {
         return logAndReturnList("Buscando todos os usuários",
                 userRepository.findAll(), "Total de usuários encontrados: {}");
     }
 
+    @Transactional(readOnly = true)
     public User findUser(FindUserRequest request) {
         if (request.getName() != null) {
             return findUserByName(request.getName());
         }
 
         if (request.getEmail() != null) {
-            return findUserByEmail(request.getEmail()).orElse(null);
+            return findUserByEmail(request.getEmail())
+                    .orElseThrow(() -> new EmailNotFoundException(messageUtil.getMessage("emailNotFound") + request.getEmail()));
         }
 
         if (request.getCpf() != null) {
-            return findUserByCpf(request.getCpf()).orElse(null);
+            return findUserByCpf(request.getCpf())
+                    .orElseThrow(() -> new CpfNotFoundException(messageUtil.getMessage("cpfNotFound") + request.getCpf()));
         }
 
         if (!request.isActive()) {
@@ -48,50 +57,67 @@ public class UserService {
         return null;
     }
 
+    @Transactional(readOnly = true)
     public User findUserByName(String name) {
         return logAndReturnUser(
                 name, userRepository.findByName(name).stream().findFirst());
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findUserByEmail(String email) {
         return logAndReturnOptionalUser("Buscando usuário pelo email: {}",
                 email, userRepository.findByEmail(email));
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findUserByCpf(String cpf) {
         return logAndReturnOptionalUser("Buscando usuário pelo CPF: {}",
                 cpf, userRepository.findByCpf(cpf));
     }
 
+    @Transactional(readOnly = true)
     public List<User> listUsersByName(String name) {
         return logAndReturnList(
                 name, userRepository.findByName(name));
     }
 
+    @Transactional(readOnly = true)
     public List<User> findUsersByActive(boolean active) {
         return logAndReturnList(
                 active, userRepository.findByActive(active));
     }
 
+    @Transactional(readOnly = true)
     public List<User> listActiveUsers() {
         return logAndReturnList("Listando usuários ativos",
                 userRepository.findByActive(true), "Total de usuários ativos: {}");
     }
 
+    @Transactional(readOnly = true)
     public List<User> listInactiveUsers() {
         return logAndReturnList("Listando usuários inativos",
                 userRepository.findByActive(false), "Total de usuários inativos: {}");
     }
 
+    @Transactional(readOnly = true)
     public User getUserById(Long id) {
         log.info("Buscando usuário com ID: {}", id);
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(messageUtil.getMessage("usernameNotFound")));
+                .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage("usernameNotFound")));
     }
 
     @Transactional
     public String updateUser(Long id, UpdateUserRequest updatedUser) {
         User user = getUserAndUpdateLog(id, "Atualizando usuário com ID: {}");
+
+        if (updatedUser.getCpf() != null && userRepository.existsByCpf(updatedUser.getCpf())) {
+            throw new CpfAlreadyExistsException(messageUtil.getMessage("cpfAlreadyExists") + updatedUser.getCpf());
+        }
+
+        if (updatedUser.getEmail() != null && userRepository.existsByEmail(updatedUser.getEmail())) {
+            throw new EmailAlreadyExistsException(messageUtil.getMessage("emailAlreadyExists") + updatedUser.getEmail());
+        }
+
         updateUserDetails(user, updatedUser);
         userRepository.save(user);
         log.info("Usuário com ID: {} atualizado com sucesso", id);
@@ -104,7 +130,7 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
         log.info("Usuário com ID: {} desativado com sucesso", id);
-        return "Usuário desativado com sucesso";
+        return messageUtil.getMessage("deactivateUser");
     }
 
     @Transactional
@@ -113,7 +139,7 @@ public class UserService {
         user.setActive(true);
         userRepository.save(user);
         log.info("Usuário com ID: {} ativado com sucesso", id);
-        return "Usuário ativado com sucesso";
+        return messageUtil.getMessage("activateUser");
     }
 
     @Transactional
@@ -121,7 +147,7 @@ public class UserService {
         log.info("Excluindo usuário com ID: {}", id);
         userRepository.deleteById(id);
         log.info("Usuário com ID: {} excluído com sucesso", id);
-        return "Usuário excluído com sucesso";
+        return messageUtil.getMessage("deleteUser");
     }
 
     private void updateUserDetails(User user, UpdateUserRequest updatedUser) {
@@ -145,7 +171,7 @@ public class UserService {
     private User getUserAndUpdateLog(Long id, String message) {
         log.info(message, id);
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(messageUtil.getMessage("usernameNotFound")));
+                .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage("usernameNotFound")));
     }
 
     private User logAndReturnUser(String param, Optional<User> userOpt) {
@@ -153,10 +179,9 @@ public class UserService {
         if (userOpt.isPresent()) {
             log.info("Usuário encontrado: {}", userOpt.get().getId());
             return userOpt.get();
-        } else {
-            log.warn("Nenhum usuário encontrado com {}", param);
-            return null;
         }
+        log.warn("Nenhum usuário encontrado com {}", param);
+        return null;
     }
 
     private Optional<User> logAndReturnOptionalUser(String message, String param, Optional<User> userOpt) {
