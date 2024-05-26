@@ -61,14 +61,14 @@ public class SecurityConfiguration {
                     log.info("Configurando CSRF");
                     csrf.csrfTokenRequestHandler(requestHandler)
                             .ignoringRequestMatchers("/api/v1", "/api/v1/**", "/auth/**",
-                                    "/auth/login", "/auth/signup")
+                                    "/auth/login", "/auth/signup", "/users/update-password")
                             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
                 })
                 .authorizeHttpRequests(requests -> {
                     log.info("Configurando autorizações de requisição");
                     requests.requestMatchers("/api/v1", "/api/v1/**", "/auth/**",
-                                    "/auth/login", "/auth/signup").permitAll()
+                                    "/auth/login", "/auth/signup", "/users/update-password").permitAll()
                             .anyRequest().authenticated();
                     // .requestMatchers("/users", "/users/**").authenticated();
                 })

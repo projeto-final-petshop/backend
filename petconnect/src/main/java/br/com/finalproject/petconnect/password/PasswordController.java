@@ -23,7 +23,7 @@ public class PasswordController {
 
         try {
             passwordService.updatePassword(passwordUpdateRequest);
-            return ResponseEntity.status(HttpStatus.OK).body("");
+            return ResponseEntity.status(HttpStatus.OK).body("Senha atualizada com sucesso!");
         } catch (PasswordUpdateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

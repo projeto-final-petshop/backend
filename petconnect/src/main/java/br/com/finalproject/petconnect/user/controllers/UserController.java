@@ -65,9 +65,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // TODO: Métodos PUT e DELETE estão retornando 401 ao realizar chamadas via Postman
-    //  realizar testes utilizando o frontend para buscar o dados do Usuário
-
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest user) {
         String response = userService.updateUser(id, user);
