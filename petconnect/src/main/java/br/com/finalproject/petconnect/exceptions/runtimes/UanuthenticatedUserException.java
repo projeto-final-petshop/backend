@@ -1,8 +1,9 @@
 package br.com.finalproject.petconnect.exceptions.runtimes;
 
-/**
- * HTTP STATUS 401 - unauthenticated
- */
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class UanuthenticatedUserException extends RuntimeException {
 
     public UanuthenticatedUserException() {
