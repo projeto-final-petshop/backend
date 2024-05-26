@@ -1,11 +1,9 @@
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/exceptions/handlers/GlobalExceptionHandler.java
 package br.com.finalproject.petconnect.exceptions.handlers;
-========
-package br.com.finalproject.petconnect.exceptions;
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/exceptions/GlobalExceptionHandler.java
 
+import br.com.finalproject.petconnect.exceptions.dto.ErrorMessages;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,47 +12,59 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final String DESCRIPTION = "description";
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleSecurityException(Exception exception) {
         ProblemDetail errorDetail = null;
 
-        // TODO send this stack trace to an observability tool
-        exception.printStackTrace();
-
         if (exception instanceof BadCredentialsException) {
+            log.error("Erro de credenciais inválidas: {}", exception.getMessage());
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), exception.getMessage());
-            errorDetail.setProperty("description", "The username or password is incorrect");
+            errorDetail.setProperty(DESCRIPTION, ErrorMessages.BAD_CREDENTIALS.getMessage());
 
             return errorDetail;
         }
 
         if (exception instanceof AccountStatusException) {
+            log.error("Erro de status da conta: {}", exception.getMessage());
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "The account is locked");
+            errorDetail.setProperty(DESCRIPTION, ErrorMessages.ACCOUNT_LOCKED.getMessage());
+
+            return errorDetail;
         }
 
         if (exception instanceof AccessDeniedException) {
+            log.error("Erro de acesso negado: {}", exception.getMessage());
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "You are not authorized to access this resource");
+            errorDetail.setProperty(DESCRIPTION, ErrorMessages.ACCESS_DENIED.getMessage());
+
+            return errorDetail;
         }
 
         if (exception instanceof SignatureException) {
+            log.error("Erro de assinatura JWT: {}", exception.getMessage());
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "The JWT signature is invalid");
+            errorDetail.setProperty(DESCRIPTION, ErrorMessages.INVALID_SIGNATURE.getMessage());
+
+            return errorDetail;
         }
 
         if (exception instanceof ExpiredJwtException) {
+            log.error("Erro de token JWT expirado: {}", exception.getMessage());
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "The JWT token has expired");
+            errorDetail.setProperty(DESCRIPTION, ErrorMessages.TOKEN_EXPIRED.getMessage());
+
+            return errorDetail;
         }
 
-        if (errorDetail == null) {
-            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
-            errorDetail.setProperty("description", "Unknown internal server error.");
-        }
+        log.error("Erro interno desconhecido: {}", exception.getMessage());
+        errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
+        errorDetail.setProperty(DESCRIPTION, ErrorMessages.UNKNOWN_ERROR.getMessage());
 
         return errorDetail;
     }

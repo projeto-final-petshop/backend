@@ -22,6 +22,19 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping("/me")
+    public ResponseEntity<User> authenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User response = (User) authentication.getPrincipal();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> allUsers() {
+        List<User> response = userService.allUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<User> findUser(FindUserRequest request) {
         User user = userService.findUser(request);
@@ -34,12 +47,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> listAllUsers() {
-        List<User> response = userService.listAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @GetMapping("/active")
     public ResponseEntity<List<User>> listActiveUsers() {
         List<User> response = userService.listActiveUsers();
@@ -49,19 +56,6 @@ public class UserController {
     @GetMapping("/inactive")
     public ResponseEntity<List<User>> listInactiveUsers() {
         List<User> response = userService.listInactiveUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User response = (User) authentication.getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<List<User>> allUsers() {
-        List<User> response = userService.allUsers();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

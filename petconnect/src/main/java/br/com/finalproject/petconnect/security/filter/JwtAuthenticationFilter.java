@@ -1,21 +1,12 @@
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/security/filter/JwtAuthenticationFilter.java
 package br.com.finalproject.petconnect.security.filter;
 
 import br.com.finalproject.petconnect.security.services.JwtService;
-========
-package br.com.finalproject.petconnect.configs;
-
-import br.com.finalproject.petconnect.services.JwtService;
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/configs/JwtAuthenticationFilter.java
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/security/filter/JwtAuthenticationFilter.java
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-========
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/configs/JwtAuthenticationFilter.java
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +20,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/security/filter/JwtAuthenticationFilter.java
 /**
  * Para cada solicitação, iremos recuperar o Token JWT no cabeçalho Authorization e valida-ló:
  *
@@ -40,48 +30,26 @@ import java.io.IOException;
  * </ul>
  */
 @Slf4j
-========
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/configs/JwtAuthenticationFilter.java
 @Component
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/security/filter/JwtAuthenticationFilter.java
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final HandlerExceptionResolver handlerExceptionResolver;
 
-========
-    private final HandlerExceptionResolver handlerExceptionResolver;
-
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
-
-    public JwtAuthenticationFilter(
-            JwtService jwtService,
-            UserDetailsService userDetailsService,
-            HandlerExceptionResolver handlerExceptionResolver
-    ) {
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-        this.handlerExceptionResolver = handlerExceptionResolver;
-    }
-
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/configs/JwtAuthenticationFilter.java
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/security/filter/JwtAuthenticationFilter.java
 
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
 
-========
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/configs/JwtAuthenticationFilter.java
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -124,10 +92,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (Exception exception) {
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/security/filter/JwtAuthenticationFilter.java
             log.error("Erro ao processar a autenticação JWT", exception);
-========
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/configs/JwtAuthenticationFilter.java
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }

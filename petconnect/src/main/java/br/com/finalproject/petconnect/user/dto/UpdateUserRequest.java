@@ -14,8 +14,6 @@ public class UpdateUserRequest {
     @Email
     private String email;
 
-    private String password;
-
     private String name;
 
     @CPF

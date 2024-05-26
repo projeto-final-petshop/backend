@@ -1,11 +1,9 @@
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/user/entities/User.java
 package br.com.finalproject.petconnect.user.entities;
-========
-package br.com.finalproject.petconnect.entities;
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/entities/User.java
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -41,9 +39,10 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String password;
 
-<<<<<<<< HEAD:petconnect/src/main/java/br/com/finalproject/petconnect/user/entities/User.java
     /**
      * Informação exclusiva do usuário
      */
@@ -54,10 +53,6 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     private boolean active;
-========
-    @Column(nullable = false, columnDefinition = "tinyint not null default 0")
-    private boolean enabled;
->>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597:petconnect/src/main/java/br/com/finalproject/petconnect/entities/User.java
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")

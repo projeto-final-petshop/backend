@@ -24,6 +24,7 @@ Lista de links utilizados para consultas e estudos.
 * [HMAC - SHA256 Hash Generator](https://www.devglan.com/online-tools/hmac-sha256-online?ref=blog.tericcabrel.com)
 * [Implement JWT authentication in a Spring Boot 3 application](https://blog.tericcabrel.com/jwt-authentication-springboot-spring-security/)
 * [Todas as anotações do JPA: Anotações de Mapeamento](https://strn.com.br/artigos/2018/12/11/todas-as-anota%C3%A7%C3%B5es-do-jpa-anota%C3%A7%C3%B5es-de-mapeamento/#google_vignette)
+* [Sentry](https://sentry.io/resources/sdk-configuration/)
 
 
 
