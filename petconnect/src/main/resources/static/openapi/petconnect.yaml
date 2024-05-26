@@ -135,6 +135,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /auth/reset-password:
+    post:
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Password reset link sent successfully
+        '400':
+          description: Invalid request or email not found
+        '500':
+          description: Internal server error
+  /auth/reset-password/confirm:
+    post:
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+      responses:
+        '200':
+          description: Password successfully reset
+        '400':
+          description: Invalid request or email not found
+        '500':
+          description: Internal server error
   /users/me:
     get:
       summary: 'Detalhes do Usuário'
