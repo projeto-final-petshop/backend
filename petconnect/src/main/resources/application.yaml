@@ -33,6 +33,27 @@ spring:
   mvc:
     locale:
       default-locale: pt
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 'petshop.petconnect@gmail.com'
+    password: 'zrgh nfow yzlb eext'
+    default-encoding: UTF-8
+    test-connection: false
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          auth: true
+          from: 'petshop.petconnect@gmail.com'
+
+mail:
+  from:
+    name: 'PetConnect'
 
 security:
   jwt:
