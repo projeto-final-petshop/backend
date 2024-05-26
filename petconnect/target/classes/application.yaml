@@ -57,3 +57,9 @@ logging:
   level:
     org.springframework.boot: DEBUG
     br.com.finalproject.petconnect: INFO
+
+sentry:
+  dsn: https://86e6ca7ed91c054b8d9e214f51e5460f@o4507323182809088.ingest.de.sentry.io/4507323185037392
+  # Defina traces_sample_rate como 1,0 para capturar 100% das transações para monitoramento de desempenho.
+  tracesSampleRate: 1.0
+  exception-resolver-order: -2147483647

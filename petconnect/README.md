@@ -1,5 +1,7 @@
 # Pet Connect
 
+* Clique [aqui](https://documenter.getpostman.com/view/13771815/2sA3Qqgstd) para acessar a Collection no Postman.
+
 ## Pré Requisitos
 
 * Java 21
@@ -26,7 +28,6 @@ No terminal insira o comando: `mvn spring-boot:run`
 
 Para migrar o banco de dados, execute no terminal: `flyway migrate -configFiles=flyway.properties`
 
-<<<<<<< HEAD
 Rollback da migração: `flyway undo -configFiles=flyway.properties`
 
 ## Rotas
@@ -54,7 +55,6 @@ A API expões rotas onde algumas são acessíveis sem autenticação enquanto ou
 
 * **Spring 'Web'**: construa aplicações 'web', incluindo RESTful, usando Spring MVC. O Apache Tomcat é usado como o
   contêiner embutido padrão.
-* **Spring Security**: 'Framework' altamente personalizável de autenticação e controle de acesso para aplicações Spring.
 * **Spring Data JPA**: Persista dados em bancos de dados SQL com Java Persistence API usando Spring Data e Hibernate.
 * **Spring Boot Dev Tools**: Fornece reinicializações rápidas de aplicativos, LiveReload e configurações para uma melhor
   experiência de desenvolvimento.
@@ -63,8 +63,20 @@ A API expões rotas onde algumas são acessíveis sem autenticação enquanto ou
 * **Validação**: Validação de Bean com validador Hibernate.
 * **Lombok**: Biblioteca de anotações Java que ajuda a reduzir código boilerplate.
 * **Driver MySQL**: Driver MySQL JDBC.
-* **Flyway Migration**: Controle de versão para o seu banco de dados, permitindo a migração de qualquer versão (
-  incluíndo um banco de dados vazio) para a versão mais recente do schema.
-=======
-Rollback da migração: `flyway undo -configFiles=flyway.properties`
->>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597
+
+## Documentações
+
+* [Swagger OpenAPI](./src/main/resources/static/openapi/petconnect.yaml)
+* [Collection](./src/main/resources/static/postman_collection)
+* [‘Scripts’ SQL para migração utilizando Flyway](./src/main/resources/db/migration)
+* [Flyway Migration](./documents/flyway.md): Controle de versão para o seu banco de dados, permitindo a migração de
+  qualquer versão (incluíndo um banco de dados vazio) para a versão mais recente do schema.
+* [Spring Security](./documents/security.md): 'Framework' altamente personalizável de autenticação e controle de acesso
+  para aplicações Spring.
+* [Sentry](./documents/sentry.md)
+* [História de Usuário](./documents/HISTORIA_DE_USUARIO.md)
+* [Links Utilizados para consultas e estudos](./documents/links.md)
+
+## Monitoramento de Erros
+
+* [Sentry](https://estudante-k0.sentry.io/settings/)

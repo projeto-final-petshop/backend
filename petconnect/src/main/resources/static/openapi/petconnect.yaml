@@ -7,13 +7,44 @@ info:
     
     * **Acadêmicos**: Gabriel, Guilherme e Juliane
     * **Nome do Produto de Software**: PetConnect
-  termsOfService: 'http://swagger.io/terms/'
+    
+    ## Validação dos Campos
+    
+    * O campo `name` deve conter no mínimo 3 caracteres e no formulário de cadastro é obrigatório.
+    * O Campo `cpf` é obrigatório para realizar o cadastro e deve ter:
+      * 11 digitos numéricos
+      * formato válido (XXX.XXX.XXX-XX)
+      * ser um número de documento válido
+    * O campo `email` deve ser um endereço de email com formato válido e em alguns casos como cadastro e 
+      login é campo obrigatório.    
+    * `phoneNumber` deve ser um número de telefone com formato válido. 
+      * O sinal de `+` é opcional.
+      * Exemplo de formato: +55119XXXXXXXX
+      * Mínimo 13 e máximo 14 caracteres
+    * `password`, `confirmPassword`, `newPassword`: A senha deve seguir os seguintes requisitos mínimos:
+      * 8 caracteres
+      * 1 letra maiúscula
+      * 1 letra minúscula
+      * 1 número
+      * 1 caracter especial
+    * `password` e `newPassword` serão criptografadas e armazenadas no banco de dados.
+    * `confirmPassword` não será persistido no banco de dados. 
+    
+    ## Endpoints
+    
+    * `active` e `deactive`: quando o usuário deseja excluir sua conta, ela será desativada, 
+      após um período de 30 (trinta) dias será excluída do banco de dados. 
+      Ou seja, dentro dos 30 dias, o usuário poderá ativar sua conta novamente.
+      Para essa primeira etapa do projeto, são endpoints **opcionais**.
+    * No momento será utilizado o método `DELETE` para excluir os dados do usuário do banco de dados.
+
+  termsOfService: 'https://swagger.io/terms/'
   contact:
     name: 'Suporte'
     email: petshop.petconnect@gmail.com
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   version: 1.0.0
 externalDocs:
   description: 'Repositório do Projeto no GitHub'
@@ -31,12 +62,16 @@ tags:
     description: 'Loja para Animais de Estimação'
   - name: Scheduling
     description: 'Agendamento de Consultas e Serviços'
+  - name: Password
+    description: 'Alteração (atualização) e Recuperação de Senha'
 paths:
   /auth/signup:
     post:
-      summary: 'Cadastrar usuário'
+      summary: 'Cadastrar um novo usuário'
       tags:
         - Auth
+      operationId: 'register'
+      description: ''
       requestBody:
         required: true
         content:
@@ -45,13 +80,13 @@ paths:
               $ref: '#/components/schemas/RegisterUserRequest'
       responses:
         '201':
-          description: 'Created'
+          description: 'Usuário cadastrado com sucesso'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: 'Campo inválido'
+          description: 'Requisição Inválida'
           content:
             application/json:
               schema:
@@ -73,6 +108,8 @@ paths:
       summary: 'Login'
       tags:
         - Auth
+      operationId: 'authenticate'
+      description: ''
       requestBody:
         required: true
         content:
@@ -81,25 +118,13 @@ paths:
               $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
-          description: OK
+          description: 'Login bem-sucedido!'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
-        '400':
-          description: 'Campo inválido'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '401':
-          description: 'Unauthorized (Não autenticado)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: 'Usuário não encontrado'
+          description: 'Credenciais Inválidas'
           content:
             application/json:
               schema:
@@ -115,8 +140,10 @@ paths:
       summary: 'Detalhes do Usuário'
       tags:
         - User
+      operationId: 'authenticatedUser'
+      description: 'Usuário autenticado'
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       responses:
         '200':
           description: 'OK'
@@ -154,13 +181,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /users/:
+  /users:
     get:
       summary: 'Listar Todos os Usuários'
       tags:
         - User
+      operationId: 'allUsers'
+      description: 'Usuário autenticado'
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       responses:
         '200':
           description: OK
@@ -194,6 +223,183 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /users/{id}:
+    put:
+      summary: 'Atualiza os dados de um Usuário'
+      tags:
+        - User
+      security:
+        - BearerAuth: [ ]
+      operationId: 'getUserById'
+      description: 'Buscar usuário por ID'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 'ID do Usuário'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '200':
+          description: 'Usuário atualizado com sucesso'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 'Usuário atualizado com sucesso!'
+        '404':
+          description: 'Usuário não encontrado.'
+    delete:
+      summary: 'Excluir um usuáiro'
+      tags:
+        - User
+      security:
+        - BearerAuth: [ ]
+      operationId: 'deleteUser'
+      description: 'Excluir usuário por ID'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 'ID do Usuário'
+      responses:
+        '200':
+          description: 'Usuário excluído com sucesso!'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 'Usuário excluído com sucesso!'
+        '404':
+          description: 'Usuário não encontrado.'
+  /users/{id}/deactivate:
+    put:
+      summary: 'Desativa um usuário (opcional)'
+      tags:
+        - User
+      security:
+        - BearerAuth: [ ]
+      operationId: 'deactivateUser'
+      description: 'Desativar Usuário'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 'ID do Usuário'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '200':
+          description: 'Usuário desativado com sucesso'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 'Usuário desativado com sucesso!'
+        '404':
+          description: 'Usuário não encontrado.'
+  /users/{id}/activate:
+    put:
+      summary: 'Ativar um usuário (opcional)'
+      tags:
+        - User
+      security:
+        - BearerAuth: [ ]
+      operationId: 'activateUser'
+      description: 'Ativar Usuário'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 'ID do Usuário'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '200':
+          description: 'Usuário ativado com sucesso'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 'Usuário ativado com sucesso!'
+        '404':
+          description: 'Usuário não encontrado.'
+  /users/search:
+    put:
+      summary: 'Busca um usuário pelo parâmetro fornecido'
+      tags:
+        - User
+      security:
+        - BearerAuth: [ ]
+      operationId: 'findUser'
+      description: 'Para pesquisar usuário por um dos parâmetros: nome, email, cpf ou ativo'
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 'Nome do Usuário'
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$'
+          description: 'Email do usuário deve ter um formato válido'
+        - name: cpf
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+            example: 'XXX.XXX.XXX-XX'
+          description: 'CPF do usuário deve ser válido e ter um formato válido'
+        - name: active
+          in: query
+          required: true
+          schema:
+            type: boolean
+          description: 'Status ativo do usuário'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '200':
+          description: 'Usuário encontrado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: 'Usuário não encontrado.'
 components:
   schemas:
     RegisterUserRequest:
@@ -205,22 +411,45 @@ components:
           example: 'Nome do Usuário'
         email:
           type: string
-          description: 'Email do usuário'
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$'
           example: 'user@example.com'
+          description: 'Email do usuário deve ter um formato válido e é campo obrigatório'
         password:
           type: string
-          description: 'Senha do Usuário'
+          description: 'A senha deve conter no mínimo 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'
+          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          minLength: 8
           example: 'P4$$w0rD'
+        confirmPassword:
+          type: string
+          description: 'O valor do campo `confirmPassword` deve receber o mesmo ao valor do campo `password`.'
+          example: 'P4$$w0rD'
+        cpf:
+          type: string
+          pattern: '^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+          example: 'XXX.XXX.XXX-XX'
+          description: 'CPF do usuário deve ser válido e ter um formato válido'
+          minLength: 11
+          maxLength: 11
+        phoneNumber:
+          type: string
+          example: '5511998765432 ou +5511998765432'
+          description: 'O número de telefone no formato E.164'
+          minLength: 13
+          maxLength: 14
     LoginRequest:
       type: object
       properties:
         email:
           type: string
-          description: 'Email do usuário'
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$'
           example: 'user@example.com'
+          description: 'Email do usuário deve ter um formato válido e é campo obrigatório'
         password:
           type: string
-          description: 'Senha do Usuário'
+          description: 'A senha deve conter no mínimo 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'
+          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          minLength: 8
           example: 'P4$$w0rD'
     LoginResponse:
       type: object
@@ -228,9 +457,10 @@ components:
         token:
           type: string
           example: 'eyJhbGciOiJIUzI1NiJ9...'
-          description: 'Token de Autenticação'
+          description: 'Token JWT para autenticação'
         expiresIn:
           type: integer
+          format: int32
           example: 86400000
           description: 'Tempo em milissegundos até o token expirar'
     User:
@@ -238,6 +468,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: 'ID do usuário'
           example: 1
         name:
@@ -246,20 +477,41 @@ components:
           example: 'Nome do Usuário'
         email:
           type: string
-          description: 'Email do Usuário'
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$'
           example: 'user@example.com'
+          description: 'Email do usuário deve ter um formato válido e é campo obrigatório'
         password:
           type: string
-          description: 'Senha do usuário criptografada'
-          example: '$2a$10$HzCBTX9B7cgF3syLr5OvZe6pDq5lGMqKzrs8vqnc3mFkg3gwT/mnK'
+          description: 'A senha deve conter no mínimo 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'
+          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          minLength: 8
+          example: 'P4$$w0rD'
+        cpf:
+          type: string
+          pattern: '^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+          example: 'XXX.XXX.XXX-XX'
+          description: 'CPF do usuário deve ser válido e ter um formato válido'
+          minLength: 11
+          maxLength: 11
+        phoneNumber:
+          type: string
+          example: '5511998765432 ou +5511998765432'
+          description: 'O número de telefone no formato E.164'
+          minLength: 13
+          maxLength: 14
+        active:
+          type: boolean
+          description: 'Buscar usuário por status (ativo ou inativo)'
         createdAt:
           type: string
           format: date-time
           example: '2024-05-25T14:00:26.067893-03:00'
+          description: 'ISO 8601'
         updatedAt:
           type: string
           format: date-time
           example: '2024-05-25T14:00:26.067893-03:00'
+          description: 'ISO 8601'
         enabled:
           type: boolean
           example: true
@@ -279,6 +531,53 @@ components:
           type: array
           items:
             type: string
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Nome do usuário'
+          example: 'Nome do Usuário'
+        email:
+          type: string
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$'
+          example: 'user@example.com'
+          description: 'Email do usuário deve ter um formato válido e é campo obrigatório'
+        cpf:
+          type: string
+          pattern: '^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+          example: 'XXX.XXX.XXX-XX'
+          description: 'CPF do usuário deve ser válido e ter um formato válido'
+          minLength: 11
+          maxLength: 11
+        phoneNumber:
+          type: string
+          example: '5511998765432 ou +5511998765432'
+          description: 'O número de telefone no formato E.164'
+          minLength: 13
+          maxLength: 14
+    FindUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Nome do usuário'
+          example: 'Nome do Usuário'
+        email:
+          type: string
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$'
+          example: 'user@example.com'
+          description: 'Email do usuário deve ter um formato válido e é campo obrigatório'
+        cpf:
+          type: string
+          pattern: '^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+          example: 'XXX.XXX.XXX-XX'
+          description: 'CPF do usuário deve ser válido e ter um formato válido'
+          minLength: 11
+          maxLength: 11
+        active:
+          type: boolean
+          description: 'Buscar usuário por status (ativo ou inativo)'
     ErrorResponse:
       type: object
       properties:
@@ -306,4 +605,4 @@ components:
       scheme: bearer
       bearerFormat: JWT
 security:
-  - bearerAuth: [ ]
+  - BearerAuth: [ ]
