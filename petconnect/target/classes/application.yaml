@@ -21,16 +21,6 @@ spring:
       ddl-auto: update # validate
       use-new-id-generator-mappings: false
     database-platform: org.hibernate.dialect.MySQLDialect
-  flyway:
-    enabled: false
-  #    url: jdbc:mysql://localhost:3306/petconnect?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
-  #    user: root
-  #    password: root
-  #    group: true
-  #    locations: filesystem:src/main/resources/db/migration
-  #    sql-migration-prefix: V
-  #    sql-migration-separator: __
-  #    sql-migration-suffixes: .sql
   jackson:
     date-format: "dd/MM/yyyy HH:mm:ss"
     locale: 'pt-BR'
@@ -43,6 +33,27 @@ spring:
   mvc:
     locale:
       default-locale: pt
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 'petshop.petconnect@gmail.com'
+    password: 'zrgh nfow yzlb eext'
+    default-encoding: UTF-8
+    test-connection: false
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          auth: true
+          from: 'petshop.petconnect@gmail.com'
+
+mail:
+  from:
+    name: 'PetConnect'
 
 security:
   jwt:
@@ -57,9 +68,3 @@ logging:
   level:
     org.springframework.boot: DEBUG
     br.com.finalproject.petconnect: INFO
-
-sentry:
-  dsn: https://86e6ca7ed91c054b8d9e214f51e5460f@o4507323182809088.ingest.de.sentry.io/4507323185037392
-  # Defina traces_sample_rate como 1,0 para capturar 100% das transações para monitoramento de desempenho.
-  tracesSampleRate: 1.0
-  exception-resolver-order: -2147483647

@@ -4,20 +4,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidFieldException extends RuntimeException {
+public class TokenExpiredException extends RuntimeException {
 
-    public InvalidFieldException() {
+    public TokenExpiredException() {
     }
 
-    public InvalidFieldException(String message) {
+    public TokenExpiredException(String message) {
         super(message);
     }
 
-    public InvalidFieldException(String message, Throwable cause) {
+    public TokenExpiredException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public InvalidFieldException(Throwable cause) {
+    public TokenExpiredException(Throwable cause) {
         super(cause);
     }
 }

@@ -4,20 +4,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class CpfNotFoundException extends RuntimeException {
+public class TokenNotFoundException extends RuntimeException {
 
-    public CpfNotFoundException() {
+    public TokenNotFoundException() {
     }
 
-    public CpfNotFoundException(String message) {
+    public TokenNotFoundException(String message) {
         super(message);
     }
 
-    public CpfNotFoundException(String message, Throwable cause) {
+    public TokenNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public CpfNotFoundException(Throwable cause) {
+    public TokenNotFoundException(Throwable cause) {
         super(cause);
     }
 }

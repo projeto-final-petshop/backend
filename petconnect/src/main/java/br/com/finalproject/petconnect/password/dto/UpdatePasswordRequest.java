@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.password;
+package br.com.finalproject.petconnect.password.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordUpdateRequest {
+public class UpdatePasswordRequest {
 
     private String currentPassword;
     private String newPassword;

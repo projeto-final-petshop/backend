@@ -1,15 +1,19 @@
 package br.com.finalproject.petconnect.user.controllers;
 
+import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.user.dto.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.services.UserService;
+import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
+    private final MessageUtil messageUtil;
     private final UserService userService;
 
     @GetMapping("/me")
@@ -61,35 +66,52 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User response = userService.getUserById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        try {
+            User response = userService.getUserById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
-
-    // TODO: Métodos PUT e DELETE estão retornando 401 ao realizar chamadas via Postman
-    //  realizar testes utilizando o frontend para buscar o dados do Usuário
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest user) {
-        String response = userService.updateUser(id, user);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        try {
+            String response = userService.updateUser(id, user);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (CpfAlreadyExistsException | EmailAlreadyExistsException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        }
     }
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
-        String response = userService.deactivateUser(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        try {
+            String response = userService.deactivateUser(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PutMapping("/{id}/activate")
     public ResponseEntity<String> activateUser(@PathVariable Long id) {
-        String response = userService.activateUser(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        try {
+            String response = userService.activateUser(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        String response = userService.deleteUser(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        try {
+            String response = userService.deleteUser(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
 }

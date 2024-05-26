@@ -60,16 +60,20 @@ public class SecurityConfiguration {
                 .csrf(csrf -> {
                     log.info("Configurando CSRF");
                     csrf.csrfTokenRequestHandler(requestHandler)
-                            .ignoringRequestMatchers("/api/v1", "/api/v1/**", "/auth/**",
-                                    "/auth/login", "/auth/signup")
+                            .ignoringRequestMatchers(
+                                    "/api/v1", "/api/v1/**", "/auth/**", "/users/**", "/users",
+                                    "/auth/login", "/auth/signup", "/users/update-password",
+                                    "/users/reset-password", "/users/reset-password/confirm")
                             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
                 })
                 .authorizeHttpRequests(requests -> {
                     log.info("Configurando autorizações de requisição");
-                    requests.requestMatchers("/api/v1", "/api/v1/**", "/auth/**",
-                                    "/auth/login", "/auth/signup").permitAll()
-                            .anyRequest().authenticated();
+                    requests.requestMatchers(
+                            "/api/v1", "/api/v1/**", "/auth/**", "/users/**", "/users",
+                            "/auth/login", "/auth/signup", "/users/update-password",
+                            "/users/reset-password", "/users/reset-password/confirm").permitAll();
+//                            .anyRequest().authenticated();
                     // .requestMatchers("/users", "/users/**").authenticated();
                 })
                 .authenticationProvider(authenticationProvider)

@@ -1,11 +1,13 @@
 package br.com.finalproject.petconnect.security.controllers;
 
+import br.com.finalproject.petconnect.email.EmailService;
 import br.com.finalproject.petconnect.security.dto.LoginRequest;
 import br.com.finalproject.petconnect.security.dto.LoginResponse;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.dto.RegisterUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,16 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/auth")
 @RestController
+@AllArgsConstructor
 public class AuthenticationController {
 
     private final JwtService jwtService;
-
     private final AuthenticationService authenticationService;
-
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<User> register(@RequestBody RegisterUserRequest registerUserRequest) {
