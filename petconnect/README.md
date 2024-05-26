@@ -26,6 +26,7 @@ No terminal insira o comando: `mvn spring-boot:run`
 
 Para migrar o banco de dados, execute no terminal: `flyway migrate -configFiles=flyway.properties`
 
+<<<<<<< HEAD
 Rollback da migração: `flyway undo -configFiles=flyway.properties`
 
 ## Rotas
@@ -64,3 +65,6 @@ A API expões rotas onde algumas são acessíveis sem autenticação enquanto ou
 * **Driver MySQL**: Driver MySQL JDBC.
 * **Flyway Migration**: Controle de versão para o seu banco de dados, permitindo a migração de qualquer versão (
   incluíndo um banco de dados vazio) para a versão mais recente do schema.
+=======
+Rollback da migração: `flyway undo -configFiles=flyway.properties`
+>>>>>>> 1c434ed80b57f6c4415caa2e50e19d38035df597
