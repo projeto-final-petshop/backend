@@ -63,7 +63,7 @@ public class SecurityConfiguration {
                             .ignoringRequestMatchers(
                                     "/api/v1", "/api/v1/**", "/auth/**", "/users/**", "/users",
                                     "/auth/login", "/auth/signup", "/users/update-password",
-                                    "/users/reset-password", "/users/reset-password/confirm")
+                                    "/auth/reset-password", "/auth/reset-password/confirm")
                             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
                 })
@@ -72,7 +72,7 @@ public class SecurityConfiguration {
                     requests.requestMatchers(
                             "/api/v1", "/api/v1/**", "/auth/**", "/users/**", "/users",
                             "/auth/login", "/auth/signup", "/users/update-password",
-                            "/users/reset-password", "/users/reset-password/confirm").permitAll();
+                            "/auth/reset-password", "/auth/reset-password/confirm").permitAll();
 //                            .anyRequest().authenticated();
                     // .requestMatchers("/users", "/users/**").authenticated();
                 })
