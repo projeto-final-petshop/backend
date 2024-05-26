@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.password;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.PasswordUpdateException;
+import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class PasswordController {
 
+    private final MessageUtil messageUtil;
     private final PasswordService passwordService;
 
     @PutMapping("/update-password")
@@ -23,7 +25,8 @@ public class PasswordController {
 
         try {
             passwordService.updatePassword(passwordUpdateRequest);
-            return ResponseEntity.status(HttpStatus.OK).body("Senha atualizada com sucesso!");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(messageUtil.getMessage("updatePassword"));
         } catch (PasswordUpdateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
