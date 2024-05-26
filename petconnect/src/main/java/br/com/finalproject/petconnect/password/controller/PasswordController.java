@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.password.controller;
 
-import br.com.finalproject.petconnect.email.EmailService;
 import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.PasswordUpdateException;
 import br.com.finalproject.petconnect.exceptions.runtimes.TokenExpiredException;
@@ -18,15 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping
 @AllArgsConstructor
 public class PasswordController {
 
-    private final EmailService emailService;
     private final MessageUtil messageUtil;
     private final PasswordService passwordService;
 
-    @PutMapping("/update-password")
+    @PutMapping("/users/update-password")
     public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordRequest passwordUpdateRequest) {
 
         try {
@@ -39,7 +37,7 @@ public class PasswordController {
 
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("/auth/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request) {
         try {
             passwordService.resetPassword(request.getEmail());
@@ -49,7 +47,7 @@ public class PasswordController {
         }
     }
 
-    @PostMapping("/reset-password/confirm")
+    @PostMapping("/auth/reset-password/confirm")
     public ResponseEntity<String> confirmResetPassword(@RequestParam("token") String token,
                                                        @RequestBody ResetPasswordRequest resetPasswordRequest) {
         try {

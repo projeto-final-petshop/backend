@@ -24,7 +24,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
-    private final MessageUtil messageUtil;
     private final UserService userService;
 
     @GetMapping("/me")
