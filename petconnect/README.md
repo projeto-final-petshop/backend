@@ -3,147 +3,64 @@
 ## Pré Requisitos
 
 * Java 21
-* Maven
-* Spring
-* MySQL
+* Apache Maven 3.8.6
+* Spring Boot 3.2.6
+* Localidade padrão: pt_BR
+* Codificação da Plataforma: UTF-8
 
 ## Ferramentas
 
-* IDE (de preferência IntelliJ) com plugins:
-    * Lombok
-    * Sonar Lint
-* MySQL Workbench
+* IDE IntelliJ
 * Postman
+* Swagger
+* MySQL
 
 ## Executando a aplicação
 
-## Entendendo a estrutura de pastas
+No terminal insira o comando: `mvn spring-boot:run`
 
-### Diretório Core
+## Executando a migração do Flyway
 
-* Localizado em `./src/main/java/br/com/project/petconnect/core`.
-* O diretório core contém pastas comuns a todo o projeto, que futuramente podem ser extraídas e transformadas em
-  bibliotecas (libs).
-* `/exceptions`: Diretório responsável pelo tratamento de erros personalizados da aplicação.
-* `/security`: Diretório responsável pela autenticação e autorização.
+* Desabilitar o flyway: `spring.flyway.enabled=false`
+* Criar arquivo na raiz do projeto: `flyway.properties`
 
-### Diretório app
+Para migrar o banco de dados, execute no terminal: `flyway migrate -configFiles=flyway.properties`
 
-* Localizado em `./src/main/java/br/com/project/petconnect/app`.
-* O diretório app possui as funcionalidades e entidades de Pet (Animal), Petshop (Loja), User (Usuário), Owner (Tutor) e
-  Login.
-* Cada pasta possui a seguinte estrutura:
-    * `controller`: Contém classes de controlador para gerenciar as solicitações HTTP relacionadas às operações CRUD (
-      Criar, Ler, Atualizar e Excluir).
-    * `domain`:
-        * `dto`: Data Transfer Objects, usados para transferir dados entre as camadas da aplicação.
-        * `entities`: Contém classes Java que representam cada entidade do modelo de dados, como User, Pet, PetShop e
-          Tutor.
-        * `model`: Modelos que representam a estrutura de dados da aplicação, muitas vezes usados para validar e
-          processar dados.
-    * `mapping`: Contém interfaces que utilizam anotações do MapStruct para fazer a transformação entre entidades e
-      DTOs.
-    * `repository`:  Interfaces de repositórios que definem as operações CRUD para cada entidade, utilizando anotações
-      do Spring Data JPA.
-    * `service`: Contém classes de serviço que encapsulam a lógica de negócio, como salvar, buscar, atualizar e excluir
-      dados.
+Rollback da migração: `flyway undo -configFiles=flyway.properties`
 
-## Relacionamento entre Entidades
+## Rotas
 
-* **Um Tutor pode ter vários Animais**: A entidade Tutor possui um relacionamento ManyToOne com a entidade Animal, o que
-  significa que um tutor pode ter vários animais cadastrados em seu nome.
-* **Um PetShop pode ter vários Animais**: A entidade PetShop também possui um relacionamento ManyToOne com a entidade
-  Animal, indicando que um PetShop pode cuidar de vários animais.
+A API expões rotas onde algumas são acessíveis sem autenticação enquanto outras exigem autenticação.
 
-## Conceitos
+| Método | Rotas da API | Status de Acesso | Descrição                             |
+|:-------|:-------------|:-----------------|:--------------------------------------|
+| POST   | /auth/signup | Desprotegida     | Cadastrar um novo usuário             |
+| POST   | /auth/login  | Desprotegida     | Autenticar usuário                    |
+| GET    | /users/me    | Protegida        | Recuperar o usuário autenticado atual |
+| GET    | /users       | Protegida        | Recuperar todos os usuários           |
 
-* **DTO (Data Transfer Object)**: Um DTO é um objeto que transporta dados entre processos. Em `./domain/dto`, são
-  criados para evitar a exposição direta das entidades e para facilitar a transferência de dados entre a camada de
-  apresentação e a camada de negócio.
-* **Model**: Um Model é uma representação dos dados e suas regras de validação. Em `./domain/model`, são utilizados para
-  definir a estrutura e a lógica dos dados manipulados pela aplicação.
-* **Entidades**: As entidades são classes Java que representam os objetos principais do seu modelo de dados, diretamente
-  relacionadas às tabelas do banco de dados. Elas são definidas na pasta `./domain/entities` e possuem as seguintes
-  características:
-    * **Atributos**: Cada entidade tem atributos que correspondem às colunas da tabela do banco de dados. Por exemplo,
-      uma entidade User pode ter atributos como `id`, `name` e `email`.
-    * **Anotações**: Utilizam anotações do JPA (Java Persistence API) para mapear os atributos da classe para as colunas
-      do banco de dados. Exemplos de anotações incluem `@Entity`, `@Table`, `@Id`, `@GeneratedValue`, `@Column`, entre
-      outras.
-    * **Relacionamentos**: Definem os relacionamentos entre as entidades usando anotações
-      como` @OneToMany`, `@ManyToOne`, `@OneToOne`, e` @ManyToMany`. Esses relacionamentos especificam como as entidades
-      estão conectadas umas às outras no banco de dados.
-    * **Construtores e Métodos**: Além dos atributos, as entidades podem ter construtores, `getters`, `setters` e outros
-      métodos úteis para manipulação de dados.
+### Erro de Autenticação
 
-### Mapeamento utilizando MapStruct
+| Erro de Autenticação                | Exceção lançada         | Código de Status HTTP |
+|:------------------------------------|:------------------------|:----------------------|
+| Credenciais de Login incorretas     | BadCredentialsException | 401 - Unauthorized    |
+| Account locked                      | AccountStatusException  | 403 - Forbidden       |
+| Not authorized to access a resource | AccessDeniedException   | 403 - Forbidden       |
+| Invalid JWT                         | SignatureException      | 401 - Unauthorized    |
+| JWT has expired                     | ExpiredJwtException     | 401 - Unauthorized    |
 
-A pasta `mapping` contém interfaces que utilizam anotações do MapStruct para fazer a transformação entre entidades e
-DTOs. O `MapStruct` é uma biblioteca de mapeamento de objetos que automatiza a conversão entre diferentes tipos de
-dados, especialmente entre entidades e DTOs. As interfaces no diretório mapping são responsáveis por:
+## Configurações do Projeto
 
-* **Mapear Entidades para DTOs**: Convertendo objetos de entidades para seus correspondentes DTOs para serem usados nas
-  camadas de apresentação e serviço.
-* **Mapear DTOs para Entidades**: Convertendo objetos DTOs de volta para entidades, permitindo que os dados sejam salvos
-  no banco de dados.
-
-Exemplo de uma interface de mapeamento com MapStruct:
-
-```java
-
-@Mapper
-public interface UserMapper {
-
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-
-    @Mapping(source = "name", target = "userName")
-    UserDTO toUserDTO(User user);
-
-    @Mapping(source = "userName", target = "name")
-    User toUser(UserDTO userDTO);
-}
-
-```
-
-### Biblioteca Lombok
-
-A aplicação também utiliza a biblioteca Lombok para gerar automaticamente getters, setters, construtores e outros
-métodos utilitários. Lombok reduz o código boilerplate, facilitando a manutenção e leitura das classes.
-
-Exemplo de uso de Lombok em uma entidade:
-
-```java
-
-@Entity
-@Table(name = "users")
-@Data // Gera getters, setters, toString, equals e hashCode automaticamente
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
-
-    private String email;
-}
-```
-
-## Como utilizar a aplicação, caso precise fazer alterações
-
-* Na pasta `entities`: no arquivo que contem as entidades deve incluir o novo campo, pois é responsável por persistir os
-  dados no banco.
-* Na pasta `dto`: o arquivo que contém `Request`, são os arquivos que irão na requisição, ou seja, campos que o usuário
-  pretende preencher.
-* Na pasta `dto`: o arquivo que contém `Response`, são os arquivos que irão na resposta, ou seja, no retorno. O que quer
-  que seja apresentado ao usuário.
-* Na pasta `service`: o arquivo que contém `Service`, são arquivos que possuem a lógica, onde deve incluir a validação
-  de campo, como verificar se aquele campo está nulo, ou se a informação que o usuário passou já está cadastrado.
-
----
-
-Observações:
-
-1. Entidade Owner é o dono do animal - funcionalidade que será ativada futuramente.
+* **Spring 'Web'**: construa aplicações 'web', incluindo RESTful, usando Spring MVC. O Apache Tomcat é usado como o
+  contêiner embutido padrão.
+* **Spring Security**: 'Framework' altamente personalizável de autenticação e controle de acesso para aplicações Spring.
+* **Spring Data JPA**: Persista dados em bancos de dados SQL com Java Persistence API usando Spring Data e Hibernate.
+* **Spring Boot Dev Tools**: Fornece reinicializações rápidas de aplicativos, LiveReload e configurações para uma melhor
+  experiência de desenvolvimento.
+* **Spring Boot Actuator**: Suporta endpoints internos (ou personalizados) que permitem monitorar e gerenciar sua
+  aplicação - como integridade do aplicativo, métricas, sessões, etc.
+* **Validação**: Validação de Bean com validador Hibernate.
+* **Lombok**: Biblioteca de anotações Java que ajuda a reduzir código boilerplate.
+* **Driver MySQL**: Driver MySQL JDBC.
+* **Flyway Migration**: Controle de versão para o seu banco de dados, permitindo a migração de qualquer versão (
+  incluíndo um banco de dados vazio) para a versão mais recente do schema.
