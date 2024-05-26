@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -47,20 +48,27 @@ public class SecurityConfiguration {
                     log.info("Configurando CORS");
                     corsCustomizer.configurationSource(request -> {
                         var config = new CorsConfiguration();
-                        config.setAllowedOrigins(Collections.singletonList("*"));
-                        config.setAllowedMethods(List.of("GET, POST, PUT, DELETE, OPTIONS"));
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                        config.setAllowedMethods(List.of("*"));
+                        config.setAllowCredentials(true);
+                        config.setAllowedHeaders(Collections.singletonList("*"));
                         config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+                        config.setMaxAge(3600L);
                         return config;
                     });
                 })
                 .csrf(csrf -> {
                     log.info("Configurando CSRF");
                     csrf.csrfTokenRequestHandler(requestHandler)
-                            .ignoringRequestMatchers("/api/v1", "/api/v1/**", "/auth/**", "/auth/login", "/auth/signup");
+                            .ignoringRequestMatchers("/api/v1", "/api/v1/**", "/auth/**",
+                                    "/auth/login", "/auth/signup")
+                            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
                 })
                 .authorizeHttpRequests(requests -> {
                     log.info("Configurando autorizações de requisição");
-                    requests.requestMatchers("/api/v1", "/api/v1/**", "/auth/**", "/auth/login", "/auth/signup").permitAll()
+                    requests.requestMatchers("/api/v1", "/api/v1/**", "/auth/**",
+                                    "/auth/login", "/auth/signup").permitAll()
                             .anyRequest().authenticated();
                     // .requestMatchers("/users", "/users/**").authenticated();
                 })
