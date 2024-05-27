@@ -26,18 +26,41 @@ public class PetService {
         return PetMapper.petMapper().toResponse(savedPet);
     }
 
-    public PetResponse updatePet(Long id, PetRequest petRequest) {
+    public String updatePet(Long id, PetRequest petRequest) {
+
         Optional<Pet> optionalPet = petRepository.findById(id);
+
         if (optionalPet.isPresent()) {
+
             Pet existingPet = optionalPet.get();
-            existingPet.setName(petRequest.getName());
-            existingPet.setAge(petRequest.getAge());
-            existingPet.setColor(petRequest.getColor());
-            existingPet.setBreed(petRequest.getBreed());
-            existingPet.setAnimalType(petRequest.getAnimalType());
-            existingPet.setBirthdate(petRequest.getBirthdate());
-            Pet updatedPet = petRepository.save(existingPet);
-            return PetMapper.petMapper().toResponse(updatedPet);
+
+            if (petRequest.getName() != null) {
+                existingPet.setName(petRequest.getName());
+            }
+
+            if (petRequest.getAge() != 0) {
+                existingPet.setAge(petRequest.getAge());
+            }
+
+            if (petRequest.getColor() != null) {
+                existingPet.setColor(petRequest.getColor());
+            }
+
+            if (petRequest.getBreed() != null) {
+                existingPet.setBreed(petRequest.getBreed());
+            }
+
+            if (petRequest.getAnimalType() != null) {
+                existingPet.setAnimalType(petRequest.getAnimalType());
+            }
+
+            if (petRequest.getBirthdate() != null) {
+                existingPet.setBirthdate(petRequest.getBirthdate());
+            }
+
+            petRepository.save(existingPet);
+            return "Pet updated succssfully!";
+
         }
         throw new PetNotFoundException("Pet not found with id: " + id);
     }
@@ -53,10 +76,11 @@ public class PetService {
         return PetMapper.petMapper().toResponseList(pets);
     }
 
-    public void deletePet(Long id) {
+    public String deletePet(Long id) {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + id));
         petRepository.delete(pet);
+        return "Pet deleted successfuly!";
     }
 
 }
