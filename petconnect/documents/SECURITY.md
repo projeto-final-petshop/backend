@@ -271,7 +271,8 @@ RBAC: Controle de acesso baseado em função
 | Rota              | Função                   | Descrição                              |
 |:------------------|:-------------------------|:---------------------------------------|
 | GET /users/me     | USER, ADMIN, SUPER_ADMIN | Recuperar o usuário autenticado        |
-| GET /users/       | ADMIN, SUPER_ADMIN       | Recuperar a lista de todos os usuários |
+| GET /users        | ADMIN, SUPER_ADMIN       | Recuperar a lista de todos os usuários |
+| POST /admins      | SUPER_ADMIN              | Cria um novo administrador (ADMIN)     |
 | GET /pets/{id}    | SUPER_ADMIN              | Criar um novo administrador            |
 | GET /pets/{id}    | USER, ADMIN, SUPER_ADMIN | Buscar um Pet por ID                   |
 | GET /pets/list    | USER, ADMIN, SUPER_ADMIN | Listar todos os Pets cadastrados       |

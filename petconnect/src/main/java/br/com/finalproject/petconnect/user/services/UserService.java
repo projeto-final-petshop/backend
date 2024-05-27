@@ -12,6 +12,7 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +38,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findUser(FindUserRequest request) {
-
-        User user = authenticationService.getCurrentUser();
 
         if (request.getName() != null) {
             return findUserByName(request.getName());

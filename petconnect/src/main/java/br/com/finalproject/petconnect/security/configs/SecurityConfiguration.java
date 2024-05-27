@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,6 +26,7 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfiguration {
 
@@ -49,10 +51,10 @@ public class SecurityConfiguration {
                     corsCustomizer.configurationSource(request -> {
                         var config = new CorsConfiguration();
                         config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-                        config.setAllowedMethods(List.of("*"));
+                        config.setAllowedMethods(List.of("GET, POST, PUT, DELETE, OPTIONS"));
+                        config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
-                        config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
                         config.setMaxAge(3600L);
                         return config;
                     });
@@ -61,19 +63,15 @@ public class SecurityConfiguration {
                     log.info("Configurando CSRF");
                     csrf.csrfTokenRequestHandler(requestHandler)
                             .ignoringRequestMatchers(
-                                    "/api/v1", "/api/v1/**", "/auth/**",
-                                    "/auth/login", "/auth/signup", "/users/update-password",
-                                    "/auth/reset-password", "/auth/reset-password/confirm")
+                                    "/api/v1", "/api/v1/**", "/auth/login", "/auth/signup", "/auth/reset-password")
                             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
                 })
                 .authorizeHttpRequests(requests -> {
                     log.info("Configurando autorizações de requisição");
-                    requests.requestMatchers(
-                                    "/api/v1", "/api/v1/**", "/auth/**",
-                                    "/auth/login", "/auth/signup", "/users/update-password",
-                                    "/auth/reset-password", "/auth/reset-password/confirm").permitAll()
-                            .requestMatchers("/users", "/users/**").authenticated()
-                            .requestMatchers("/pets", "/pets/**").authenticated();
+                    requests
+                            .requestMatchers("/api/v1", "/api/v1/**").permitAll()
+                            .requestMatchers("/auth/login", "/auth/signup", "/auth/reset-password").permitAll()
+                            .anyRequest().authenticated();
                 })
                 .authenticationProvider(authenticationProvider)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)

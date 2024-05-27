@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User response = (User) authentication.getPrincipal();
@@ -34,36 +36,42 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<List<User>> allUsers() {
         List<User> response = userService.allUsers();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<User> findUser(FindUserRequest request) {
         User user = userService.findUser(request);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<List<User>> listUsersByName(@RequestParam String name) {
         List<User> response = userService.listUsersByName(name);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/active")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<List<User>> listActiveUsers() {
         List<User> response = userService.listActiveUsers();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/inactive")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<List<User>> listInactiveUsers() {
         List<User> response = userService.listInactiveUsers();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         try {
             User response = userService.getUserById(id);
@@ -74,7 +82,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest user) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> updateUser(@PathVariable Long id,
+                                             @RequestBody UpdateUserRequest user) {
         try {
             String response = userService.updateUser(id, user);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
@@ -84,6 +94,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
         try {
             String response = userService.deactivateUser(id);
@@ -94,6 +105,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/activate")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<String> activateUser(@PathVariable Long id) {
         try {
             String response = userService.activateUser(id);
@@ -104,6 +116,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {
             String response = userService.deleteUser(id);

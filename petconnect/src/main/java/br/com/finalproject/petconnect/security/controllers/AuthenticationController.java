@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.security.controllers;
 
-import br.com.finalproject.petconnect.email.EmailService;
 import br.com.finalproject.petconnect.security.dto.LoginRequest;
 import br.com.finalproject.petconnect.security.dto.LoginResponse;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;
