@@ -1,16 +1,16 @@
 # História de Usuário
 
-1. Usuário
+1. Usuário OK
     * Cadastrar (POST)
     * Campos obrigatórios
     * Validação de campos: e-mail e CPF (únicos e válidos)
     * Mensagem de erro
     * Atualizar (PUT)
-2. Acessar o Sistema
+2. Acessar o Sistema OK
     * Login: email e senha (POST)
     * Recuperar senha: envio de email com link para redefinição (POST)
     * Detalhes do Usuário (GET)
-3. Pet - CUSTOMER
+3. Pet - CUSTOMER OK
     * Cadastrar Pet (POST)
     * Detalhes do Pet (GET)
     * Atualizar dados do Pet (PUT)
