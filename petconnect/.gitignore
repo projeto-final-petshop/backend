@@ -3,8 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.idea/sonarlint/issuestore/index.pb
-.idea/sonarlint/securityhotspotstore/index.pb
+.idea/sonarlint/**
 target/classes/
 
 ### STS ###

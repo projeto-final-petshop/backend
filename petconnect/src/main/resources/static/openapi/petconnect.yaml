@@ -137,7 +137,9 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
   /auth/reset-password:
     post:
-      summary: Request password reset
+      summary: 'Solicitar redefinição de senha'
+      tags:
+        - Auth
       requestBody:
         required: true
         content:
@@ -149,14 +151,16 @@ paths:
                   type: string
       responses:
         '200':
-          description: Password reset link sent successfully
+          description: 'Link de redefinição de senha enviado com sucesso!'
         '400':
-          description: Invalid request or email not found
+          description: 'Solicitação inválida ou e-mail não encontrado!'
         '500':
-          description: Internal server error
+          description: 'Internal server error'
   /auth/reset-password/confirm:
     post:
-      summary: Request password reset
+      summary: 'Confirmar solicitar redefinição de senha'
+      tags:
+        - Auth
       requestBody:
         required: true
         content:
@@ -170,11 +174,11 @@ paths:
                   type: string
       responses:
         '200':
-          description: Password successfully reset
+          description: 'Senha redefinida com sucesso'
         '400':
-          description: Invalid request or email not found
+          description: 'Solicitação inválida ou e-mail não encontrado'
         '500':
-          description: Internal server error
+          description: 'Internal server error'
   /users/me:
     get:
       summary: 'Detalhes do Usuário'
@@ -290,7 +294,7 @@ paths:
         '200':
           description: 'Usuário atualizado com sucesso'
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 example: 'Usuário atualizado com sucesso!'
@@ -316,10 +320,10 @@ paths:
         '200':
           description: 'Usuário excluído com sucesso!'
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
-                example: 'Usuário excluído com sucesso!'
+                example: 'Usuário excluido com sucesso!'
         '404':
           description: 'Usuário não encontrado.'
   /users/{id}/deactivate:
@@ -440,6 +444,135 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description: 'Usuário não encontrado.'
+  /pets:
+    post:
+      tags:
+        - Pet
+      security:
+        - BearerAuth: [ ]
+      summary: 'Cadastrar Pet'
+      description: 'Cadastrar um novo Pet'
+      operationId: createPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetRequest'
+      responses:
+        '201':
+          description: 'Pet criado com sucesso!'
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+        '400':
+          description: 'Campo inválido'
+    get:
+      tags:
+        - Pet
+      security:
+        - BearerAuth: [ ]
+      summary: 'Listar Pet'
+      description: 'Listar todos os pets cadastrados'
+      operationId: getAllPets
+      responses:
+        '200':
+          description: 'Lista de pets retornada com suesso'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+        '500':
+          description: 'Erro interno no servidor'
+  /pets/{id}:
+    get:
+      tags:
+        - Pet
+      security:
+        - BearerAuth: [ ]
+      summary: 'Buscar Pet por ID'
+      description: 'Buscar um pet pelo ID'
+      operationId: getPetById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: 'Pet retornado com sucesso!'
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+        '400':
+          description: 'Campo inválido'
+    put:
+      tags:
+        - Pet
+      security:
+        - BearerAuth: [ ]
+      summary: 'Ataulizar Pet'
+      description: 'Atualizar um pet existente'
+      operationId: updatePet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetRequest'
+      responses:
+        '200':
+          description: 'Pet atualizado com sucesso!'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: 'Pet atualizado com sucesso!'
+        '400':
+          description: 'Campo inválido'
+    delete:
+      tags:
+        - Pet
+      security:
+        - BearerAuth: [ ]
+      summary: 'Excluir Pet'
+      description: 'Excluir um pet existente'
+      operationId: deletePet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: 'Pet excluído com sucesso!'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Pet excluido com sucesso!'
+        '400':
+          description: 'Campo inválido'
 components:
   schemas:
     RegisterUserRequest:
@@ -618,6 +751,64 @@ components:
         active:
           type: boolean
           description: 'Buscar usuário por status (ativo ou inativo)'
+    PetRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Rian'
+        age:
+          type: integer
+          format: int32
+          example: 5
+        color:
+          type: string
+          example: 'Preto'
+        breed:
+          type: string
+          example: 'Siamês'
+        animalType:
+          type: string
+          example: 'Gato'
+        birthdate:
+          type: string
+          format: date
+          example: 27/11/2018
+    PetResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 'Rian'
+        age:
+          type: integer
+          format: int32
+          example: 5
+        color:
+          type: string
+          example: 'Preto'
+        breed:
+          type: string
+          example: 'Siamês'
+        animalType:
+          type: string
+          example: 'Gato'
+        birthdate:
+          type: string
+          format: date
+          example: 27/11/2018
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-05-26 21:49:17'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2024-05-26 21:49:17'
     ErrorResponse:
       type: object
       properties:
