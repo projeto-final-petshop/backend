@@ -4,6 +4,7 @@ import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsExcept
 import br.com.finalproject.petconnect.exceptions.runtimes.CpfNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
+import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.user.dto.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
 
+    private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final MessageUtil messageUtil;
 
@@ -35,6 +37,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findUser(FindUserRequest request) {
+
+        User user = authenticationService.getCurrentUser();
+
         if (request.getName() != null) {
             return findUserByName(request.getName());
         }

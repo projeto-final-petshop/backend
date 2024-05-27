@@ -72,9 +72,8 @@ public class SecurityConfiguration {
                                     "/api/v1", "/api/v1/**", "/auth/**",
                                     "/auth/login", "/auth/signup", "/users/update-password",
                                     "/auth/reset-password", "/auth/reset-password/confirm").permitAll()
-                            .anyRequest().authenticated();
-//                            .requestMatchers("/users", "/users/**").authenticated()
-//                            .requestMatchers("/pets", "/pets/**").authenticated();
+                            .requestMatchers("/users", "/users/**").authenticated()
+                            .requestMatchers("/pets", "/pets/**").authenticated();
                 })
                 .authenticationProvider(authenticationProvider)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
@@ -84,8 +83,6 @@ public class SecurityConfiguration {
 
         log.info("SecurityFilterChain configurado com sucesso");
         return http.build();
-
     }
-
 
 }

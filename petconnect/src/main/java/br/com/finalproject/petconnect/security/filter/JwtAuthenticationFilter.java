@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,36 +44,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+        log.info("Iniciando processamento de filtro para a requisição: {}", request.getRequestURI());
 
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Requisição sem cabeçalho Authorization ou Bearer inválido");
+            log.warn("Cabeçalho de autorização ausente ou formato inválido. Ignorando filtro.");
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-
             final String jwt = authHeader.substring(7);
+            log.info("Token JWT extraído: {}", jwt);
 
             final String userEmail = jwtService.extractUsername(jwt);
-            log.info("Token JWT extraído e usuário identificado: {}", userEmail);
+            log.info("Usuário extraído do token: {}", userEmail);
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            if (userEmail != null && authentication == null) {
-
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                log.info("Detalhes do usuário carregados: {}", userDetails.getUsername());
+                log.info("Detalhes do usuário carregados para: {}", userEmail);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
-
-                    log.info("Token JWT válido para o usuário: {}", userDetails.getUsername());
+                    log.info("Token JWT válido para o usuário: {}", userEmail);
 
                     var authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
@@ -84,11 +76,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    log.info("Autenticação bem-sucedida para o usuário: {}", userDetails.getUsername());
+                    log.info("Autenticação bem-sucedida para o usuário: {}", userEmail);
+                } else {
+                    log.warn("Token JWT inválido para o usuário: {}", userEmail);
                 }
-                log.warn("Token JWT inválido para o usuário: {}", userDetails.getUsername());
             }
-
             filterChain.doFilter(request, response);
 
         } catch (Exception exception) {
@@ -96,4 +88,62 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }
+
+//    protected void doFilterInternal(
+//            @NonNull HttpServletRequest request,
+//            @NonNull HttpServletResponse response,
+//            @NonNull FilterChain filterChain
+//    ) throws ServletException, IOException {
+//
+//        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+//        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
+//
+//        final String authHeader = request.getHeader("Authorization");
+//
+//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//            log.warn("Requisição sem cabeçalho Authorization ou Bearer inválido");
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        try {
+//
+//            final String jwt = authHeader.substring(7);
+//
+//            final String userEmail = jwtService.extractUsername(jwt);
+//            log.info("Token JWT extraído e usuário identificado: {}", userEmail);
+//
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//            if (userEmail != null && authentication == null) {
+//
+//                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+//                log.info("Detalhes do usuário carregados: {}", userDetails.getUsername());
+//
+//                if (jwtService.isTokenValid(jwt, userDetails)) {
+//
+//                    log.info("Token JWT válido para o usuário: {}", userDetails.getUsername());
+//
+//                    var authToken = new UsernamePasswordAuthenticationToken(
+//                            userDetails,
+//                            null,
+//                            userDetails.getAuthorities()
+//                    );
+//
+//                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                    SecurityContextHolder.getContext().setAuthentication(authToken);
+//                    log.info("Autenticação bem-sucedida para o usuário: {}", userDetails.getUsername());
+//                }
+//                log.warn("Token JWT inválido para o usuário: {}", userDetails.getUsername());
+//            }
+//
+//            filterChain.doFilter(request, response);
+//
+//        } catch (Exception exception) {
+//            log.error("Erro ao processar a autenticação JWT", exception);
+//            handlerExceptionResolver.resolveException(request, response, null, exception);
+//        }
+//    }
 }
