@@ -63,18 +63,17 @@ public class SecurityConfiguration {
                             .ignoringRequestMatchers(
                                     "/api/v1", "/api/v1/**", "/auth/**", "/users/**", "/users",
                                     "/auth/login", "/auth/signup", "/users/update-password",
-                                    "/auth/reset-password", "/auth/reset-password/confirm")
+                                    "/auth/reset-password", "/auth/reset-password/confirm",
+                                    "/pets", "/pets/**")
                             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-
                 })
                 .authorizeHttpRequests(requests -> {
                     log.info("Configurando autorizações de requisição");
                     requests.requestMatchers(
                             "/api/v1", "/api/v1/**", "/auth/**", "/users/**", "/users",
                             "/auth/login", "/auth/signup", "/users/update-password",
-                            "/auth/reset-password", "/auth/reset-password/confirm").permitAll();
-//                            .anyRequest().authenticated();
-                    // .requestMatchers("/users", "/users/**").authenticated();
+                            "/auth/reset-password", "/auth/reset-password/confirm",
+                            "/pets", "/pets/**").permitAll();
                 })
                 .authenticationProvider(authenticationProvider)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
