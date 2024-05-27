@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.pets.entities;
 
+import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +35,10 @@ public class Pet {
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthdate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

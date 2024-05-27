@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.user.entities;
 
+import br.com.finalproject.petconnect.pets.entities.Pet;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -54,12 +55,14 @@ public class User implements UserDetails {
 
     private boolean active;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets;
+
     @CreationTimestamp
-    @Column(updatable = false, name = "created_at")
+    @Column(updatable = false)
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
     /**
