@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Carolina Vera Gabriela de Paula",
+    "email": "carolinaveradepaula@novadeliveri.com.br",
+    "password": "P4$$w0rD",
+    "cpf": "519.154.459-57",
+    "phoneNumber": "5544986595344"
+  },
+  {
+    "name": "Heloise Laís Almeida",
+    "cpf": "646.974.019-72",
+    "email": "heloise.lais.almeida@bassanpeixoto.adv.br",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5544994694208"
+  },
+  {
+    "name": "Leandro Marcos Carvalho",
+    "cpf": "783.130.029-56",
+    "email": "leandromarcoscarvalho@signainfo.com.br",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5541991438175"
+  },
+  {
+    "name": "Isabelle Caroline Fogaça",
+    "cpf": "521.459.889-04",
+    "email": "isabelle_caroline_fogaca@solucao.adm.br",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5545983234456"
+  },
+  {
+    "name": "Maria Caroline Gabrielly Peixoto",
+    "cpf": "165.625.159-04",
+    "email": "mariacarolinepeixoto@ambarnet.com.br",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5544989529075"
+  }
+]

@@ -61,13 +61,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
 
             final String jwt = authHeader.substring(7);
+            log.info("Token JWT extraído: {}", jwt);
 
             final String userEmail = jwtService.extractUsername(jwt);
             log.info("Token JWT extraído e usuário identificado: {}", userEmail);
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (userEmail != null && authentication == null) {
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 log.info("Detalhes do usuário carregados: {}", userDetails.getUsername());

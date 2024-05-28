@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.pets.dto;
 
-import br.com.finalproject.petconnect.user.dto.UserResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -23,8 +22,6 @@ public class PetResponse {
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthdate;
-
-    private UserResponse user;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;

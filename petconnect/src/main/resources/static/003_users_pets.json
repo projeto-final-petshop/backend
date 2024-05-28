@@ -1,0 +1,30 @@
+{
+  "user": {
+    "id": 2,
+    "name": "Isabelle Caroline Fogaça",
+    "pets": [
+      {
+        "id": 1,
+        "name": "Max",
+        "age": 3,
+        "color": "Brown",
+        "breed": "Labrador",
+        "animalType": "Dog",
+        "birthdate": "15/05/2019",
+        "createdAt": "2024-05-27 07:00:00",
+        "updatedAt": "2024-05-27 07:00:00"
+      },
+      {
+        "id": 3,
+        "name": "Rian",
+        "age": 5,
+        "color": "Preto",
+        "breed": "N/A",
+        "animalType": "Gato",
+        "birthdate": "27/11/2018",
+        "createdAt": "2024-05-27 23:31:52",
+        "updatedAt": "2024-05-27 23:31:52"
+      }
+    ]
+  }
+}
