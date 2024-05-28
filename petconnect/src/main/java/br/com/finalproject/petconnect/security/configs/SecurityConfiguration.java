@@ -11,13 +11,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -28,7 +26,7 @@ import java.util.Collections;
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity(debug = true)
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
 
     private static final String AUTHORIZATION = "Authorization";
@@ -43,8 +41,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         log.info("Configurando SecurityFilterChain");
-        var requestHandler = new CsrfTokenRequestAttributeHandler();
-        requestHandler.setCsrfRequestAttributeName("_csrf");
 
         http
                 .sessionManagement(session -> {
@@ -67,29 +63,17 @@ public class SecurityConfiguration {
                     });
                 })
                 // CSRF vem habilitado por padrão pelo Spring Security
-                // para realizar testes deve ficar desabilitado
-                // TODO: HABILITAR QUANDO FOR CONECTAR COM O FRONTEND
-                .csrf(csrf -> csrf.disable())
-//                .csrf(csrf -> {
-//                    log.info("Configurando CSRF");
-//                    csrf
-//                            .ignoringRequestMatchers(
-//                                    "/api/v1", "/api/v1/**", "/error",
-//                                    "/auth/login", "/auth/signup", "/auth/reset-password"
-//                            )
-//                            .csrfTokenRequestHandler(requestHandler)
-//                            .csrfTokenRepository(csrfTokenRepository())
-//                            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                            .requireCsrfProtectionMatcher(httpServletRequest -> !httpServletRequest.getMethod().equals("GET")); // Exceções para GET
-//                })
+                // para realizar testes locais deve ficar desabilitado
+                // TODO: HABILITAR QUANDO TESTAR COM FRONTEND
+                .csrf(AbstractHttpConfigurer::disable)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
                     log.info("Configurando autorizações de requisição");
                     requests
                             .requestMatchers("/api/v1", "/api/v1/**", "/error").permitAll()
                             .requestMatchers("/auth/login", "/auth/signup", "/auth/reset-password").permitAll()
-                            .requestMatchers("/users", "/users/**").authenticated()
-                            .requestMatchers("/pets", "/pets/**").authenticated();
+                            // TODO: INCLUIR RODAS E PERMISSÕES
+                            .anyRequest().authenticated();
                 })
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -98,17 +82,6 @@ public class SecurityConfiguration {
 
         log.info("SecurityFilterChain configurado com sucesso");
         return http.build();
-    }
-
-//    private CsrfTokenRepository requestHandler() {
-
-//
-//    }
-
-    private CsrfTokenRepository csrfTokenRepository() {
-        var repository = new HttpSessionCsrfTokenRepository();
-        repository.setHeaderName("X-Custom-CSRF-Token"); // Nome do header personalizado
-        return repository;
     }
 
 }

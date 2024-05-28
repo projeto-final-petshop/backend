@@ -3,11 +3,15 @@ package br.com.finalproject.petconnect.pets.controllers;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.services.PetService;
+import br.com.finalproject.petconnect.user.entities.User;
+import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +23,19 @@ import java.util.List;
 public class PetController {
 
     private final PetService petService;
+    private final UserRepository userRepository;
 
-    @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PetResponse> createPet(@RequestBody PetRequest request) {
-        log.info("Iniciando criação de novo pet com dados: {}", request);
-        PetResponse response = petService.createPet(request);
-        log.info("Pet criado com sucesso: {}", response);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    @PostMapping("/create")
+    public ResponseEntity<?> createPet(@RequestBody PetRequest petRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentPrincipalName = authentication.getName();
+            User user = userRepository.findByEmail(currentPrincipalName).get(); // 'Optional.get()' without 'isPresent()' check
+            PetResponse petResponse = petService.createPet(petRequest, user.getId());
+            return ResponseEntity.ok(petResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

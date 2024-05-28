@@ -19,6 +19,9 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Representa o usuário do sistema
+ */
 @Getter
 @Setter
 @Builder
@@ -58,8 +61,7 @@ public class User implements UserDetails {
 
     private boolean active;
 
-    @Transient
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Pet> pets;
 
     @ManyToOne
@@ -67,11 +69,13 @@ public class User implements UserDetails {
     private Role role;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
 

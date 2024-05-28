@@ -21,6 +21,4 @@ public class PetRequest {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthdate;
 
-    private Long userId;
-
 }

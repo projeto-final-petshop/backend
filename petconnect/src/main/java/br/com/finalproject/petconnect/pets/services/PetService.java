@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.pets.services;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.UserNotFoundException;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.entities.Pet;
@@ -8,6 +9,7 @@ import br.com.finalproject.petconnect.pets.mapping.PetMapper;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.user.entities.User;
+import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,26 +17,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class PetService {
 
-    private final AuthenticationService authenticationService;
-    private final PetRepository petRepository;
+    private final PetMapper petMapper;
     private final MessageUtil messageUtil;
+    private final PetRepository petRepository;
+    private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     @Transactional
-    public PetResponse createPet(PetRequest petRequest) {
-        log.info("Iniciando a criação de um novo pet.");
-        User user = authenticationService.getCurrentUser(); // Obtém o usuário autenticado
+    public PetResponse createPet(PetRequest petRequest, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         Pet pet = PetMapper.petMapper().toEntity(petRequest);
         pet.setUser(user);
         Pet savedPet = petRepository.save(pet);
-        log.info("Pet criado com sucesso com ID: {}", savedPet.getId());
         return PetMapper.petMapper().toResponse(savedPet);
     }
+
+//    public PetResponse createPet(PetRequest petRequest) {
+//        log.info("Iniciando a criação de um novo pet.");
+//        User user = authenticationService.getCurrentUser(); // Obtém o usuário autenticado
+//        Pet pet = PetMapper.petMapper().toEntity(petRequest);
+//        pet.setUser(user);
+//        Pet savedPet = petRepository.save(pet);
+//        log.info("Pet criado com sucesso com ID: {}", savedPet.getId());
+//        return PetMapper.petMapper().toResponse(savedPet);
+//    }
 
     @Transactional
     public String updatePet(Long id, PetRequest petRequest) {
@@ -83,6 +97,14 @@ public class PetService {
         Pet pet = getPetOwnedByCurrentUser(id);
         log.info("Pet com ID: {} encontrado.", id);
         return PetMapper.petMapper().toResponse(pet);
+    }
+
+    public List<PetResponse> getPetsByUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new PetNotFoundException("User not found"));
+        List<Pet> pets = petRepository.findByUser(user);
+        return pets.stream()
+                .map(petMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
