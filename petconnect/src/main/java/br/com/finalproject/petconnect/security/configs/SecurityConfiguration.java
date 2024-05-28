@@ -11,12 +11,13 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -42,7 +43,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         log.info("Configurando SecurityFilterChain");
-
         var requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
 
@@ -66,14 +66,21 @@ public class SecurityConfiguration {
                         return config;
                     });
                 })
-                .csrf(AbstractHttpConfigurer::disable)
+                // CSRF vem habilitado por padrão pelo Spring Security
+                // para realizar testes deve ficar desabilitado
+                // TODO: HABILITAR QUANDO FOR CONECTAR COM O FRONTEND
+                .csrf(csrf -> csrf.disable())
 //                .csrf(csrf -> {
 //                    log.info("Configurando CSRF");
-//                    csrf.csrfTokenRequestHandler(requestHandler)
+//                    csrf
 //                            .ignoringRequestMatchers(
 //                                    "/api/v1", "/api/v1/**", "/error",
-//                                    "/auth/login", "/auth/signup", "/auth/reset-password")
-//                            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+//                                    "/auth/login", "/auth/signup", "/auth/reset-password"
+//                            )
+//                            .csrfTokenRequestHandler(requestHandler)
+//                            .csrfTokenRepository(csrfTokenRepository())
+//                            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                            .requireCsrfProtectionMatcher(httpServletRequest -> !httpServletRequest.getMethod().equals("GET")); // Exceções para GET
 //                })
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
@@ -91,6 +98,17 @@ public class SecurityConfiguration {
 
         log.info("SecurityFilterChain configurado com sucesso");
         return http.build();
+    }
+
+//    private CsrfTokenRepository requestHandler() {
+
+//
+//    }
+
+    private CsrfTokenRepository csrfTokenRepository() {
+        var repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName("X-Custom-CSRF-Token"); // Nome do header personalizado
+        return repository;
     }
 
 }
