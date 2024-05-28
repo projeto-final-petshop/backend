@@ -38,7 +38,7 @@ public class Pet implements Serializable {
     private LocalDate birthdate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false)
     private User user;
 
     @CreationTimestamp

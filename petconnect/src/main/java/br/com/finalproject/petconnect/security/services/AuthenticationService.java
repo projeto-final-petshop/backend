@@ -1,6 +1,9 @@
 package br.com.finalproject.petconnect.security.services;
 
+import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.RoleNotFoundException;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
@@ -11,6 +14,7 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,10 +42,21 @@ public class AuthenticationService {
 
         log.info("Iniciando processo de cadastro para o email: {}", input.getEmail());
 
+        if (userRepository.existsByEmail(input.getEmail())) {
+            log.error("Erro ao cadastrar usuário: email {} já está em uso", input.getEmail());
+            throw new EmailAlreadyExistsException("Email já está em uso");
+        }
+
+        if (userRepository.existsByCpf(input.getCpf())) {
+            log.error("Erro ao cadastrar usuário: CPF {} já está em uso", input.getCpf());
+            throw new CpfAlreadyExistsException("CPF já está em uso");
+        }
+
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
 
         if (optionalRole.isEmpty()) {
-            return null;
+            log.error("Erro ao cadastrar usuário: role USER não encontrada");
+            throw new RoleNotFoundException("Role USER não encontrada");
         }
 
         User user = User.builder()

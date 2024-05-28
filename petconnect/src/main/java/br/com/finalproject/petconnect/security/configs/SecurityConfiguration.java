@@ -11,24 +11,29 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
 @AllArgsConstructor
+@EnableWebSecurity(debug = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfiguration {
+
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String CONTENT_TYPE = "Content-Type";
+
+    private static final String ALLOWED_ORIGINS_URL = "http://localhost:4200";
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -49,32 +54,37 @@ public class SecurityConfiguration {
                 .cors(corsCustomizer -> {
                     log.info("Configurando CORS");
                     corsCustomizer.configurationSource(request -> {
+                        var source = new UrlBasedCorsConfigurationSource();
                         var config = new CorsConfiguration();
-                        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-                        config.setAllowedMethods(List.of("GET, POST, PUT, DELETE, OPTIONS"));
-                        config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
-                        config.setAllowCredentials(true);
+                        config.setAllowedOrigins(Collections.singletonList(ALLOWED_ORIGINS_URL));
                         config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setExposedHeaders(Arrays.asList(AUTHORIZATION, CONTENT_TYPE));
+                        config.setAllowCredentials(true);
                         config.setMaxAge(3600L);
+                        source.registerCorsConfiguration("/**", config);
                         return config;
                     });
                 })
-                .csrf(csrf -> {
-                    log.info("Configurando CSRF");
-                    csrf.csrfTokenRequestHandler(requestHandler)
-                            .ignoringRequestMatchers(
-                                    "/api/v1", "/api/v1/**", "/auth/login", "/auth/signup", "/auth/reset-password")
-                            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-                })
+                .csrf(AbstractHttpConfigurer::disable)
+//                .csrf(csrf -> {
+//                    log.info("Configurando CSRF");
+//                    csrf.csrfTokenRequestHandler(requestHandler)
+//                            .ignoringRequestMatchers(
+//                                    "/api/v1", "/api/v1/**", "/error",
+//                                    "/auth/login", "/auth/signup", "/auth/reset-password")
+//                            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+//                })
+                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
                     log.info("Configurando autorizações de requisição");
                     requests
-                            .requestMatchers("/api/v1", "/api/v1/**").permitAll()
+                            .requestMatchers("/api/v1", "/api/v1/**", "/error").permitAll()
                             .requestMatchers("/auth/login", "/auth/signup", "/auth/reset-password").permitAll()
-                            .anyRequest().authenticated();
+                            .requestMatchers("/users", "/users/**").authenticated()
+                            .requestMatchers("/pets", "/pets/**").authenticated();
                 })
                 .authenticationProvider(authenticationProvider)
-                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());

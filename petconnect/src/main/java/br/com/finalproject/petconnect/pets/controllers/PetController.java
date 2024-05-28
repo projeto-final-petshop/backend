@@ -21,9 +21,11 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> createPet(@RequestBody PetRequest request) {
+        log.info("Iniciando criação de novo pet com dados: {}", request);
         PetResponse response = petService.createPet(request);
+        log.info("Pet criado com sucesso: {}", response);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -31,28 +33,36 @@ public class PetController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> updatePet(@PathVariable Long id,
                                             @RequestBody PetRequest request) {
+        log.info("Iniciando atualização do pet com ID: {}. Dados: {}", id, request);
         String message = petService.updatePet(id, request);
+        log.info("Pet atualizado com sucesso. ID: {}, Mensagem: {}", id, message);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> getPetById(@PathVariable Long id) {
+        log.info("Recuperando informações do pet com ID: {}", id);
         PetResponse response = petService.getPetById(id);
+        log.info("Informações do pet recuperadas: {}", response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PetResponse>> getAllPets() {
+        log.info("Recuperando informações de todos os pets");
         List<PetResponse> response = petService.getAllPets();
+        log.info("Informações de todos os pets recuperadas: {}", response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> deletePet(@PathVariable Long id) {
+        log.info("Iniciando exclusão do pet com ID: {}", id);
         String message = petService.deletePet(id);
+        log.info("Pet excluído com sucesso. ID: {}, Mensagem: {}", id, message);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 

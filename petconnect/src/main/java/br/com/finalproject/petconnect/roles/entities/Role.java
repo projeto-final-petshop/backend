@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.roles.entities;
 
+import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,10 +9,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Setter
 @Getter
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +24,6 @@ public class Role implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleEnum name;
 

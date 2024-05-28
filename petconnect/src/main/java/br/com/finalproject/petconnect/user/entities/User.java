@@ -62,8 +62,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets;
 
-    @OneToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private Role role;
 
     @CreationTimestamp
