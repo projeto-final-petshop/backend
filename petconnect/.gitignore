@@ -1,11 +1,14 @@
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
 !**/src/main/**/target/
 !**/src/test/**/target/
 .idea/sonarlint/**
 target/classes/
-
+*.log
+*.tmp
+*.gz
 ### STS ###
 .apt_generated
 .classpath
