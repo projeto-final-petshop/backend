@@ -1,42 +1,18 @@
 openapi: 3.0.3
 info:
   title: 'Petconnect'
-  description: |-
-    Trabalho apresentado como requisito parcial para a disciplina de **Projeto Final I: Especificação e Design**, 
-    do curso de Bacharelado em Sistemas de Informação, da PUCPR
+  description: |
     
-    * **Acadêmicos**: Gabriel, Guilherme e Juliane
-    * **Nome do Produto de Software**: PetConnect
+    API PetConnect
     
-    ## Validação dos Campos
+    Esta API permite aos usuários autenticar-se, gerenciar seus pets e agendamentos de serviços.
     
-    * O campo `name` deve conter no mínimo 3 caracteres e no formulário de cadastro é obrigatório.
-    * O Campo `cpf` é obrigatório para realizar o cadastro e deve ter:
-      * 11 digitos numéricos
-      * formato válido (XXX.XXX.XXX-XX)
-      * ser um número de documento válido
-    * O campo `email` deve ser um endereço de email com formato válido e em alguns casos como cadastro e 
-      login é campo obrigatório.    
-    * `phoneNumber` deve ser um número de telefone com formato válido. 
-      * O sinal de `+` é opcional.
-      * Exemplo de formato: +55119XXXXXXXX
-      * Mínimo 13 e máximo 14 caracteres
-    * `password`, `confirmPassword`, `newPassword`: A senha deve seguir os seguintes requisitos mínimos:
-      * 8 caracteres
-      * 1 letra maiúscula
-      * 1 letra minúscula
-      * 1 número
-      * 1 caracter especial
-    * `password` e `newPassword` serão criptografadas e armazenadas no banco de dados.
-    * `confirmPassword` não será persistido no banco de dados. 
-    
-    ## Endpoints
-    
-    * `active` e `deactive`: quando o usuário deseja excluir sua conta, ela será desativada, 
-      após um período de 30 (trinta) dias será excluída do banco de dados. 
-      Ou seja, dentro dos 30 dias, o usuário poderá ativar sua conta novamente.
-      Para essa primeira etapa do projeto, são endpoints **opcionais**.
-    * No momento será utilizado o método `DELETE` para excluir os dados do usuário do banco de dados.
+    Funcionalidades principais incluem:
+    - Cadastro e autenticação de usuários
+    - Gerenciamento de informações de pets
+    - Agendamento de serviços para pets
+    - Visualização de agendamentos por usuário e pet
+    - Cancelamento e atualização de agendamentos
 
   termsOfService: 'https://swagger.io/terms/'
   contact:
@@ -218,19 +194,17 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /users/{id}:
+  /users/update:
     put:
       summary: 'Atualiza os dados de um Usuário'
       tags:
         - User
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       operationId: 'getUserById'
       description: 'Buscar usuário por ID'
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
           description: 'Informar o ID do Usuário'
       requestBody:
         required: true
@@ -245,18 +219,17 @@ paths:
           $ref: '#/components/responses/UserNotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /users/delete:
     delete:
       summary: 'Excluir um usuário'
       tags:
         - User
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       operationId: 'deleteUser'
       description: 'Excluir um usuário pelo ID'
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
           description: 'Informar o ID do Usuário'
       responses:
         '200':
@@ -265,54 +238,6 @@ paths:
           $ref: '#/components/responses/UserNotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /users/{id}/deactivate:
-    put:
-      summary: 'Desativa um usuário'
-      tags:
-        - User
-      security:
-        - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
-      operationId: 'deactivateUser'
-      parameters:
-        - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
-          description: 'Informar o ID do Usuário'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegisterUserRequest'
-      responses:
-        '200':
-          description: 'Usuário desativado com sucesso'
-        '404':
-          $ref: '#/components/responses/UserNotFound'
-  /users/{id}/activate:
-    put:
-      summary: 'Ativar um usuário'
-      tags:
-        - User
-      security:
-        - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
-      operationId: 'activateUser'
-      parameters:
-        - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
-          description: 'Informar o ID do Usuário'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegisterUserRequest'
-      responses:
-        '200':
-          description: 'Usuário ativado com sucesso'
-        '404':
-          $ref: '#/components/responses/UserNotFound'
   /users/search:
     put:
       summary: 'Busca um usuário pelo parâmetro fornecido'
@@ -361,7 +286,6 @@ paths:
         - Pet
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       summary: 'Cadastrar Pet'
       description: 'Cadastrar um novo Pet'
       operationId: createPet
@@ -394,7 +318,6 @@ paths:
         - Pet
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       summary: 'Listar Pet'
       description: 'Listar todos os pets cadastrados'
       operationId: getAllPets
@@ -417,19 +340,18 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /pets/{id}:
+  /pets/{petId}:
     get:
       tags:
         - Pet
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       summary: 'Buscar Pet por ID'
       description: 'Buscar um pet pelo ID'
       operationId: getPetById
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/PetId'
           description: 'Informar o ID do Pet'
       responses:
         '200':
@@ -454,13 +376,12 @@ paths:
         - Pet
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       summary: 'Ataulizar Pet'
       description: 'Atualizar um pet existente'
       operationId: updatePet
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/PetId'
           description: 'Informar o ID do Pet'
       requestBody:
         required: true
@@ -491,13 +412,12 @@ paths:
         - Pet
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       summary: 'Excluir Pet'
       description: 'Excluir um pet existente'
       operationId: deletePet
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/PetId'
           description: 'Informar o ID do Pet'
       responses:
         '200':
@@ -525,7 +445,6 @@ paths:
         - Appointment
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       operationId: scheduleAppointment
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
@@ -550,7 +469,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /update/{id}:
+  /appointments/update/{appointmentId}:
     put:
       summary: 'Atualiza um agendamento existente'
       description: 'Atualiza um agendamento existente'
@@ -558,11 +477,10 @@ paths:
         - Appointment
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       operationId: updateAppointment
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/AppointmentId'
           description: 'Informar o ID do Agendamento'
       requestBody:
         description: 'Detalhes do agendamento para atualização'
@@ -588,7 +506,7 @@ paths:
           $ref: '#/components/responses/AppointmentNotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /cancel/{id}:
+  /appointments/cancel/{appointmentId}:
     delete:
       summary: 'Cancela um agendamento existente'
       description: 'Cancela um agendamento existente'
@@ -596,11 +514,10 @@ paths:
         - Appointment
       security:
         - Bearer: [ ]
-        - roles: [ ADMIN, USER ]
       operationId: cancelAppointment
       parameters:
         - $ref: '#/components/parameters/AuthHeader'
-        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/AppointmentId'
           description: 'Informar o ID do Agendamento'
       responses:
         '200':
@@ -610,6 +527,95 @@ paths:
               schema:
                 type: string
                 example: 'Agendamento cancelado com sucesso.'
+        '400':
+          $ref: '#/components/responses/InvalidField'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/AppointmentNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /appointments/all:
+    get:
+      summary: 'Listar todos os agendamentos'
+      description: 'Agendamentos vinculados ao usuário.'
+      tags:
+        - Appointment
+      security:
+        - Bearer: [ ]
+      operationId: getAllAppointments
+      parameters:
+        - $ref: '#/components/parameters/AuthHeader'
+          description: 'Informar o ID do Agendamento'
+      responses:
+        '200':
+          description: 'Lista de agendamentos cadastrados.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          $ref: '#/components/responses/InvalidField'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/AppointmentNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /appointments/pets/{petId}:
+    get:
+      summary: 'Lista de agendamentos do Pet.'
+      description: 'Agendamentos vinculados ao usuário e um pet.'
+      tags:
+        - Appointment
+      security:
+        - Bearer: [ ]
+      operationId: getAppointmentsByPet
+      parameters:
+        - $ref: '#/components/parameters/AuthHeader'
+        - $ref: '#/components/parameters/PetId'
+          description: 'Informe o ID do Pet'
+      responses:
+        '200':
+          description: 'Lista de agendamento do Pet.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          $ref: '#/components/responses/InvalidField'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/AppointmentNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /appointments/{appointmentId}:
+    get:
+      summary: 'Lista de agendamentos do Pet.'
+      description: 'Agendamentos vinculados ao usuário e um pet.'
+      tags:
+        - Appointment
+      security:
+        - Bearer: [ ]
+      operationId: getAppointmentById
+      parameters:
+        - $ref: '#/components/parameters/AuthHeader'
+        - $ref: '#/components/parameters/AppointmentId'
+          description: 'Informe o ID do Agendamento'
+      responses:
+        '200':
+          description: 'Lista de agendamento do Pet.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
         '400':
           $ref: '#/components/responses/InvalidField'
         '401':
@@ -640,6 +646,20 @@ components:
         description: 'Token JWT de Autorização'
     Id:
       name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    PetId:
+      name: petId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    AppointmentId:
+      name: appointmentId
       in: path
       required: true
       schema:

@@ -39,11 +39,11 @@ public class PasswordService {
         User currentUser = getCurrentAuthenticatedUser();
 
         if (!passwordEncoder.matches(passwordUpdateRequest.getCurrentPassword(), currentUser.getPassword())) {
-            throw new PasswordUpdateException(messageUtil.getMessage("incorrectPassword"));
+            throw new PasswordUpdateException(messageUtil.getMessage("unautorized.incorrectPassword"));
         }
 
         if (!passwordUpdateRequest.getNewPassword().equals(passwordUpdateRequest.getConfirmPassword())) {
-            throw new PasswordUpdateException(messageUtil.getMessage("passwordsDoNotMatch"));
+            throw new PasswordUpdateException(messageUtil.getMessage("badRequest.passwordsDoNotMatch"));
         }
 
         currentUser.setPassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));

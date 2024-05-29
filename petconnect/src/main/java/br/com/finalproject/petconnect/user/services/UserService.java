@@ -57,7 +57,7 @@ public class UserService {
         }
 
         throw new NoSearchCriteriaProvidedException(userUtils
-                .formatMessage("NO_SEARCH_CRITERIA_PROVIDED", request.toString()));
+                .formatMessage("badRequest.noSearchCriteriaProvided", request.toString()));
     }
 
     @Transactional(readOnly = true)
