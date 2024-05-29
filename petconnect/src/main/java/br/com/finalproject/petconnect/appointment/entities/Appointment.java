@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -49,6 +48,11 @@ public class Appointment implements Serializable {
     @JoinColumn(nullable = false)
     private User user;
 
+    /**
+     * PT: agendado, cancelado, concluído, pendente, confirmado.
+     * <p>
+     * EN: scheduled, cancelled, completed, pending, confirmed.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AppointmentStatus status;
