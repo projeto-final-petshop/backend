@@ -8,6 +8,7 @@ import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.dto.RegisterUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserRequest registerUserRequest) {
+    public ResponseEntity<User> register(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
         log.info("Iniciando o processo de registro para o usuário com o email: {}", registerUserRequest.getEmail());
         try {
             User registeredUser = authenticationService.signup(registerUserRequest);
@@ -46,9 +47,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
-        log.info("Iniciando o processo de autenticação para o usuário com o email: {}",
-                loginRequest.getEmail());
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody @Valid LoginRequest loginRequest) {
+        log.info("Iniciando o processo de autenticação para o usuário com o email: {}", loginRequest.getEmail());
         User authenticatedUser = authenticationService.authenticate(loginRequest);
         String jwtToken = jwtService.generateToken(authenticatedUser);
         var loginResponse = LoginResponse.builder()

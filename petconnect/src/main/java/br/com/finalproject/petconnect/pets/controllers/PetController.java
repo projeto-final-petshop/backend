@@ -6,8 +6,10 @@ import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.services.PetService;
 import br.com.finalproject.petconnect.security.services.JwtService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +24,13 @@ import java.util.List;
 @AllArgsConstructor
 public class PetController {
 
-    private final JwtService jwtService;
     private final PetService petService;
 
     @PostMapping("/create")
-    public ResponseEntity<PetResponse> createPet(@RequestBody PetRequest request,
-                                                 @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<PetResponse> createPet(@RequestBody @Valid PetRequest request,
+                                                 @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
-            PetResponse response = petService.createPet(request, authorization);
+            PetResponse response = petService.createPet(request, authorizationHeader);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -37,7 +38,7 @@ public class PetController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PetResponse>> listPets(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<List<PetResponse>> listPets(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
             List<PetResponse> response = petService.listPets(authorizationHeader);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -51,7 +52,7 @@ public class PetController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> getPetDetails(@PathVariable Long id,
-                                                     @RequestHeader("Authorization") String authorizationHeader) {
+                                                     @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
             PetResponse response = petService.getPetDetails(id, authorizationHeader);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -64,8 +65,8 @@ public class PetController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PetResponse> updatePet(@PathVariable Long id,
-                                                 @RequestBody PetRequest request,
-                                                 @RequestHeader("Authorization") String token) {
+                                                 @RequestBody @Valid PetRequest request,
+                                                 @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         try {
             PetResponse response = petService.updatePet(id, request, token);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -78,7 +79,7 @@ public class PetController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePet(@PathVariable Long id,
-                                          @RequestHeader("Authorization") String token) {
+                                          @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         try {
             petService.deletePet(id, token);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

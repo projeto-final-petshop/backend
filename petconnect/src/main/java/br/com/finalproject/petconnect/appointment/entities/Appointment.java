@@ -1,45 +1,57 @@
-package br.com.finalproject.petconnect.pets.entities;
+package br.com.finalproject.petconnect.appointment.entities;
 
-import br.com.finalproject.petconnect.appointment.entities.Appointment;
+import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Past;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Date;
 
-/**
- * Representa o animal de estimação do usuário
- */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "pets")
+@Table(name = "appointments")
 @Entity
-public class Pet implements Serializable {
+public class Appointment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private int age;
-    private String color;
-    private String breed;
-    private String animalType;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Pet pet;
 
-    @Past
+    @Enumerated(EnumType.STRING)
+    private ServiceType serviceType;
+
+    @Enumerated(EnumType.STRING)
+    private PetType petType;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
-    private LocalDate birthdate;
+    private LocalDate appointmentDate;
+
+    @JsonFormat(pattern = "HH:mm")
+    @Temporal(TemporalType.TIME)
+    private LocalTime appointmentTime;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AppointmentStatus status;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -49,12 +61,5 @@ public class Pet implements Serializable {
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private User user;
-
-    @Transient
-    private List<Appointment> appointments;
 
 }

@@ -4,6 +4,7 @@ import br.com.finalproject.petconnect.user.dto.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<User> findUser(FindUserRequest request) {
         User user = userService.findUser(request);
         log.info("Usuário encontrado: {}", user != null ? user : "Nenhum usuário encontrado para a pesquisa.");
@@ -49,13 +51,15 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<User>> listUsersByName(@RequestParam String name) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<List<User>> listUsersByName(@RequestParam(name = "name") String name) {
         List<User> response = userService.listUsersByName(name);
         log.info("Usuários listados por nome ({}): {}", name, response);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/active")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<List<User>> listActiveUsers() {
         List<User> response = userService.listActiveUsers();
         log.info("Usuários ativos listados: {}", response);
@@ -63,6 +67,7 @@ public class UserController {
     }
 
     @GetMapping("/inactive")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<List<User>> listInactiveUsers() {
         List<User> response = userService.listInactiveUsers();
         log.info("Usuários inativos listados: {}", response);
@@ -70,7 +75,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<User> getUserById(@PathVariable(name = "id") Long id) {
         try {
             User response = userService.getUserById(id);
             log.info("Usuário recuperado pelo ID ({}): {}", id, response);
@@ -82,26 +88,26 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest userUpdateRequest) {
+    public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest userUpdateRequest) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             userService.updateUser(currentPrincipalName, userUpdateRequest);
-            return ResponseEntity.ok("User updated successfully");
+            return ResponseEntity.status(HttpStatus.OK).body("User updated successfully");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
+    public ResponseEntity<String> deactivateUser(@PathVariable(name = "id") Long id) {
         try {
             String response = userService.deactivateUser(id);
             log.info("Usuário desativado (ID: {}): {}", id, response);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         } catch (UsernameNotFoundException ex) {
             log.warn("Erro ao desativar usuário (ID: {}): {}", id, ex.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
 
@@ -119,7 +125,7 @@ public class UserController {
 
     @DeleteMapping("/delete")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> deleteUser() {
+    public ResponseEntity<String> deleteUser() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();

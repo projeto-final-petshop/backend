@@ -9,6 +9,7 @@ import br.com.finalproject.petconnect.password.dto.ResetPasswordRequest;
 import br.com.finalproject.petconnect.password.dto.UpdatePasswordRequest;
 import br.com.finalproject.petconnect.password.service.PasswordService;
 import br.com.finalproject.petconnect.utils.MessageUtil;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class PasswordController {
     private final PasswordService passwordService;
 
     @PutMapping("/users/update-password")
-    public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordRequest passwordUpdateRequest) {
+    public ResponseEntity<String> updatePassword(@RequestBody @Valid UpdatePasswordRequest passwordUpdateRequest) {
 
         try {
             passwordService.updatePassword(passwordUpdateRequest);
@@ -38,7 +39,7 @@ public class PasswordController {
     }
 
     @PostMapping("/auth/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request) {
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid PasswordResetRequest request) {
         try {
             passwordService.resetPassword(request.getEmail());
             return ResponseEntity.status(HttpStatus.OK).body("Password reset link has been sent to your email.");
@@ -48,13 +49,12 @@ public class PasswordController {
     }
 
     @PostMapping("/auth/reset-password/confirm")
-    public ResponseEntity<String> confirmResetPassword(@RequestParam("token") String token,
-                                                       @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<String> confirmResetPassword(@RequestParam(name = "token") String token,
+                                                       @RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
         try {
             if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match.");
             }
-
             passwordService.updatePasswordWithToken(token, resetPasswordRequest.getNewPassword());
             return ResponseEntity.status(HttpStatus.OK).body("Password successfully reset.");
         } catch (TokenNotFoundException | TokenExpiredException e) {

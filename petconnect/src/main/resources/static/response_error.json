@@ -1,0 +1,7 @@
+{
+  "title": "Unauthorized",
+  "status": 401,
+  "detail": "Bad Credentials",
+  "instance": "/api/v1/auth/login",
+  "type": "Usuário não autenticado."
+}
