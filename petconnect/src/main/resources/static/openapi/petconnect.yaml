@@ -58,12 +58,10 @@ tags:
     description: 'Usuário'
   - name: Pet
     description: 'Animal de Estimação'
+  - name: Appointment
+    description: 'Agendamento de Consultas e Serviços'
   - name: PetShop
     description: 'Loja para Animais de Estimação'
-  - name: Scheduling
-    description: 'Agendamento de Consultas e Serviços'
-  - name: Password
-    description: 'Alteração (atualização) e Recuperação de Senha'
 paths:
   /auth/signup:
     post:
@@ -84,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
         '400':
           description: 'Requisição Inválida'
           content:
@@ -186,15 +184,23 @@ paths:
         - User
       operationId: 'authenticatedUser'
       description: 'Usuário autenticado'
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       responses:
         '200':
           description: 'OK'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
         '400':
           description: 'Campo inválido'
           content:
@@ -233,7 +239,15 @@ paths:
       operationId: 'allUsers'
       description: 'Usuário autenticado'
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN ]
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       responses:
         '200':
           description: OK
@@ -242,7 +256,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/UserResponse'
         '400':
           description: 'Campo inválido'
           content:
@@ -273,7 +287,8 @@ paths:
       tags:
         - User
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       operationId: 'getUserById'
       description: 'Buscar usuário por ID'
       parameters:
@@ -284,6 +299,12 @@ paths:
             type: integer
             format: int64
           description: 'ID do Usuário'
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       requestBody:
         required: true
         content:
@@ -305,7 +326,8 @@ paths:
       tags:
         - User
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       operationId: 'deleteUser'
       description: 'Excluir usuário por ID'
       parameters:
@@ -316,6 +338,12 @@ paths:
             type: integer
             format: int64
           description: 'ID do Usuário'
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       responses:
         '200':
           description: 'Usuário excluído com sucesso!'
@@ -332,7 +360,8 @@ paths:
       tags:
         - User
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       operationId: 'deactivateUser'
       description: 'Desativar Usuário'
       parameters:
@@ -343,6 +372,12 @@ paths:
             type: integer
             format: int64
           description: 'ID do Usuário'
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       requestBody:
         required: true
         content:
@@ -365,7 +400,8 @@ paths:
       tags:
         - User
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       operationId: 'activateUser'
       description: 'Ativar Usuário'
       parameters:
@@ -376,6 +412,12 @@ paths:
             type: integer
             format: int64
           description: 'ID do Usuário'
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       requestBody:
         required: true
         content:
@@ -398,10 +440,17 @@ paths:
       tags:
         - User
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN ]
       operationId: 'findUser'
       description: 'Para pesquisar usuário por um dos parâmetros: nome, email, cpf ou ativo'
       parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
         - name: name
           in: query
           required: true
@@ -441,7 +490,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
         '404':
           description: 'Usuário não encontrado.'
   /pets:
@@ -449,10 +498,18 @@ paths:
       tags:
         - Pet
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       summary: 'Cadastrar Pet'
       description: 'Cadastrar um novo Pet'
       operationId: createPet
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       requestBody:
         required: true
         content:
@@ -473,10 +530,18 @@ paths:
       tags:
         - Pet
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       summary: 'Listar Pet'
       description: 'Listar todos os pets cadastrados'
       operationId: getAllPets
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
       responses:
         '200':
           description: 'Lista de pets retornada com suesso'
@@ -493,11 +558,18 @@ paths:
       tags:
         - Pet
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       summary: 'Buscar Pet por ID'
       description: 'Buscar um pet pelo ID'
       operationId: getPetById
       parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
         - name: id
           in: path
           required: true
@@ -519,11 +591,18 @@ paths:
       tags:
         - Pet
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       summary: 'Ataulizar Pet'
       description: 'Atualizar um pet existente'
       operationId: updatePet
       parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
         - name: id
           in: path
           required: true
@@ -552,11 +631,18 @@ paths:
       tags:
         - Pet
       security:
-        - BearerAuth: [ ]
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
       summary: 'Excluir Pet'
       description: 'Excluir um pet existente'
       operationId: deletePet
       parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
         - name: id
           in: path
           required: true
@@ -574,12 +660,128 @@ paths:
                 example: 'Pet excluido com sucesso!'
         '400':
           description: 'Campo inválido'
+  /appointments/schedule:
+    post:
+      summary: 'Agenda um novo agendamento'
+      description: 'Detalhes do agendamento'
+      tags:
+        - Appointment
+      security:
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
+      operationId: scheduleAppointment
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+      responses:
+        '204':
+          description: 'Agendamento criado com sucesso.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: 'Erro ao criar agendamento: pet não encontrado.'
+        '500':
+          description: 'Erro interno ao criar agendamento.'
+  /update/{id}:
+    put:
+      summary: 'Atualiza um agendamento existente'
+      description: 'Atualiza um agendamento existente'
+      tags:
+        - Appointment
+      security:
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
+      operationId: updateAppointment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 'ID do agendamento'
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
+      requestBody:
+        description: 'Detalhes do agendamento para atualização'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+      responses:
+        '200':
+          description: 'Agendamento atualizado com sucesso.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: 'Agendamento ou Pet não encontrado.'
+        '500':
+          description: 'Erro interno do servidor.'
+  /cancel/{id}:
+    delete:
+      summary: 'Cancela um agendamento existente'
+      description: 'Cancela um agendamento existente'
+      tags:
+        - Appointment
+      security:
+        - Bearer: [ ]
+        - roles: [ ADMIN, USER ]
+      operationId: cancelAppointment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 'ID do agendamento'
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: 'Token JWT de Autorização'
+      responses:
+        '200':
+          description: 'Agendamento cancelado com sucesso.'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 'Agendamento cancelado com sucesso.'
+        '404':
+          description: 'Agendamento não encontrado.'
+        '500':
+          description: 'Erro interno do servidor.'
 components:
   securitySchemes:
-    BearerAuth:
+    Bearer:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    roles:
+      type: apiKey
+      in: header
+      name: roles
   schemas:
     RegisterUserRequest:
       type: object
@@ -642,7 +844,7 @@ components:
           format: int32
           example: 86400000
           description: 'Tempo em milissegundos até o token expirar'
-    User:
+    UserResponse:
       type: object
       properties:
         id:
@@ -817,26 +1019,103 @@ components:
           type: string
           format: date-time
           example: '2024-05-26 21:49:17'
+    AppointmentRequest:
+      type: object
+      required:
+        - petId
+        - appointmentDate
+        - appointmentTime
+      properties:
+        petId:
+          type: integer
+          format: int64
+          example: 1
+        serviceType:
+          type: string
+        petType:
+          type: string
+        appointmentDate:
+          type: string
+          format: date
+          example: '10/06/2024'
+        appointmentTime:
+          type: string
+          format: time
+          example: '14:00'
+    AppointmentResponse:
+      type: object
+      properties:
+        petId:
+          type: integer
+          format: int64
+          example: 1
+        serviceType:
+          $ref: '#/components/schemas/ServiceType'
+        petType:
+          $ref: '#/components/schemas/PetType'
+        appointmentDate:
+          type: string
+          format: date
+          example: "10/06/2024"
+        appointmentTime:
+          type: string
+          format: time
+          example: "14:00"
+        status:
+          $ref: '#/components/schemas/AppointmentStatus'
+    ServiceType:
+      type: string
+      enum:
+        - BATH
+        - GROOMING
+        - BATH_AND_GROOMING
+        - VETERINARY_CONSULTATION
+      example: 'BATH'
+    PetType:
+      type: string
+      enum:
+        - DOG
+        - CAT
+        - OTHER
+      example: 'DOG'
+    AppointmentStatus:
+      type: string
+      enum:
+        - SCHEDULED
+        - CANCELED
+        - CONCLUDED
+        - PENDING
+        - CONFIRMED
+      example: 'AGENDADO'
     ErrorResponse:
       type: object
       properties:
-        type:
-          type: string
-          example: "about:blank"
         title:
           type: string
-          example: "Forbidden"
+          example: 'Forbidden'
+          description: |-
+            Um breve resumo do tipo de problema. Não deve mudar para ocorrências do mesmo tipo, 
+            exceto para fins de localização
         status:
           type: integer
+          format: int32
           example: 403
+          description: |-
+            O status HTTP gerado pelo servidor de origem. Normalmente deve ser o mesmo status HTTP da resposta, 
+            e pode servir de referência para casos onde um servidor proxy altera o status da resposta
         detail:
           type: string
-          example: "A assinatura JWT não corresponde à assinatura computada localmente. A validade do JWT não pode ser afirmada e não deve ser confiável."
+          example: 'A validade do JWT não pode ser afirmada e não deve ser confiável.'
+          description: 'Descrição detalhada do problema.'
         instance:
           type: string
-          example: "/api/v1/users/"
-        description:
+          example: '/api/v1/users/'
+          description: |-
+            Propriedade opcional, com um URI exclusivo para o erro específico, que geralmente aponta para um log de 
+            erros para essa resposta.
+        type:
           type: string
-          example: "A assinatura JWT é inválida"
+          example: 'about:blank'
+          description: 'Uma URL para um documento que descreva o tipo do problema'
 security:
-  - BearerAuth: [ ]
+  - Bearer: [ ]

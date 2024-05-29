@@ -19,7 +19,9 @@
 
 ## Executando a aplicação
 
-No terminal insira o comando: `mvn spring-boot:run`
+* No terminal insira o comando: `mvn spring-boot:run`
+* Executar a aplicação pulando os testes: `mvn spring-boot:run -DskipTests`
+
 
 ## Executando a migração do Flyway
 

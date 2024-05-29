@@ -10,7 +10,7 @@
     * Login: email e senha (POST)
     * Recuperar senha: envio de email com link para redefinição (POST)
     * Detalhes do Usuário (GET)
-3. Pet - CUSTOMER OK
+3. Pet - USER OK
     * Cadastrar Pet (POST)
     * Detalhes do Pet (GET)
     * Atualizar dados do Pet (PUT)

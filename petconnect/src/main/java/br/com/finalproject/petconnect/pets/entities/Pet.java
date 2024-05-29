@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.pets.entities;
 
+import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * Representa o animal de estimação do usuário
@@ -49,7 +51,10 @@ public class Pet implements Serializable {
     private OffsetDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false)
     private User user;
+
+    @Transient
+    private List<Appointment> appointments;
 
 }
