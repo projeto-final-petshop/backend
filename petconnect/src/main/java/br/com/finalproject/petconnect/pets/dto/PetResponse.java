@@ -29,4 +29,6 @@ public class PetResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
 
+    private Long userId;
+
 }

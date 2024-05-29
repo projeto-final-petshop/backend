@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,11 +27,27 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    public String extractEmail(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
+        } catch (SignatureException e) {
+            throw new RuntimeException("Token inválido ou expirado");
+        }
+    }
+
     public String extractUsername(String token) {
-        log.info("Extraindo username do token JWT");
+        log.info("Extraindo username (subject) do token JWT: {}", token);
         return extractClaim(token, Claims::getSubject);
     }
 
+    /**
+     * método genérico e pode ser usado para extrair qualquer claim do token JWT com base em uma função passada como
+     * parâmetro.
+     */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         log.info("Extraindo claim do token JWT");
         final Claims claims = extractAllClaims(token);
@@ -48,6 +65,7 @@ public class JwtService {
     }
 
     public long getExpirationTime() {
+        log.info("Tempo de expiração do Token JWT: {}", jwtExpiration);
         return jwtExpiration;
     }
 
@@ -90,13 +108,17 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        log.info("Extraindo todos os claims do token JWT");
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            log.info("Extraindo todos os claims do token JWT");
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (SignatureException e) {
+            throw new RuntimeException("Token inválido ou expirado!");
+        }
     }
 
     private Key getSignInKey() {

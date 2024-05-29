@@ -10,6 +10,8 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -222,6 +224,18 @@ public class UserService {
         List<User> userList = new ArrayList<>(users);
         log.info("Total de usuários com status ativo {}: {}", param, userList.size());
         return userList;
+    }
+
+    @Transactional
+    public User getCurrentLoggedInUser() {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        // Inicializar manualmente as coleções Lazy
+        Hibernate.initialize(user.getPets());
+
+        return user;
     }
 
 }

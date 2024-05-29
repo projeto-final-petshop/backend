@@ -61,7 +61,7 @@ public class User implements UserDetails {
 
     private boolean active;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets;
 
     @ManyToOne
