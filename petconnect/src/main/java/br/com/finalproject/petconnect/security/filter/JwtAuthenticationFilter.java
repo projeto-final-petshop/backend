@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.security.filter;
 
 import br.com.finalproject.petconnect.security.services.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,63 +38,88 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final HandlerExceptionResolver handlerExceptionResolver;
 
-    @Override
-    protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        final String requestTokenHeader = request.getHeader("Authorization");
 
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-
-        final String authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Requisição sem cabeçalho Authorization ou Bearer inválido");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        try {
-
-            final String jwt = authHeader.substring(7);
-            log.info("Token JWT extraído: {}", jwt);
-
-            final String userEmail = jwtService.extractUsername(jwt);
-            log.info("Token JWT extraído e usuário identificado: {}", userEmail);
-
-            // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                log.info("Detalhes do usuário carregados: {}", userDetails.getUsername());
-
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-
-                    log.info("Token JWT válido para o usuário: {}", userDetails.getUsername());
-
-                    var authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                    log.info("Autenticação bem-sucedida para o usuário: {}", userDetails.getUsername());
-                }
-                log.warn("Token JWT inválido para o usuário: {}", userDetails.getUsername());
+        String username = null;
+        String jwtToken = null;
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+            jwtToken = requestTokenHeader.substring(7);
+            try {
+                username = jwtService.extractEmail(jwtToken);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Não foi possível obter o JWT Token");
+            } catch (ExpiredJwtException e) {
+                System.out.println("O JWT Token expirou");
             }
-
-            filterChain.doFilter(request, response);
-
-        } catch (Exception exception) {
-            log.error("Erro ao processar a autenticação JWT", exception);
-            handlerExceptionResolver.resolveException(request, response, null, exception);
+        } else {
+            logger.warn("JWT Token não começa com Bearer String");
         }
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            if (jwtService.isTokenValid(jwtToken, userDetails)) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+        }
+        chain.doFilter(request, response);
     }
+
+//    @Override
+//    protected void doFilterInternal(
+//            @NonNull HttpServletRequest request,
+//            @NonNull HttpServletResponse response,
+//            @NonNull FilterChain filterChain
+//    ) throws ServletException, IOException {
+//
+//        final String authHeader = request.getHeader("Authorization");
+//
+//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//            log.warn("Requisição sem cabeçalho Authorization ou Bearer inválido");
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        try {
+//
+//            final String jwtToken = authHeader.substring(7);
+//            log.info("Token JWT extraído: {}", jwtToken);
+//
+//            final String userEmail = jwtService.extractUsername(jwtToken);
+//            log.info("Usuário extraído do token JWT: {}", userEmail);
+//
+//            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//
+//                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+//                log.info("Detalhes do usuário carregados: {}", userDetails.getUsername());
+//
+//                if (jwtService.isTokenValid(jwtToken, userDetails)) {
+//                    log.info("Token JWT válido para o usuário: {}", userDetails.getUsername());
+//
+//                    var authToken = new UsernamePasswordAuthenticationToken(
+//                            userDetails,
+//                            null,
+//                            userDetails.getAuthorities()
+//                    );
+//
+//                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                    SecurityContextHolder.getContext().setAuthentication(authToken);
+//                    log.info("Autenticação bem-sucedida para o usuário: {}", userDetails.getUsername());
+//                } else {
+//                    log.warn("Token JWT inválido para o usuário: {}", userDetails.getUsername());
+//                }
+//
+//            }
+//
+//        } catch (Exception exception) {
+//            log.error("Erro ao processar a autenticação JWT", exception);
+//            handlerExceptionResolver.resolveException(request, response, null, exception);
+//            return; // Adiciona um retorno aqui para evitar a continuação do fluxo em caso de exceção
+//        }
+//        filterChain.doFilter(request, response);
+//    }
 }

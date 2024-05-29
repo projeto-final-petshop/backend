@@ -2,7 +2,6 @@ package br.com.finalproject.petconnect.security.services;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.RoleNotFoundException;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
@@ -14,11 +13,8 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -122,13 +118,6 @@ public class AuthenticationService {
         log.info("Administrador cadastrado com sucesso: {}", savedUser.getId());
         return savedUser;
 
-    }
-
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EmailNotFoundException(messageUtil.getMessage("emailNotFound") + email));
     }
 
 }

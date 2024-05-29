@@ -527,6 +527,7 @@ paths:
         - name: id
           in: path
           required: true
+          description: ID do Pet
           schema:
             type: integer
             format: int64
@@ -574,6 +575,11 @@ paths:
         '400':
           description: 'Campo inválido'
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     RegisterUserRequest:
       type: object
@@ -753,6 +759,8 @@ components:
           description: 'Buscar usuário por status (ativo ou inativo)'
     PetRequest:
       type: object
+      required:
+        - name
       properties:
         name:
           type: string
@@ -830,10 +838,5 @@ components:
         description:
           type: string
           example: "A assinatura JWT é inválida"
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
 security:
   - BearerAuth: [ ]
