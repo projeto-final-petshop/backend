@@ -3,6 +3,7 @@ package br.com.finalproject.petconnect.security.controllers;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.user.dto.RegisterUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,7 @@ public class AdminController {
 
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<User> createAdministrator(@RequestBody RegisterUserRequest registerUserDto) {
+    public ResponseEntity<User> createAdministrator(@RequestBody @Valid RegisterUserRequest registerUserDto) {
         User createdAdmin = authenticationService.createAdministrator(registerUserDto);
         return ResponseEntity.ok(createdAdmin);
     }

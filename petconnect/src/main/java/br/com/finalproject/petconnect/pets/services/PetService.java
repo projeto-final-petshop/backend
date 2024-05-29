@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.pets.services;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.PetServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.UserNotFoundException;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
@@ -30,90 +31,120 @@ public class PetService {
 
     @Transactional
     public PetResponse createPet(PetRequest petRequest, String authorizationHeader) {
-
         try {
-
-            String token = extractToken(authorizationHeader);
-            String userEmail = jwtService.extractUsername(token);
-            User user = userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage("userNotFound")));
-
+            User user = getUserFromAuthorizationHeader(authorizationHeader);
             Pet pet = PetMapper.petMapper().toEntity(petRequest);
             pet.setUser(user);
-
             Pet savedPet = petRepository.save(pet);
+            log.info("Pet cadastrado com sucesso: {}", savedPet.getId());
             return PetMapper.petMapper().toResponse(savedPet);
-
+        } catch (UserNotFoundException | PetNotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            throw new PetNotFoundException("Falha ao cadastrar Pet.", e);
+            log.error("Falha ao cadastrar Pet: {}", e.getMessage());
+            throw new PetServiceException("Falha ao cadastrar Pet. Por favor, tente novamente mais tarde.");
         }
-
     }
 
     public List<PetResponse> listPets(String authorizationHeader) {
-        String token = extractToken(authorizationHeader);
-        String userEmail = jwtService.extractUsername(token);
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage("userNotFound")));
-
-        List<Pet> pets = petRepository.findByUser(user);
-        return PetMapper.petMapper().toResponseList(pets);
+        try {
+            User user = getUserFromAuthorizationHeader(authorizationHeader);
+            List<Pet> pets = petRepository.findByUser(user);
+            log.info("Lista de pets cadastrados: {}", pets);
+            return PetMapper.petMapper().toResponseList(pets);
+        } catch (UserNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Falha ao listar Pets: {}", e.getMessage());
+            throw new PetServiceException("Falha ao listar Pets. Por favor, tente novamente mais tarde.");
+        }
     }
 
     public PetResponse getPetDetails(Long petId, String authorizationHeader) {
-        String token = extractToken(authorizationHeader);
-        String userEmail = jwtService.extractUsername(token);
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage("userNotFound")));
-
-        Pet pet = petRepository.findByIdAndUser(petId, user)
-                .orElseThrow(() -> new PetNotFoundException(messageUtil.getMessage("petNotFound")));
-
-        return PetMapper.petMapper().toResponse(pet);
+        try {
+            User user = getUserFromAuthorizationHeader(authorizationHeader);
+            Pet existingPet = getPetByIdAndUser(petId, user);
+            log.info("Detalhes do Pet: {}", existingPet);
+            return PetMapper.petMapper().toResponse(existingPet);
+        } catch (UserNotFoundException | PetNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Falha ao obter detalhes do Pet: {}", e.getMessage());
+            throw new PetServiceException("Falha ao obter detalhes do Pet. Por favor, tente novamente mais tarde.");
+        }
     }
 
     public PetResponse updatePet(Long petId, PetRequest petRequest, String authorizationHeader) {
-        String token = extractToken(authorizationHeader);
-        String userEmail = jwtService.extractUsername(token);
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage("userNotFound")));
+        try {
+            User user = getUserFromAuthorizationHeader(authorizationHeader);
+            Pet existingPet = getPetByIdAndUser(petId, user);
+            updatePetDetails(existingPet, petRequest);
+            petRepository.save(existingPet);
+            log.info("Pet com ID {} atualizado com sucesso!", existingPet.getId());
+            return PetMapper.petMapper().toResponse(existingPet);
+        } catch (UserNotFoundException | PetNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Falha ao atualizar do Pet: {}", e.getMessage());
+            throw new PetServiceException("Falha ao atualizar do Pet. Por favor, tente novamente mais tarde.");
+        }
+    }
 
-        Pet existingPet = petRepository.findByIdAndUser(petId, user)
-                .orElseThrow(() -> new PetNotFoundException(messageUtil.getMessage("petNotFound")));
+    public void deletePet(Long petId, String authorizationHeader) {
+        try {
+            User user = getUserFromAuthorizationHeader(authorizationHeader);
+            Pet existingPet = getPetByIdAndUser(petId, user);
+            log.info("Pet com ID {} excluído com sucesso", existingPet.getId());
+            petRepository.delete(existingPet);
+        } catch (UserNotFoundException | PetNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Falha ao excluir do Pet: {}", e.getMessage());
+            throw new PetServiceException("Falha ao excluir do Pet. Por favor, tente novamente mais tarde.");
+        }
+    }
 
+    private User getUserFromAuthorizationHeader(String authorizationHeader) {
+        try {
+            String userEmail = jwtService.extractEmail(extractToken(authorizationHeader));
+            return userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage("userNotFound")));
+        } catch (UserNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Falha ao obter usuário do cabeçalho de autorização: {}", e.getMessage());
+            throw new PetServiceException("Falha ao obter usuário do cabeçalho de autorização.");
+        }
+    }
+
+    private Pet getPetByIdAndUser(Long petId, User user) {
+        try {
+            return petRepository.findByIdAndUser(petId, user)
+                    .orElseThrow(() -> new PetNotFoundException(messageUtil.getMessage("petNotFound")));
+        } catch (PetNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Falha ao obter Pet pelo ID e usuário: {}", e.getMessage());
+            throw new PetServiceException("Falha ao obter Pet pelo ID e usuário.");
+        }
+    }
+
+    private void updatePetDetails(Pet existingPet, PetRequest petRequest) {
         existingPet.setName(petRequest.getName());
         existingPet.setAge(petRequest.getAge());
         existingPet.setColor(petRequest.getColor());
         existingPet.setBreed(petRequest.getBreed());
         existingPet.setAnimalType(petRequest.getAnimalType());
         existingPet.setBirthdate(petRequest.getBirthdate());
-
-        petRepository.save(existingPet);
-        return PetMapper.petMapper().toResponse(existingPet);
-    }
-
-    public void deletePet(Long petId, String authorizationHeader) {
-        String token = extractToken(authorizationHeader);
-        String userEmail = jwtService.extractUsername(token);
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage("userNotFound")));
-
-        Pet existingPet = petRepository.findByIdAndUser(petId, user)
-                .orElseThrow(() -> new PetNotFoundException(messageUtil.getMessage("petNotFound")));
-
-        petRepository.delete(existingPet);
     }
 
     private String extractToken(String authorizationHeader) {
-        return authorizationHeader.substring(7); // Remove "Bearer " do token
+        try {
+            return authorizationHeader.substring(7); // Remove "Bearer " do token
+        } catch (Exception e) {
+            log.error("Falha ao extrair token: {}", e.getMessage());
+            throw new PetServiceException("Falha ao extrair token.");
+        }
     }
-
-
-//    private String extractToken(String authorizationHeader) {
-//        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-//            throw new IllegalArgumentException("");
-//        }
-//        return authorizationHeader.substring(7); // Remove "Bearer " prefix
-//    }
 
 }

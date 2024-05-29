@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,7 +27,6 @@ import java.util.List;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
 
-    private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
@@ -59,10 +57,6 @@ public class SecurityConfiguration {
                                 .anyRequest().authenticated();
                     })
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//                    .authenticationProvider(authenticationProvider)
-//                    .formLogin(Customizer.withDefaults())
-//                    .httpBasic(Customizer.withDefaults());
-
             log.info("SecurityFilterChain configurado com sucesso");
         } catch (Exception e) {
             log.error("Erro ao configurar o SecurityFilterChain", e);
@@ -74,25 +68,25 @@ public class SecurityConfiguration {
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-
         try {
-            var config = new CorsConfiguration();
-            config.setAllowedOrigins(List.of("https://localhost:4200")); // Configurações de origem permitidas
-            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT")); // Métodos HTTP permitidos
-            config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Cabeçalhos permitidos
-            config.setAllowCredentials(true); // Permitir credenciais como cookies
-
+            final var config = getCorsConfiguration();
             var source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", config); // Aplicar configuração a todos os endpoints
-
             log.info("Configuração de CORS aplicada com sucesso");
-
             return source;
         } catch (Exception e) {
             log.error("Erro ao configurar CORS", e);
             throw e;
         }
+    }
 
+    private static CorsConfiguration getCorsConfiguration() {
+        var config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("https://localhost:4200")); // Configurações de origem permitidas
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT")); // Métodos HTTP permitidos
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Cabeçalhos permitidos
+        config.setAllowCredentials(true); // Permitir credenciais como cookies
+        return config;
     }
 
 }
