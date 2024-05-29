@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.user.dto;
 
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -10,9 +9,6 @@ import org.hibernate.validator.constraints.br.CPF;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserRequest {
-
-    @Email
-    private String email;
 
     private String name;
 

@@ -21,11 +21,9 @@ public interface PetMapper {
         return INSTANCE;
     }
 
-    @Mapping(target = "user", ignore = true) // Ignora o user ao criar a entidade Pet
     @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")
     Pet toEntity(PetRequest petRequest);
 
-    @Mapping(target = "user", source = "user") // Inclui o user no mapeamento da resposta
     @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")
     PetResponse toResponse(Pet pet);
 

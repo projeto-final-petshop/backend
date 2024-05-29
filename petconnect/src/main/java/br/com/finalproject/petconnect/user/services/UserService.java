@@ -1,9 +1,8 @@
 package br.com.finalproject.petconnect.user.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.CpfNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.UserNotFoundException;
 import br.com.finalproject.petconnect.user.dto.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -11,6 +10,8 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,18 +36,21 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findUser(FindUserRequest request) {
+
         if (request.getName() != null) {
             return findUserByName(request.getName());
         }
 
         if (request.getEmail() != null) {
             return findUserByEmail(request.getEmail())
-                    .orElseThrow(() -> new EmailNotFoundException(messageUtil.getMessage("emailNotFound") + request.getEmail()));
+                    .orElseThrow(() -> new EmailNotFoundException(
+                            messageUtil.getMessage("emailNotFound") + request.getEmail()));
         }
 
         if (request.getCpf() != null) {
             return findUserByCpf(request.getCpf())
-                    .orElseThrow(() -> new CpfNotFoundException(messageUtil.getMessage("cpfNotFound") + request.getCpf()));
+                    .orElseThrow(() -> new CpfNotFoundException(
+                            messageUtil.getMessage("cpfNotFound") + request.getCpf()));
         }
 
         if (!request.isActive()) {
@@ -107,21 +111,23 @@ public class UserService {
     }
 
     @Transactional
-    public String updateUser(Long id, UpdateUserRequest updatedUser) {
-        User user = getUserAndUpdateLog(id, "Atualizando usuário com ID: {}");
-
-        if (updatedUser.getCpf() != null && userRepository.existsByCpf(updatedUser.getCpf())) {
-            throw new CpfAlreadyExistsException(messageUtil.getMessage("cpfAlreadyExists") + updatedUser.getCpf());
+    public void updateUser(String email, UpdateUserRequest userUpdateRequest) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (userUpdateRequest.getName() != null && !userUpdateRequest.getName().isEmpty()) {
+                user.setName(userUpdateRequest.getName());
+            }
+            if (userUpdateRequest.getCpf() != null && !userUpdateRequest.getCpf().isEmpty()) {
+                user.setCpf(userUpdateRequest.getCpf());
+            }
+            if (userUpdateRequest.getPhoneNumber() != null && !userUpdateRequest.getPhoneNumber().isEmpty()) {
+                user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
+            }
+            userRepository.save(user);
+        } else {
+            throw new UserNotFoundException("User not found");
         }
-
-        if (updatedUser.getEmail() != null && userRepository.existsByEmail(updatedUser.getEmail())) {
-            throw new EmailAlreadyExistsException(messageUtil.getMessage("emailAlreadyExists") + updatedUser.getEmail());
-        }
-
-        updateUserDetails(user, updatedUser);
-        userRepository.save(user);
-        log.info("Usuário com ID: {} atualizado com sucesso", id);
-        return "Usuário atualizado com sucesso";
     }
 
     @Transactional
@@ -143,30 +149,35 @@ public class UserService {
     }
 
     @Transactional
-    public String deleteUser(Long id) {
-        log.info("Excluindo usuário com ID: {}", id);
-        userRepository.deleteById(id);
-        log.info("Usuário com ID: {} excluído com sucesso", id);
-        return messageUtil.getMessage("deleteUser");
-    }
-
-    private void updateUserDetails(User user, UpdateUserRequest updatedUser) {
-        if (updatedUser.getName() != null) {
-            user.setName(updatedUser.getName());
-        }
-
-        if (updatedUser.getEmail() != null) {
-            user.setEmail(updatedUser.getEmail());
-        }
-
-        if (updatedUser.getCpf() != null) {
-            user.setCpf(updatedUser.getCpf());
-        }
-
-        if (updatedUser.getPhoneNumber() != null) {
-            user.setPhoneNumber(updatedUser.getPhoneNumber());
+    public void deleteUser(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            userRepository.delete(optionalUser.get());
+        } else {
+            throw new UserNotFoundException("User not found");
         }
     }
+
+//    public String deleteUser(Long id) {
+//        log.info("Excluindo usuário com ID: {}", id);
+//        userRepository.deleteById(id);
+//        log.info("Usuário com ID: {} excluído com sucesso", id);
+//        return messageUtil.getMessage("deleteUser");
+//    }
+
+//    private void updateUserDetails(User user, UpdateUserRequest updatedUser) {
+//        if (updatedUser.getName() != null) {
+//            user.setName(updatedUser.getName());
+//        }
+//
+//        if (updatedUser.getCpf() != null) {
+//            user.setCpf(updatedUser.getCpf());
+//        }
+//
+//        if (updatedUser.getPhoneNumber() != null) {
+//            user.setPhoneNumber(updatedUser.getPhoneNumber());
+//        }
+//    }
 
     private User getUserAndUpdateLog(Long id, String message) {
         log.info(message, id);
@@ -213,6 +224,18 @@ public class UserService {
         List<User> userList = new ArrayList<>(users);
         log.info("Total de usuários com status ativo {}: {}", param, userList.size());
         return userList;
+    }
+
+    @Transactional
+    public User getCurrentLoggedInUser() {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        // Inicializar manualmente as coleções Lazy
+        Hibernate.initialize(user.getPets());
+
+        return user;
     }
 
 }

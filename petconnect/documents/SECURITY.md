@@ -271,7 +271,8 @@ RBAC: Controle de acesso baseado em função
 | Rota              | Função                   | Descrição                              |
 |:------------------|:-------------------------|:---------------------------------------|
 | GET /users/me     | USER, ADMIN, SUPER_ADMIN | Recuperar o usuário autenticado        |
-| GET /users/       | ADMIN, SUPER_ADMIN       | Recuperar a lista de todos os usuários |
+| GET /users        | ADMIN, SUPER_ADMIN       | Recuperar a lista de todos os usuários |
+| POST /admins      | SUPER_ADMIN              | Cria um novo administrador (ADMIN)     |
 | GET /pets/{id}    | SUPER_ADMIN              | Criar um novo administrador            |
 | GET /pets/{id}    | USER, ADMIN, SUPER_ADMIN | Buscar um Pet por ID                   |
 | GET /pets/list    | USER, ADMIN, SUPER_ADMIN | Listar todos os Pets cadastrados       |
@@ -281,9 +282,28 @@ RBAC: Controle de acesso baseado em função
 
 Para proteger as rotas, basta incluir nos métodos do controller:
 
+* `@PreAuthorize`: Utilizada a nível de método.
+    * `hasRole('ADMIN')`: o prefixo `ROLE_` é ignorado, pois o Spring adiciona o prefixo automaticamente.
+    * `hasAnyRole('USER', 'ADMIN')`: suporta diversas funções.
+    * `hasAuthority('ROLE_ADMIN')`: necessário informar o nome da autoridade completo
+    * `hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')`: suporte a múltiplas autoridades.
+* `@PosAuthorize`: usada para especificar que um método deve ser invocado somente se o resultado atender a determinados
+  critérios após a execução do método.
+* `@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)`
 * `@PreAuthorize("isAuthenticated()")`
 * `@PreAuthorize("hasRole('ADMIN')")`
 * `@PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")`
 * `@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)`
 
 ---
+
+### Componentes
+
+* `UserDetails`: interface responsável por armazenar as informações do usuário logado no sistema.
+    * username, password, authorities
+* `UserDetailsService`: interface responsável por buscar e retornar o `UserDetails` por seu username.
+    * é chamado automaticamente durante a autenticação para retornar o `UserDetails`
+* `SecurityConfig`: Configura o filtro de segurança, encoder de senha, encoder/decoder de JWT.
+    * Rotas autorizadas e protegidas, http basic, oauth resource server com jwt.
+
+
