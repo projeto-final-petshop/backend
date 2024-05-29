@@ -58,19 +58,19 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/cancel/{id}")
-    public ResponseEntity<Void> cancelAppointment(@PathVariable(name = "id") Long appointmentId,
-                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public ResponseEntity<String> cancelAppointment(@PathVariable(name = "id") Long appointmentId,
+                                                    @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
             log.info("Recebida solicitação de cancelamento para o agendamento ID: {}", appointmentId);
             appointmentService.cancelAppointment(appointmentId, authorizationHeader);
             log.info("Agendamento cancelado com sucesso. Agendamento ID: {}", appointmentId);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Agendamento cancelado com sucesso.");
         } catch (IllegalArgumentException e) {
             log.error("Erro ao cancelar agendamento: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // Customize response as needed
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agendamento não encontrado ou não pertence ao usuário.");  // Customize response as needed
         } catch (Exception e) {
             log.error("Erro interno ao cancelar agendamento", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // Customize response as needed
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno ao cancelar o agendamento.");  // Customize response as needed
         }
     }
 
