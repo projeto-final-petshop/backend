@@ -12,17 +12,17 @@ public enum ErrorMessages {
     /**
      * Bad Request - Http Status 400
      */
-    INVALID_FIELD("INVALID_FIELD", HttpStatus.BAD_REQUEST), // InvalidFieldException.class
-    NO_SEARCH_CRITERIA_PROVIDED("NO_SEARCH_CRITERIA_PROVIDED", HttpStatus.BAD_REQUEST), // NoSearchCriteriaProvidedException.class
+    INVALID_FIELD("badRequest.invalidField", HttpStatus.BAD_REQUEST), // InvalidFieldException.class
+    NO_SEARCH_CRITERIA_PROVIDED("badRequest.noSearchCriteriaProvided", HttpStatus.BAD_REQUEST), // NoSearchCriteriaProvidedException.class
     PASSWORD_UPDATE("PASSWORD_UPDATE", HttpStatus.BAD_REQUEST), // PasswordUpdateException.class
 
     /**
      * UNAUTHORIZED - Http Status 401
      */
-    AUTHENTICATION("AUTHENTICATION", HttpStatus.UNAUTHORIZED), // AuthenticationException.class
-    TOKEN_NOT_FOUND("TOKEN_NOT_FOUND", HttpStatus.UNAUTHORIZED), // TokenNotFoundException.class
-    UNAUTHENTICATED("UNAUTHENTICATED", HttpStatus.UNAUTHORIZED), // UnauthenticateException.class
-    BAD_CREDENTIALS("BAD_CREDENTIALS", HttpStatus.UNAUTHORIZED), // BadCredentialsException.class
+    AUTHENTICATION("unautorized.authentication", HttpStatus.UNAUTHORIZED), // AuthenticationException.class
+    TOKEN_NOT_FOUND("unautorized.tokenNotFound", HttpStatus.UNAUTHORIZED), // TokenNotFoundException.class
+    UNAUTHENTICATED("unautorized.unauthenticated", HttpStatus.UNAUTHORIZED), // UnauthenticateException.class
+    BAD_CREDENTIALS("unautorized.badCredentials", HttpStatus.UNAUTHORIZED), // BadCredentialsException.class
     INVALID_SIGNATURE("INVALID_SIGNATURE", HttpStatus.UNAUTHORIZED), // InvalidSignatureException.class
     TOKEN_EXPIRED("TOKEN_EXPIRED", HttpStatus.UNAUTHORIZED), // TokenExpiredException.class
 

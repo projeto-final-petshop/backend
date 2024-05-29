@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -40,7 +43,7 @@ public class AppointmentService {
         Appointment appointment = AppointmentMapper.petMapper().toEntity(request);
         appointment.setUser(user);
         appointment.setPet(pet);
-        appointment.setStatus(AppointmentStatus.AGENDADO);
+        appointment.setStatus(AppointmentStatus.SCHEDULED);
 
         log.info("Salvando agendamento para o pet ID: {} e usuário: {}", pet.getId(), user.getUsername());
         Appointment savedAppointment = appointmentRepository.save(appointment);
@@ -96,10 +99,34 @@ public class AppointmentService {
                     return new IllegalArgumentException("Agendamento não encontrado ou não pertence ao usuário");
                 });
 
-        appointment.setStatus(AppointmentStatus.CANCELADO);
+        appointment.setStatus(AppointmentStatus.CANCELLED);
         log.info("Cancelando agendamento ID: {}", appointmentId);
         appointmentRepository.save(appointment);
         log.info("Agendamento cancelado com sucesso. Agendamento ID: {}", appointmentId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppointmentResponse> getAllAppointmentsByUser(String authorizationHeader) {
+        User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+        List<Appointment> appointments = appointmentRepository.findAllByUserId(user.getId());
+        return AppointmentMapper.petMapper().toResponseList(appointments);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppointmentResponse> getAppointmentsByPet(Long petId, String authorizationHeader) {
+        User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+        Pet pet = petRepository.findByIdAndUserId(petId, user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Pet não encontrado ou não pertence ao usuário"));
+        List<Appointment> appointments = appointmentRepository.findAllByPetId(pet.getId());
+        return AppointmentMapper.petMapper().toResponseList(appointments);
+    }
+
+    @Transactional(readOnly = true)
+    public AppointmentResponse getAppointmentById(Long appointmentId, String authorizationHeader) {
+        User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+        Appointment appointment = appointmentRepository.findByIdAndUserId(appointmentId, user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado ou não pertence ao usuário"));
+        return AppointmentMapper.petMapper().toResponse(appointment);
     }
 
 }
