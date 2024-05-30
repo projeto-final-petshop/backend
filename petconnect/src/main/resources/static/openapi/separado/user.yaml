@@ -1,0 +1,226 @@
+openapi: 3.0.3
+info:
+  title: 'API de Usuários'
+  description: 'API de Usuários'
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8888/api/v1/users'
+tags:
+  - name: user
+    description: 'Usuário'
+paths:
+  /me:
+    get:
+      tags:
+        - user
+      summary: 'Detalhes do Usuário'
+      operationId: authenticatedUser
+      security:
+        - Bearer: [ ]
+      parameters:
+        - $ref: '#/components/parameters/AuthHeader'
+      responses:
+        '200':
+          description: 'Usuário autenticado recuperado com sucesso!'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '403':
+          description: 'Usuário não possui permissão.'
+        '500':
+          description: 'Erro desconhecido ao cadastrar usuário.'
+  /update:
+    post:
+      tags:
+        - user
+      summary: 'Atualização do usuário'
+      operationId: updateUser
+      security:
+        - Bearer: [ ]
+      parameters:
+        - $ref: '#/components/parameters/AuthHeader'
+      requestBody:
+        description: 'Atualização dos dados do usuário'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: 'Usuário atualizado com sucesso!'
+        '404':
+          description: 'Usuário não encontrado.'
+        '500':
+          description: 'Erro desconhecido ao cadastrar usuário.'
+  /delete:
+    delete:
+      tags:
+        - user
+      summary: 'Excluir Usuário'
+      operationId: deleteUser
+      security:
+        - Bearer: [ ]
+      parameters:
+        - $ref: '#/components/parameters/AuthHeader'
+      responses:
+        '200':
+          description: 'Usuário excluído com sucesso!'
+        '404':
+          description: 'Usuário não encontrado.'
+        '500':
+          description: 'Erro desconhecido ao cadastrar usuário.'
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    roles:
+      type: apiKey
+      in: header
+      name: roles
+  parameters:
+    AuthHeader:
+      in: header
+      name: Authorization
+      required: true
+      schema:
+        type: string
+        description: 'Token JWT de Autorização'
+  schemas:
+    RegisterUserRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - confirmPassword
+        - cpf
+      properties:
+        name:
+          type: string
+          description: 'Nome completo do Usuário'
+        email:
+          type: string
+          uniqueItems: true
+          example: 'user@example.com'
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$'
+          description: 'Email do usuário, irá ser utilizado como username para geração do Token JWT.'
+        password:
+          type: string
+          minLength: 8
+          example: 'P4$$w0rD'
+          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          description: 'A senha deve conter no mínimo: 8 caracteres, pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial.'
+        confirmPassword:
+          type: string
+          example: 'P4$$w0rD'
+          description: 'A senha deve ser a mesma do campo password.'
+        cpf:
+          type: string
+          uniqueItems: true
+          minLength: 11
+          maxLength: 11
+          pattern: '^\d{3}\.\d{3}\.\d{3}-\d{2}$'
+          example: 'XXX.XXX.XXX-XX'
+          description: 'Número de CPF válido do Usuário'
+        phoneNumber:
+          type: string
+          minLength: 13
+          maxLength: 14
+          example: '+5511998765432'
+          description: 'O número de telefone no formato E.164'
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+        email:
+          type: string
+          example: 'user@example.com'
+        cpf:
+          type: string
+          example: 'XXX.XXX.XXX-XX'
+        phoneNumber:
+          type: string
+          example: '+5511998765432'
+        active:
+          type: boolean
+          example: true
+          description: 'O usuário ao se cadastrar estará como ativo.'
+        pets:
+          type: array
+        role:
+          $ref: '#/components/schemas/Role'
+        createAt:
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd HH:mm:ss"
+          example: '2024-05-25 14:00:26'
+        updatedAt:
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd HH:mm:ss"
+          example: '2024-05-25 14:00:26'
+        enabled:
+          type: boolean
+          example: true
+        accountNonExpired:
+          type: boolean
+          example: true
+        credentialsNonExpired:
+          type: boolean
+          example: true
+        accountNonLocked:
+          type: boolean
+          example: true
+        username:
+          type: string
+          example: 'user@example.com'
+        authorities:
+          type: array
+          items:
+            type: string
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          $ref: '#/components/schemas/RoleEnum'
+        description:
+          type: string
+        createAt:
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd HH:mm:ss"
+          example: '2024-05-25 14:00:26'
+        updatedAt:
+          type: string
+          format: date-time
+          pattern: "yyyy-MM-dd HH:mm:ss"
+          example: '2024-05-25 14:00:26'
+    RoleEnum:
+      type: string
+      enum:
+        - USER
+        - ADMIN
+        - EMPLOYEE
+        - VETERINARIO
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        cpf:
+          type: string
+          example: 'XXX.XXX.XXX-XX'
+        phoneNumber:
+          type: string
+          example: '+5511998765432'

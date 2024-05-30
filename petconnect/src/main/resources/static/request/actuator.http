@@ -1,0 +1,12 @@
+### Actuator
+GET http://localhost:9090/actuator
+
+### Actuator - OpenAPI
+GET http://localhost:9090/actuator/openapi
+
+### Actuator - Swagger
+http://localhost:9090/actuator/swagger-ui/index.html
+
+
+###
+http://localhost:9090/swagger-ui.html

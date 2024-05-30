@@ -2,6 +2,9 @@
 
 * Clique [aqui](https://documenter.getpostman.com/view/13771815/2sA3Qqgstd) para acessar a Collection no Postman.
 
+* swagger formato json: http://localhost:8888/api/v1/api-docs
+* swagger: http://localhost:8888/api/v1/swagger-ui/index.html
+
 ## Pré Requisitos
 
 * Language: Java 21
@@ -21,7 +24,6 @@
 
 * No terminal insira o comando: `mvn spring-boot:run`
 * Executar a aplicação pulando os testes: `mvn spring-boot:run -DskipTests`
-
 
 ## Executando a migração do Flyway
 

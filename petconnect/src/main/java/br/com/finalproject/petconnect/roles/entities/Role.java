@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.roles.entities;
 
-import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,15 +8,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roles")
 @Entity
+@Table(name = "roles")
 public class Role implements Serializable {
 
     @Id

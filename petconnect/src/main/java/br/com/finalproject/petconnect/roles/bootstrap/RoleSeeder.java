@@ -31,16 +31,13 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
         log.info("Carregando roles...");
 
-        var roleNames = new RoleEnum[]{
-                RoleEnum.USER,
-                RoleEnum.ADMIN,
-                RoleEnum.SUPER_ADMIN
-        };
+        var roleNames = RoleEnum.values();  // Inclui todas as roles definidas no RoleEnum
 
         Map<RoleEnum, String> roleDescriptionMap = Map.of(
-                RoleEnum.USER, "Default user role",
-                RoleEnum.ADMIN, "Administrator role",
-                RoleEnum.SUPER_ADMIN, "Super Administrator role"
+                RoleEnum.USER, "Dono do animal de estimação (Pet)",
+                RoleEnum.EMPLOYEE, "Funcionário do petshop",
+                RoleEnum.ADMIN, "Dono da loja petshop",
+                RoleEnum.VETERINARIAN, "Médico veterinário que realiza atendimento no petshop"
         );
 
         Arrays.stream(roleNames).forEach((roleName) -> {
@@ -60,6 +57,7 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
             );
 
         });
+
 
         log.info("Carregamento das roles concluído.");
 

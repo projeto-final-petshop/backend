@@ -53,9 +53,10 @@ public class PasswordService {
 
     private User getCurrentAuthenticatedUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage("usernameNotFound")));
+                .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage("notFound.username")));
     }
 
+    @Transactional
     public void resetPassword(String email) throws EmailNotFoundException {
 
         User user = userRepository.findByEmail(email)
@@ -69,6 +70,7 @@ public class PasswordService {
         emailService.sendEmail(user.getEmail(), "Password Reset Request", "To reset your password, click the link below:\n" + resetLink);
     }
 
+    @Transactional
     public void updatePasswordWithToken(String token, String newPassword) throws TokenNotFoundException, TokenExpiredException {
 
         PasswordResetToken resetToken = tokenRepository.findByToken(token)

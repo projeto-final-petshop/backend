@@ -4,6 +4,15 @@ import br.com.finalproject.petconnect.appointment.dto.AppointmentRequest;
 import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
 import br.com.finalproject.petconnect.appointment.services.AppointmentService;
 import br.com.finalproject.petconnect.exceptions.runtimes.PetNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +23,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(
+        name = "Appointment",
+        description = "Agendamento de Serviços e Consultas Veterinárias"
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT",
+        in = SecuritySchemeIn.HEADER
+)
+@SecurityRequirement(
+        name = "bearerAuth"
+)
 @Slf4j
 @RestController
 @RequestMapping("/appointments")
@@ -22,6 +45,34 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    @Operation(summary = "Agendar um novo serviço ou uma nova consulta")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Agendamento realizado com sucesso.",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    implementation = AppointmentResponse.class
+                            )
+                    )
+            }
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Requisição inválida",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Pet não encontrado.",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno ao criar agendamento",
+            content = @Content
+    )
     @PostMapping("/schedule")
     public ResponseEntity<AppointmentResponse> scheduleAppointment(@RequestBody @Valid AppointmentRequest request,
                                                                    @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -39,6 +90,34 @@ public class AppointmentController {
         }
     }
 
+    @Operation(summary = "Atualização (reagendamento) do serviço ou consulta.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Agendamento atualizado com sucesso.",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    implementation = AppointmentResponse.class
+                            )
+                    )
+            }
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Requisição inválida",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Agendamento não encontrado ou não pertence ao usuário.",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno ao atualizar agendamento",
+            content = @Content
+    )
     @PutMapping("/update/{appointmentId}")
     public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
                                                                  @RequestBody @Valid AppointmentRequest request,
@@ -57,6 +136,34 @@ public class AppointmentController {
         }
     }
 
+    @Operation(summary = "Cancelamento do agendamento de serviço ou consulta.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Agendamento cancelado com sucesso.",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    implementation = String.class
+                            )
+                    )
+            }
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Requisição inválida",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Agendamento não encontrado ou não pertence ao usuário.",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno ao cancelar o agendamento.",
+            content = @Content
+    )
     @DeleteMapping("/cancel/{appointmentId}")
     public ResponseEntity<String> cancelAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
                                                     @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -74,6 +181,30 @@ public class AppointmentController {
         }
     }
 
+    @Operation(summary = "Listar todos os serviços e agendamentos.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Lista de agendamentos.",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    type = "array",
+                                    implementation = AppointmentResponse.class
+                            )
+                    )
+            }
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Você não possui  nenhum agendamento cadastrado.",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno ao carregar agendamento",
+            content = @Content
+    )
     @GetMapping("/all")
     public ResponseEntity<List<AppointmentResponse>> getAllAppointments(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -81,6 +212,30 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @Operation(summary = "Listar agendamentos de um único Pet.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Lista de agendamentos.",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    type = "array",
+                                    implementation = AppointmentResponse.class
+                            )
+                    )
+            }
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Pet não encontrado.",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno ao carregar agendamento",
+            content = @Content
+    )
     @GetMapping("/pets/{petId}")
     public ResponseEntity<List<AppointmentResponse>> getAppointmentsByPet(
             @PathVariable(name = "petId") Long petId,
@@ -89,6 +244,34 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @Operation(summary = "Buscar (visualizar) agendamento.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Agendamento encontrado!",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    implementation = AppointmentResponse.class
+                            )
+                    )
+            }
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Requisição inválida",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Agendamento não encontrado.",
+            content = @Content
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno ao buscar agendamento",
+            content = @Content
+    )
     @GetMapping("/{appointmentId}")
     public ResponseEntity<AppointmentResponse> getAppointmentById(
             @PathVariable(name = "appointmentId") Long appointmentId,

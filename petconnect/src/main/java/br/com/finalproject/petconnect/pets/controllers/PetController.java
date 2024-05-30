@@ -5,7 +5,11 @@ import br.com.finalproject.petconnect.exceptions.runtimes.UserNotFoundException;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.services.PetService;
-import br.com.finalproject.petconnect.security.services.JwtService;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +22,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(
+        name = "Pets",
+        description = "Animal de Estimação"
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT",
+        in = SecuritySchemeIn.HEADER
+)
+@SecurityRequirement(
+        name = "bearerAuth"
+)
 @Slf4j
 @RestController
 @RequestMapping("/pets")
