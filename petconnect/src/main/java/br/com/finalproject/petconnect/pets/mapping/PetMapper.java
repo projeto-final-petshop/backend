@@ -24,6 +24,8 @@ public interface PetMapper {
     @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")
     Pet toEntity(PetRequest petRequest);
 
+    @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
+    @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")
     PetResponse toResponse(Pet pet);
 

@@ -6,8 +6,9 @@ import br.com.finalproject.petconnect.security.dto.LoginRequest;
 import br.com.finalproject.petconnect.security.dto.LoginResponse;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.security.services.JwtService;
-import br.com.finalproject.petconnect.user.dto.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(
+        name = "Auth",
+        description = "Cadastro e Autenticação de Usuário"
+)
 @Slf4j
 @RequestMapping("/auth")
 @RestController

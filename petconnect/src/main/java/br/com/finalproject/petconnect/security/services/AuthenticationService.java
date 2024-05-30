@@ -8,7 +8,7 @@ import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
 import br.com.finalproject.petconnect.security.dto.LoginRequest;
-import br.com.finalproject.petconnect.user.dto.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;

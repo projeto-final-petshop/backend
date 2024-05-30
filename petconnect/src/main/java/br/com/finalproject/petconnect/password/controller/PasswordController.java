@@ -9,6 +9,7 @@ import br.com.finalproject.petconnect.password.dto.ResetPasswordRequest;
 import br.com.finalproject.petconnect.password.dto.UpdatePasswordRequest;
 import br.com.finalproject.petconnect.password.service.PasswordService;
 import br.com.finalproject.petconnect.utils.MessageUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(
+        name = "Password",
+        description = "Atualização e Reset de Senha"
+)
 @Slf4j
 @RestController
 @RequestMapping
