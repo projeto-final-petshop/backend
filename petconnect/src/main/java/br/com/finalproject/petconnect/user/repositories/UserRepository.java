@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.user.repositories;
 
+import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.user.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -19,5 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByCpf(String cpf);
 
     boolean existsByEmail(String email);
+
+    boolean existsByRoleName(RoleEnum roleEnum);
+
+    boolean existsByEmailOrCpf(String email, String cpf);
 
 }

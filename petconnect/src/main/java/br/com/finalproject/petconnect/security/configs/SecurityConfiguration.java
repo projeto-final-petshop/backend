@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.security.configs;
 
-import br.com.finalproject.petconnect.security.filter.CsrfCookieFilter;
 import br.com.finalproject.petconnect.security.filter.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 
 @Slf4j
@@ -48,12 +45,15 @@ public class SecurityConfiguration {
                         log.info("Desabilitando CSRF para simplificar");
                         csrf.disable();
                     })
-                    .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                    //.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                     .authorizeHttpRequests(requests -> {
                         log.info("Configurando autorizações de requisição");
                         requests
                                 .requestMatchers("/api/v1", "/api/v1/**", "/error").permitAll()
+                                .requestMatchers("/api-docs", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/actuator", "/actuator/**").permitAll()
                                 .requestMatchers("/auth/login", "/auth/signup", "/auth/reset-password").permitAll()
+                                .requestMatchers("/auth/login").anonymous()
                                 .anyRequest().authenticated();
                     })
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -82,10 +82,10 @@ public class SecurityConfiguration {
 
     private static CorsConfiguration getCorsConfiguration() {
         var config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://localhost:4200")); // Configurações de origem permitidas
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT")); // Métodos HTTP permitidos
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Cabeçalhos permitidos
-        config.setAllowCredentials(true); // Permitir credenciais como cookies
+        config.setAllowedOrigins(Arrays.asList("https://localhost:4200", "https://localhost:9090", "*"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        config.setAllowCredentials(true);
         return config;
     }
 

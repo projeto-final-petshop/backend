@@ -3,7 +3,7 @@ package br.com.finalproject.petconnect.security.bootstrap;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
-import br.com.finalproject.petconnect.user.dto.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import jakarta.annotation.Nonnull;
@@ -33,27 +33,42 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     private void createSuperAdministrator() {
 
-        RegisterUserRequest request = RegisterUserRequest.builder()
-                .name("PetConnect")
-                .email("petshop.petconnect@gmail.com")
-                .password(passwordEncoder.encode("P4$$w0rD"))
-                .active(true)
-                .cpf("396.810.991-09")
-                .phoneNumber("+5521986548329")
-                .build();
-
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.SUPER_ADMIN);
-        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
-
-        if (optionalRole.isEmpty() || optionalUser.isPresent()) {
-            log.info("Superadministrador já existente ou a role de SUPER_ADMIN não foi encontrada. Pulando a criação do superadministrador.");
+        // Verifica se já existe algum usuário com a função de administrador
+        if (userRepository.existsByRoleName(RoleEnum.ADMIN)) {
+            log.info("Já existe pelo menos um administrador cadastrado.");
             return;
         }
+
+        // Verifica se já existe algum usuário com o e-mail ou CPF fornecidos
+        String email = "petshop.petconnect@gmail.com";
+        String cpf = "396.810.991-09";
+
+        if (userRepository.existsByEmailOrCpf(email, cpf)) {
+            log.info("Já existe um usuário cadastrado com o mesmo e-mail ou CPF. Pulando a criação do administrador.");
+            return;
+        }
+
+        // Carrega a role de ADMIN do banco de dados
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.ADMIN);
+        if (optionalRole.isEmpty()) {
+            log.error("Role de ADMIN não encontrada. Não é possível criar o administrador.");
+            return;
+        }
+
+        // Cria o administrador
+        RegisterUserRequest request = RegisterUserRequest.builder()
+                .name("PetConnect")
+                .email(email)
+                .password(passwordEncoder.encode("P4$$w0rD"))
+                .active(true)
+                .cpf(cpf)
+                .phoneNumber("+5521986548329")
+                .build();
 
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(request.getPassword())
                 .active(request.isActive())
                 .cpf(request.getCpf())
                 .phoneNumber(request.getPhoneNumber())
@@ -61,7 +76,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
 
         userRepository.save(user);
-        log.info("Superadministrador '{}' criado com sucesso!", user.getEmail());
+        log.info("Administrador '{}' criado com sucesso!", user.getEmail());
 
     }
 

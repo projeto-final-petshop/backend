@@ -46,6 +46,7 @@ public class PetService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<PetResponse> listPets(String authorizationHeader) {
         try {
             User user = getUserFromAuthorizationHeader(authorizationHeader);
@@ -60,6 +61,7 @@ public class PetService {
         }
     }
 
+    @Transactional(readOnly = true)
     public PetResponse getPetDetails(Long petId, String authorizationHeader) {
         try {
             User user = getUserFromAuthorizationHeader(authorizationHeader);
@@ -74,6 +76,7 @@ public class PetService {
         }
     }
 
+    @Transactional
     public PetResponse updatePet(Long petId, PetRequest petRequest, String authorizationHeader) {
         try {
             User user = getUserFromAuthorizationHeader(authorizationHeader);
@@ -90,6 +93,7 @@ public class PetService {
         }
     }
 
+    @Transactional
     public void deletePet(Long petId, String authorizationHeader) {
         try {
             User user = getUserFromAuthorizationHeader(authorizationHeader);
@@ -120,7 +124,7 @@ public class PetService {
     private Pet getPetByIdAndUser(Long petId, User user) {
         try {
             return petRepository.findByIdAndUser(petId, user)
-                    .orElseThrow(() -> new PetNotFoundException(messageUtil.getMessage("petNotFound")));
+                    .orElseThrow(() -> new PetNotFoundException(messageUtil.getMessage("notFound.pet")));
         } catch (PetNotFoundException e) {
             throw e;
         } catch (Exception e) {
