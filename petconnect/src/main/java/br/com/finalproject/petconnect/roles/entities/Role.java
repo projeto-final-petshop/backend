@@ -3,6 +3,7 @@ package br.com.finalproject.petconnect.roles.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -27,15 +28,14 @@ public class Role implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoleEnum name;
 
+    @Size(min = 3)
     private String description;
 
     @CreationTimestamp
     @Column(updatable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
 
 }

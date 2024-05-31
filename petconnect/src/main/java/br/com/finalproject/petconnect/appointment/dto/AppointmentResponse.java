@@ -22,8 +22,7 @@ public class AppointmentResponse {
     @Schema(name = "appointmentId", type = "integer", format = "int64",
             requiredMode = Schema.RequiredMode.AUTO,
             description = "Identificação única do agendamento",
-            example = "10"
-    )
+            example = "10")
     @JsonProperty("appointmentId")
     private Long id;
 

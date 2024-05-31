@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -40,21 +41,29 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
+    @Size(min = 3, max = 250, message = "O nome deve ter entre 3 e 250 caracteres.")
     private String name;
 
-    @Email
+    @Email(message = "Por favor, insira um endereço de e-mail válido.",
+            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
     @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
+            message = "A senha deve conter pelo menos 8 caracteres, " +
+                    "incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
     private String password;
 
-    @CPF
-    @Column(name = "cpf", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
+    @CPF(message = "Por favor, insira um CPF válido.")
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
+            message = "Por favor, insira um CPF válido no formato XXX.XXX.XXX-XX")
     private String cpf;
 
+    @Pattern(regexp = "^\\+?\\d{13,14}$",
+            message = "Por favor, insira um número de telefone válido no formato E.164.")
     private String phoneNumber;
 
     private boolean active;
@@ -63,17 +72,15 @@ public class User implements UserDetails {
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Pet> pets;
 
-    @ManyToOne
+    @ManyToOne // inserir inicialização
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_user_role"))
     private Role role;
 
     @CreationTimestamp
     @Column(updatable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
 
     @Override

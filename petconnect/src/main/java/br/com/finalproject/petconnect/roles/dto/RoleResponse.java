@@ -36,14 +36,12 @@ public class RoleResponse {
             pattern = "yyyy-MM-dd HH:mm:ss",
             requiredMode = Schema.RequiredMode.AUTO,
             description = "Data de Criação")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;
 
     @Schema(name = "updatedAt", type = "String", format = "date-time",
             pattern = "yyyy-MM-dd HH:mm:ss",
             requiredMode = Schema.RequiredMode.AUTO,
             description = "Data de Atualização")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
 
 }
