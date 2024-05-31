@@ -15,8 +15,10 @@ public class FindUserRequest {
     @Schema(
             name = "email",
             type = "String",
+            pattern = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Email do Usuário"
+            description = "Email do Usuário",
+            example = "username@domain.com"
     )
     @Email
     private String email;

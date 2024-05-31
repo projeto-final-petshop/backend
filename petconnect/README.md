@@ -93,3 +93,33 @@ A API expões rotas onde algumas são acessíveis sem autenticação enquanto ou
 ## Monitoramento de Erros
 
 * [Sentry](https://estudante-k0.sentry.io/settings/)
+
+---
+
+PetType (tipo de animal de estimação)
+
+DOG = 1
+CAT = 2
+OTHER = 3
+
+AppointmentStatus (status do agendamento)
+
+SCHEDULED = 1
+CANCELLED = 2
+COMPLETED = 3
+PEDING = 4
+CONFIRMED = 5
+
+ServiceType (tipo de serviço)
+
+BATH = 1
+GROOMING = 2
+BATH_AND_GROOMING = 3
+VETERINARY_CONSULTATION = 4
+
+RoleEnum
+
+USER = 1 (dono do animal de estimação)
+ADMIN = 2 (dono do petshop)
+GROOMING = 3 (funcionário que irá realizar os serviços de banho, tosa, banho e tosa)
+VETERINARIAN = 4 (médico veterinário que irá realizar as consultas médicas

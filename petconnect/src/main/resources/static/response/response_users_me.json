@@ -1,0 +1,17 @@
+{
+  "email": "petshop.petconnect@gmail.com",
+  "name": "PetConnect",
+  "cpf": "396.810.991-09",
+  "phoneNumber": "+5521986548329",
+  "active": true,
+  "role": {
+    "name": "ADMIN",
+    "description": "Dono da loja petshop",
+    "createdAt": "2024-05-30 20:19:00",
+    "updatedAt": "2024-05-30 20:19:00",
+    "roleId": 2
+  },
+  "createdAt": "2024-05-30 20:19:00",
+  "updatedAt": "2024-05-30 20:19:00",
+  "userId": 1
+}

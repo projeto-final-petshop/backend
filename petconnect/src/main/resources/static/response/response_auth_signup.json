@@ -1,0 +1,27 @@
+{
+  "name": "Carolina Vera Gabriela de Paula",
+  "email": "carolinaveradepaula@novadeliveri.com.br",
+  "cpf": "519.154.459-57",
+  "phoneNumber": "5544986595344",
+  "active": true,
+  "role": {
+    "name": "USER",
+    "description": "Dono do animal de estimação (Pet)",
+    "createdAt": "2024-05-30 20:19:00",
+    "updatedAt": "2024-05-30 20:19:00",
+    "roleId": 1
+  },
+  "createdAt": "2024-05-30 20:23:29",
+  "updatedAt": "2024-05-30 20:23:29",
+  "enabled": true,
+  "username": "carolinaveradepaula@novadeliveri.com.br",
+  "authorities": [
+    {
+      "authority": "ROLE_USER"
+    }
+  ],
+  "accountNonLocked": true,
+  "accountNonExpired": true,
+  "credentialsNonExpired": true,
+  "userId": 3
+}

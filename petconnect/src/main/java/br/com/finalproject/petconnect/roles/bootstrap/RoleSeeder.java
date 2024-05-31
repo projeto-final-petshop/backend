@@ -35,9 +35,10 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
         Map<RoleEnum, String> roleDescriptionMap = Map.of(
                 RoleEnum.USER, "Dono do animal de estimação (Pet)",
-                RoleEnum.EMPLOYEE, "Funcionário do petshop",
                 RoleEnum.ADMIN, "Dono da loja petshop",
-                RoleEnum.VETERINARIAN, "Médico veterinário que realiza atendimento no petshop"
+                RoleEnum.GROOMING, "Funcionário responsável pelo banho e tosa",
+                RoleEnum.VETERINARIAN, "Médico veterinário que realiza atendimento no petshop",
+                RoleEnum.EMPLOYEE, "Funcionário do petshop"
         );
 
         Arrays.stream(roleNames).forEach((roleName) -> {
