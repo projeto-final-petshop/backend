@@ -1,11 +1,18 @@
 package br.com.finalproject.petconnect.appointment.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum AppointmentStatus {
 
-    SCHEDULED,
-    CANCELLED,
-    COMPLETED,
-    PEDING,
-    CONFIRMED
+    SCHEDULED(1),
+    CANCELLED(2),
+    COMPLETED(3),
+    PEDING(4),
+    CONFIRMED(5);
+
+    private final int code;
 
 }

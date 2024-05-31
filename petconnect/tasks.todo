@@ -1,5 +1,17 @@
+TODO: GET - /appointments - O usuário com função 'USER' poderá filtrar os agendamentos por data, hora, tipo se serviço, apenas dos seus pets
+TODO: GET - /appointments - O usuário com função 'ADMIN' poderá visualizar todos os agendamentos.
+TODO: GET - /appointments - O usuário com função 'ADMIN' poderá filtrar os agendamentos por data, hora, tipo se serviço de todos.
+TODO: GET - /pets - O usuário autenticado ('ADMIN', 'EMPLOYEE', 'VETERINARIAN') poderá listar todos os Pets cadastrados no sistema.
+TODO: GET - /pets - O usuário autenticado ('ADMIN', 'EMPLOYEE', 'VETERINARIAN') poderá visualizar detalhes dos Pets cadastrados.
+TODO: POST - /admins/register - O usuário que tiver a função 'ADMIN' poderá cadastrar novo EMPLOYEE.
+TODO: POST - /admins/register - O usuário que tiver a função 'ADMIN' poderá cadastrar novo VETERINARIAN.
+TODO: Criar CRUD para PetShop
+TODO: Um ADMIN deve estar vinculado a pelo menos um PetShop
+TODO: Um PetShop pode ter um ou mais funcionários (EMPLOYEE)
+TODO: Um PetShop pode ter um ou mais médico veterinário (VETERINARIAN)
+TODO: Um PetShop pode ter um ou mais clientes (USER)
+TODO: Um USER pode ter um ou mais pets
 TODO: Criar template para envio de email para alteração de senha
 TODO: Criar template para envio de email para notificar o usuário para que confirme o cadastro
 TODO: Criar template para envio de email para notificar o usuário para que confirme o agendamento
 TODO: Customizar mensagens de erros e logs
-TODO: Visualizar os agendamentos

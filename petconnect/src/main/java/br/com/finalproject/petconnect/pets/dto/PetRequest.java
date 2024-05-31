@@ -13,9 +13,13 @@ import java.time.LocalDate;
 public class PetRequest {
 
     private String name;
+
     private int age;
+
     private String color;
+
     private String breed;
+
     private String animalType;
 
     @JsonFormat(pattern = "dd/MM/yyyy")

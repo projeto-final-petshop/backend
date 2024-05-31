@@ -1,0 +1,25 @@
+### Cadastrar Pet
+POST http://localhost:8888/api/v1/pets/create
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJvbGluYXZlcmFkZXBhdWxhQG5vdmFkZWxpdmVyaS5jb20uYnIiLCJpYXQiOjE3MTcxMTE1NTUsImV4cCI6MTcxNzE5Nzk1NX0.hvpBtwldaSoThvdvhzEMyMxdkVauDTOE7t4I0BsSIemfNP-uQXkZ1JEURisa9tmQ
+Content-Type: application/json
+
+{
+  "name": "Max",
+  "age": 3,
+  "color": "Brown",
+  "breed": "Labrador",
+  "animalType": "Dog",
+  "birthdate": "15/05/2019"
+}
+
+### Listar Pets
+GET http://localhost:8888/api/v1/pets
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJvbGluYXZlcmFkZXBhdWxhQG5vdmFkZWxpdmVyaS5jb20uYnIiLCJpYXQiOjE3MTcxMTE1NTUsImV4cCI6MTcxNzE5Nzk1NX0.hvpBtwldaSoThvdvhzEMyMxdkVauDTOE7t4I0BsSIemfNP-uQXkZ1JEURisa9tmQ
+
+### Buscar Pet (Visualizar detalhes do Pet)
+GET http://localhost:8888/api/v1/pets/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJvbGluYXZlcmFkZXBhdWxhQG5vdmFkZWxpdmVyaS5jb20uYnIiLCJpYXQiOjE3MTcxMTE1NTUsImV4cCI6MTcxNzE5Nzk1NX0.hvpBtwldaSoThvdvhzEMyMxdkVauDTOE7t4I0BsSIemfNP-uQXkZ1JEURisa9tmQ
+
+###
+
+

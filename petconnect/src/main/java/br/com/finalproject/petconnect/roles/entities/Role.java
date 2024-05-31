@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.roles.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,17 +21,17 @@ public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("roleId")
     private Long id;
 
     @Enumerated(EnumType.STRING)
     private RoleEnum name;
 
-    @Column(nullable = false)
     private String description;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp

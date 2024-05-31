@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
+public class ListUsersResponse {
 
     @Schema(name = "userId", type = "Integer", format = "int64",
             requiredMode = Schema.RequiredMode.AUTO,

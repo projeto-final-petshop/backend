@@ -3,6 +3,7 @@ package br.com.finalproject.petconnect.appointment.entities;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,6 +25,7 @@ public class Appointment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("appointmentId")
     private Long id;
 
     @ManyToOne
@@ -48,11 +50,6 @@ public class Appointment implements Serializable {
     @JoinColumn(nullable = false)
     private User user;
 
-    /**
-     * PT: agendado, cancelado, concluído, pendente, confirmado.
-     * <p>
-     * EN: scheduled, cancelled, completed, pending, confirmed.
-     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AppointmentStatus status;
