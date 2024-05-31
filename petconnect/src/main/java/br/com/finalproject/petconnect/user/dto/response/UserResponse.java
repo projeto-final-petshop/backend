@@ -3,11 +3,7 @@ package br.com.finalproject.petconnect.user.dto.response;
 import br.com.finalproject.petconnect.roles.dto.RoleResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.OffsetDateTime;
 
@@ -47,13 +43,13 @@ public class UserResponse {
     @Schema(name = "createdAt", type = "String", format = "date-time",
             pattern = "yyyy-MM-dd HH:mm:ss",
             requiredMode = Schema.RequiredMode.AUTO,
-            description = "Data de Criação")
+            description = "Data de Criação", example = "31/05/2024 19:12:17")
     private OffsetDateTime createdAt;
 
     @Schema(name = "updatedAt", type = "String", format = "date-time",
             pattern = "yyyy-MM-dd HH:mm:ss",
             requiredMode = Schema.RequiredMode.AUTO,
-            description = "Data de Atualização")
+            description = "Data de Atualização", example = "31/05/2024 19:12:17")
     private OffsetDateTime updatedAt;
 
 }

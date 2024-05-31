@@ -28,7 +28,7 @@ public class UserService {
         final var existingUser = UserServiceUtils.getUserByEmail(email);
         UserServiceUtils.updateUserFields(existingUser, userRequest);
         User savedUser = userRepository.save(existingUser);
-        UserMapper.petMapper().toUserResponse(savedUser);
+        UserMapper.userMapper().toUserResponse(savedUser);
     }
 
     @Transactional(readOnly = true)

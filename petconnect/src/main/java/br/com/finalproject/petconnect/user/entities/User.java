@@ -2,7 +2,6 @@ package br.com.finalproject.petconnect.user.entities;
 
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.roles.entities.Role;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -72,7 +71,8 @@ public class User implements UserDetails {
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Pet> pets;
 
-    @ManyToOne // inserir inicialização
+    // @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_user_role"))
     private Role role;
 

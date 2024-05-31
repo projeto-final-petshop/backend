@@ -8,7 +8,7 @@ import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
 import br.com.finalproject.petconnect.security.dto.LoginRequest;
-import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.MessageUtil;
@@ -36,7 +36,7 @@ public class AuthenticationService {
     /**
      * Cadastrar um novo usuário
      */
-    public User signup(RegisterUserRequest input) {
+    public User signup(UserRequest input) {
         log.info("Iniciando processo de cadastro para o email: {}", input.getEmail());
         validateUniqueEmail(input.getEmail());
         validateUniqueCpf(input.getCpf());
@@ -57,7 +57,7 @@ public class AuthenticationService {
      * Cadastrar um novo administrador
      * TODO: lógica deve ser utilizada para implementar o cadastro de funcionário (ROLE_EMPLOYEE)
      */
-    public User createAdministrator(RegisterUserRequest input) {
+    public User createAdministrator(UserRequest input) {
         log.info("Iniciando processo de cadastro de administrador para o email: {}", input.getEmail());
         Role role = findRole(RoleEnum.ADMIN, "ADMIN");
         return createUser(input, role);
@@ -86,7 +86,7 @@ public class AuthenticationService {
         return optionalRole.get();
     }
 
-    private User createUser(RegisterUserRequest input, Role role) {
+    private User createUser(UserRequest input, Role role) {
         User user = User.builder()
                 .name(input.getName())
                 .email(input.getEmail())

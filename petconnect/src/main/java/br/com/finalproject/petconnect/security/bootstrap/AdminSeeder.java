@@ -3,7 +3,7 @@ package br.com.finalproject.petconnect.security.bootstrap;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
-import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import jakarta.annotation.Nonnull;
@@ -56,7 +56,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         }
 
         // Cria o administrador
-        RegisterUserRequest request = RegisterUserRequest.builder()
+        UserRequest request = UserRequest.builder()
                 .name("PetConnect")
                 .email(email)
                 .password(passwordEncoder.encode("P4$$w0rD"))
