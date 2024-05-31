@@ -17,8 +17,10 @@ public class UserRequest {
     @Schema(
             name = "email",
             type = "String",
+            pattern = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Email do Usuário"
+            description = "Email do Usuário",
+            example = "username@domain.com"
     )
     @Email
     private String email;
@@ -28,7 +30,8 @@ public class UserRequest {
             type = "String",
             pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Senha do Usuário"
+            description = "Senha do Usuário",
+            example = "P4$$w0rD"
     )
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
@@ -37,8 +40,10 @@ public class UserRequest {
     @Schema(
             name = "confirmPassword",
             type = "String",
+            pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Confirmar senha"
+            description = "Confirmar Senha",
+            example = "P4$$w0rD"
     )
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
@@ -57,8 +62,10 @@ public class UserRequest {
             type = "String",
             minLength = 11,
             maxLength = 11,
+            pattern = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Número do CPF do Usuário. Deve ser um número válido"
+            description = "Número do CPF do Usuário. Deve ser um número válido",
+            example = "165.625.159-04"
     )
     @CPF
     private String cpf;
@@ -68,7 +75,8 @@ public class UserRequest {
             type = "String",
             minLength = 13,
             maxLength = 14,
-            description = "Número de telefone do Usuário"
+            description = "Número de telefone do Usuário",
+            example = "+5544989529075"
     )
     private String phoneNumber;
 
@@ -76,7 +84,8 @@ public class UserRequest {
             name = "active",
             type = "boolean",
             requiredMode = Schema.RequiredMode.AUTO,
-            description = "Informa se o usuário está ativo ou não no sistema"
+            description = "Informa se o usuário está ativo ou não no sistema",
+            example = "true"
     )
     private boolean active;
 

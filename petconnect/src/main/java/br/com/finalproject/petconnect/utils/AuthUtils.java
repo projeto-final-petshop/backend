@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.utils;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.PetServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.InvalidTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.TokenFailureException;
 import br.com.finalproject.petconnect.exceptions.runtimes.UserNotFoundException;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -8,6 +9,10 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
+import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.*;
 
 @Slf4j
 @Component
@@ -20,26 +25,25 @@ public class AuthUtils {
 
     public User getUserFromAuthorizationHeader(String authorizationHeader) {
         try {
-            // Extrai o email do usuário do token JWT
             String userEmail = jwtService.extractEmail(extractToken(authorizationHeader));
-            // Busca o usuário pelo email no banco de dados
             return userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage("userNotFound")));
-        } catch (UserNotFoundException e) {
-            throw e;
+                    .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage(NOT_FOUND_USER_MESSAGE)));
         } catch (Exception e) {
-            log.error("Falha ao obter usuário do cabeçalho de autorização: {}", e.getMessage());
-            throw new PetServiceException("Falha ao obter usuário do cabeçalho de autorização.");
+            log.error(INVALID_TOKEN, e.getMessage());
+            throw new InvalidTokenException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE));
         }
     }
 
-    private String extractToken(String authorizationHeader) {
+    public String extractToken(String authorizationHeader) {
         try {
-            // Remove "Bearer " do token
-            return authorizationHeader.substring(7);
+            return Optional.ofNullable(authorizationHeader)
+                    .filter(header -> header.startsWith(BEARER_PREFIX))
+                    .map(header -> header.substring(7)) // Remove "Bearer " do token
+                    .orElseThrow(() -> new InvalidTokenException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE)));
         } catch (Exception e) {
-            log.error("Falha ao extrair token: {}", e.getMessage());
-            throw new PetServiceException("Falha ao extrair token.");
+            log.error(TOKEN_FAILURE, e.getMessage());
+            throw new TokenFailureException(messageUtil.getMessage(TOKEN_FAILURE_MESSAGE));
         }
     }
+
 }

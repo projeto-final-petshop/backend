@@ -17,18 +17,21 @@ public class RegisterUserRequest {
     @Schema(
             name = "email",
             type = "String",
+            pattern = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Email do Usuário"
+            description = "Email do Usuário",
+            example = "username@domain.com"
     )
     @Email
     private String email;
 
     @Schema(
-            name = "password",
+            name = "newPassword",
             type = "String",
             pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Senha do Usuário"
+            description = "Nova senha",
+            example = "P4$$w0rD"
     )
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
@@ -37,10 +40,11 @@ public class RegisterUserRequest {
     @Schema(
             name = "confirmPassword",
             type = "String",
+            pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Confirmar senha"
+            description = "Confirmar Senha",
+            example = "P4$$w0rD"
     )
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
 
     @Schema(
@@ -57,8 +61,10 @@ public class RegisterUserRequest {
             type = "String",
             minLength = 11,
             maxLength = 11,
+            pattern = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Número do CPF do Usuário. Deve ser um número válido"
+            description = "Número do CPF do Usuário. Deve ser um número válido",
+            example = "165.625.159-04"
     )
     @CPF
     private String cpf;

@@ -27,20 +27,21 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_email", columnNames = "email"),
+        @UniqueConstraint(name = "uk_cpf", columnNames = "cpf")
+})
 @Entity
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("userId")
     private Long id;
 
     @Column(nullable = false)
     private String name;
 
-    /**
-     * Informação exclusiva do usuário
-     */
     @Email
     @Column(unique = true, nullable = false)
     private String email;
@@ -50,45 +51,37 @@ public class User implements UserDetails {
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String password;
 
-    /**
-     * Informação exclusiva do usuário
-     */
     @CPF
-    @Column(unique = true, nullable = false)
+    @Column(name = "cpf", unique = true, nullable = false)
     private String cpf;
 
     private String phoneNumber;
 
     private boolean active;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Pet> pets;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_user_role"))
     private Role role;
 
     @CreationTimestamp
     @Column(updatable = false)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
 
-    /**
-     * @return uma lista de funções do usuário.
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         var authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
         return List.of(authority);
     }
 
-    /**
-     * @return o endereço de email
-     */
     @Override
     public String getUsername() {
         return email;

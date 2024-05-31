@@ -7,9 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ServiceType {
 
-    BATH,
-    GROOMING,
-    BATH_AND_GROOMING,
-    VETERINARY_CONSULTATION
+    BATH(1),
+    GROOMING(2),
+    BATH_AND_GROOMING(3),
+    VETERINARY_CONSULTATION(4);
+
+    private final int code;
 
 }

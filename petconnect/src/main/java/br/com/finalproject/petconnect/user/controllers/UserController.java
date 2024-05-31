@@ -7,8 +7,12 @@ import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.mapping.UserMapper;
 import br.com.finalproject.petconnect.user.services.UserService;
 import br.com.finalproject.petconnect.utils.MessageUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,20 +29,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(
-        name = "User",
-        description = "Usuários"
-)
-@SecurityScheme(
-        name = "bearerAuth",
-        type = SecuritySchemeType.HTTP,
-        scheme = "bearer",
-        bearerFormat = "JWT",
-        in = SecuritySchemeIn.HEADER
-)
-@SecurityRequirement(
-        name = "bearerAuth"
-)
+@Tag(name = "User", description = "Usuários")
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer",
+        bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
+@SecurityRequirement(name = "bearerAuth")
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -48,6 +42,11 @@ public class UserController {
     private final MessageUtil messageUtil;
     private final UserService userService;
 
+    @Operation(summary = "Recupera o usuário autenticado", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuário autenticado recuperado com sucesso",
+                    content = @Content(schema = @Schema(implementation = UserResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserResponse> authenticatedUser() {
@@ -58,6 +57,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
+    @Operation(summary = "Recupera todos os usuários", responses = {
+            @ApiResponse(responseCode = "200", description = "Todos os usuários recuperados com sucesso",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> allUsers() {
@@ -66,6 +70,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "Encontra um usuário", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @GetMapping("/search")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> findUser(FindUserRequest request) {
@@ -74,6 +84,11 @@ public class UserController {
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Lista usuários por nome", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuários listados por nome com sucesso",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> listUsersByName(@RequestParam(name = "name") String name) {
@@ -82,6 +97,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "Lista usuários ativos", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuários ativos listados com sucesso",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @GetMapping("/active")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> listActiveUsers() {
@@ -90,6 +110,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "Lista usuários inativos", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuários inativos listados com sucesso",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @GetMapping("/inactive")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> listInactiveUsers() {
@@ -98,20 +123,33 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/{id}")
+    @Operation(summary = "Recupera um usuário pelo ID", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuário recuperado com sucesso",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
+    @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getUserById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable(name = "userId") Long userId) {
         try {
-            User response = userService.getUserById(id);
-            log.info("Usuário recuperado pelo ID ({}): {}", id, response);
+            User response = userService.getUserById(userId);
+            log.info("Usuário recuperado pelo ID ({}): {}", userId, response);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (UsernameNotFoundException ex) {
-            log.warn("Usuário não encontrado pelo ID ({}): {}", id, ex.getMessage());
+            log.warn("Usuário não encontrado pelo ID ({}): {}", userId, ex.getMessage());
             // TODO: Deve retornar uma mensagem informando que o usuário não foi encontrado
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
+    @Operation(summary = "Atualiza um usuário", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @PutMapping("/update")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> updateUser(@RequestBody @Valid UserRequest request) {
@@ -125,6 +163,12 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Deleta um usuário", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuário deletado com sucesso",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
+    })
     @DeleteMapping("/delete")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> deleteUser() {

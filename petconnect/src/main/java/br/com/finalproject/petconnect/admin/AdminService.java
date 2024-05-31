@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static br.com.finalproject.petconnect.exceptions.dto.ErrorMessagesUtil.ROLE_NOT_FOUND;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -39,7 +41,7 @@ public class AdminService {
         Optional<Role> optionalRole = roleRepository.findByName(roleEnum);
         return optionalRole.orElseThrow(() -> {
             log.error("Erro ao cadastrar usuário: role {} não encontrada", roleName);
-            return new RoleNotFoundException("Role " + roleName + " não encontrada");
+            return new RoleNotFoundException(ROLE_NOT_FOUND);
         });
     }
 

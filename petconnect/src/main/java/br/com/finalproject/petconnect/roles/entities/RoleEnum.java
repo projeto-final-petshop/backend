@@ -9,14 +9,15 @@ public enum RoleEnum {
 
     USER(1),
     ADMIN(2),
-    EMPLOYEE(3),
-    VETERINARIAN(4);
+    GROOMING(3),
+    VETERINARIAN(4),
+    EMPLOYEE(5);
 
-    private final int value;
+    private final int code;
 
     public static RoleEnum fromValue(int value) {
         for (RoleEnum role : RoleEnum.values()) {
-            if (role.getValue() == value) {
+            if (role.getCode() == value) {
                 return role;
             }
         }
