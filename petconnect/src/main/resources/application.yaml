@@ -22,7 +22,6 @@ spring:
       use-new-id-generator-mappings: false
     database-platform: org.hibernate.dialect.MySQLDialect
   jackson:
-    date-format: "yyyy-MM-dd HH:mm:ss"
     locale: 'pt-BR'
     time-zone: 'America/Sao_Paulo'
     default-property-inclusion: NON_NULL
@@ -33,6 +32,10 @@ spring:
   mvc:
     locale:
       default-locale: pt
+    format:
+      date: 'dd/MM/yyyy'
+      time: 'HH:mm'
+      date-time: 'yyyy-MM-dd HH:mm'
   mail:
     host: smtp.gmail.com
     port: 587

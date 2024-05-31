@@ -4,10 +4,6 @@ import br.com.finalproject.petconnect.appointment.entities.PetType;
 import br.com.finalproject.petconnect.appointment.entities.ServiceType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -42,14 +38,17 @@ public class AppointmentRequest {
             format = "date", pattern = "dd/MM/yyyy",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "10/06/2024")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(
+            pattern = "dd/MM/yyyy",
+            shape = JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
 
     @Schema(name = "appointmentTime", type = "string",
             format = "time", pattern = "HH:mm",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "10:00")
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm",
+            shape = JsonFormat.Shape.STRING)
     private LocalTime appointmentTime;
 
 }

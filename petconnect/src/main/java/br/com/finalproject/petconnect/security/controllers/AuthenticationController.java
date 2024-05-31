@@ -6,7 +6,7 @@ import br.com.finalproject.petconnect.security.dto.LoginRequest;
 import br.com.finalproject.petconnect.security.dto.LoginResponse;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.security.services.JwtService;
-import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
+    public ResponseEntity<User> register(@RequestBody @Valid UserRequest registerUserRequest) {
         log.info("Iniciando o processo de registro para o usuário com o email: {}", registerUserRequest.getEmail());
         try {
             User registeredUser = authenticationService.signup(registerUserRequest);

@@ -22,8 +22,7 @@ public class AppointmentResponse {
     @Schema(name = "appointmentId", type = "integer", format = "int64",
             requiredMode = Schema.RequiredMode.AUTO,
             description = "Identificação única do agendamento",
-            example = "10"
-    )
+            example = "10")
     @JsonProperty("appointmentId")
     private Long id;
 
@@ -73,14 +72,14 @@ public class AppointmentResponse {
     @Schema(name = "createdAt", type = "String", format = "date-time",
             pattern = "yyyy-MM-dd HH:mm:ss",
             requiredMode = Schema.RequiredMode.AUTO,
-            description = "Data de Criação")
+            description = "Data de Criação", example = "31/05/2024 19:12:17")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime createdAt;
 
     @Schema(name = "updatedAt", type = "String", format = "date-time",
             pattern = "yyyy-MM-dd HH:mm:ss",
             requiredMode = Schema.RequiredMode.AUTO,
-            description = "Data de Atualização")
+            description = "Data de Atualização", example = "31/05/2024 19:12:17")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime updatedAt;
 

@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.admin;
 
-import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -41,7 +41,7 @@ public class AdminController {
     @ApiResponse(responseCode = "400", description = INVALID_INPUT_DATA, content = @Content)
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createAdministrator(@RequestBody @Valid RegisterUserRequest registerUserDto) {
+    public ResponseEntity<User> createAdministrator(@RequestBody @Valid UserRequest registerUserDto) {
         User createdAdmin = adminService.createAdministrator(registerUserDto);
         return ResponseEntity.ok(createdAdmin);
     }

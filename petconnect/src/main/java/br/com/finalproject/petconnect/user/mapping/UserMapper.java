@@ -14,7 +14,7 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    static UserMapper petMapper() {
+    static UserMapper userMapper() {
         return INSTANCE;
     }
 
@@ -32,5 +32,6 @@ public interface UserMapper {
     User updateUserFromRequest(UserRequest userRequest, @MappingTarget User user);
 
     List<UserResponse> toUserResponseList(List<User> users);
+
 
 }
