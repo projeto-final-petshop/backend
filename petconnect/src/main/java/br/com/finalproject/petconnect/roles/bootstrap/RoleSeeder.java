@@ -31,7 +31,7 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
         log.info("Carregando roles...");
 
-        var roleNames = RoleEnum.values();  // Inclui todas as roles definidas no RoleEnum
+        RoleEnum[] roleNames = RoleEnum.values();
 
         Map<RoleEnum, String> roleDescriptionMap = Map.of(
                 RoleEnum.USER, "Dono do animal de estimação (Pet)",
@@ -58,7 +58,6 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
             );
 
         });
-
 
         log.info("Carregamento das roles concluído.");
 

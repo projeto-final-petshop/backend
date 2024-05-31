@@ -7,6 +7,7 @@ public class ErrorMessagesUtil {
 
     // Erros relacionados a Role
     public static final String ROLE_NOT_FOUND = "Role não encontrada.";
+    public static final String INVALID_ROLE = "Função inválida para cadastro de usuário.";
 
     // Erros relacionados a Pet
     public static final String PET_NOT_FOUND = "Pet não encontrado ou não pertence ao usuário.";
@@ -27,6 +28,7 @@ public class ErrorMessagesUtil {
     public static final String AUTHENTICATION_REQUIRED = "Autenticação necessária.";
     public static final String ACCESS_DENIED = "Acesso negado.";
     public static final String INSUFFICIENT_PERMISSIONS = "Permissões insuficientes para executar esta ação.";
+    public static final String ADMIN_PERMISSION_ERROR = "Você não tem permissão para realizar esta ação.";
 
     // Erros relacionados a Agendamento
     public static final String APPOINTMENT_NOT_FOUND = "Agendamento não encontrado ou não pertence ao usuário.";

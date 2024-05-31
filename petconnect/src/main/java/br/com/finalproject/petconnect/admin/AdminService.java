@@ -4,7 +4,7 @@ import br.com.finalproject.petconnect.exceptions.runtimes.RoleNotFoundException;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
-import br.com.finalproject.petconnect.user.dto.request.RegisterUserRequest;
+import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -25,13 +25,13 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User createAdministrator(RegisterUserRequest input) {
+    public User createAdministrator(UserRequest input) {
         log.info("Iniciando processo de cadastro de administrador para o email: {}", input.getEmail());
         Role role = findRoleByEnum(RoleEnum.ADMIN, "ADMIN");
         return createUser(input, role);
     }
 
-    public User createEmployeeOrVeterinarian(RegisterUserRequest input) {
+    public User createEmployeeOrVeterinarian(UserRequest input) {
         log.info("Iniciando processo de cadastro para o email: {} ", input.getEmail());
         Role role = findRoleByEnum(RoleEnum.ADMIN, "ADMIN");
         return createUser(input, role);
@@ -45,7 +45,7 @@ public class AdminService {
         });
     }
 
-    private User createUser(RegisterUserRequest input, Role role) {
+    private User createUser(UserRequest input, Role role) {
         User user = User.builder()
                 .name(input.getName())
                 .email(input.getEmail())
