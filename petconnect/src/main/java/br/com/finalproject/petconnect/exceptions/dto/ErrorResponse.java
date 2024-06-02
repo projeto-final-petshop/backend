@@ -42,10 +42,19 @@ public class ErrorResponse {
      */
     private String type;
 
+    /**
+     * Tratamento de Exceção
+     * <p>
+     * Corrigir NullPointerException no GlobalExceptionHandler para garantir que o {@link ErrorResponse} seja
+     * corretamente inicializado.
+     */
     private Map<String, String> properties = new HashMap<>();
 
     public void setProperty(String key, String value) {
-        properties.put(key, value);
+        if (this.properties == null) {
+            this.properties = new HashMap<>();
+        }
+        this.properties.put(key, value);
     }
 
 }

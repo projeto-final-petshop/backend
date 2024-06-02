@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.security.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.AuthenticationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.RoleNotFoundException;
@@ -32,61 +31,80 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+//
+//    public User signup(UserRequest input) {
+//
+//        log.info("Iniciando processo de cadastro para o email: {}", input.getEmail());
+//
+//        // Verifica se o e-mail já está cadastrado
+//        if (userRepository.existsByEmail(input.getEmail())) {
+//            throw new EmailAlreadyExistsException("E-mail já está em uso");
+//        }
+//
+//        if (userRepository.existsByCpf(input.getCpf())) {
+//            throw new CpfAlreadyExistsException("CPF já está em uso");
+//        }
+//
+//        var user = new User();
+//        user.setName(input.getName());
+//        user.setEmail(input.getEmail());
+//        user.setPassword(passwordEncoder.encode(input.getPassword()));
+//        user.setActive(true);
+//        user.setCpf(input.getCpf());
+//        user.setPhoneNumber(input.getPhoneNumber());
+//
+//        User savedUser = userRepository.save(user);
+//        log.info("Usuário cadastrado com sucesso: {}", savedUser.getId());
+//        return savedUser;
+//    }
+//
+//    public User authenticate(LoginRequest input) {
+//        log.info("Iniciando processo de autenticação para o email: {}", input.getEmail());
+//
+//        try {
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            input.getEmail(),
+//                            input.getPassword()
+//                    )
+//            );
+//            log.info("Autenticação bem-sucedida para o email: {}", input.getEmail());
+//        } catch (Exception e) {
+//            log.error("Falha na autenticação para o email: {}", input.getEmail(), e);
+//            throw e;
+//        }
+//
+//        User user = userRepository.findByEmail(input.getEmail())
+//                .orElseThrow(() -> {
+//                    log.error("Usuário não encontrado com o email: {}", input.getEmail());
+//                    return new RuntimeException("Usuário não encontrado");
+//                });
+//
+//        log.info("Usuário autenticado com sucesso: {}", user.getId());
+//        return user;
+//    }
 
-    /**
-     * Cadastrar um novo usuário
-     */
     public User signup(UserRequest input) {
+
         log.info("Iniciando processo de cadastro para o email: {}", input.getEmail());
-        validateUniqueEmail(input.getEmail());
-        validateUniqueCpf(input.getCpf());
-        Role role = findRole(RoleEnum.USER, "USER");
-        return createUser(input, role);
-    }
 
-    /**
-     * Autenticar usuário cadastrado - Login
-     */
-    public User authenticate(LoginRequest input) {
-        log.info("Iniciando processo de autenticação para o email: {}", input.getEmail());
-        authenticateUser(input.getEmail(), input.getPassword());
-        return findUserByEmail(input.getEmail());
-    }
-
-    /**
-     * Cadastrar um novo administrador
-     * TODO: lógica deve ser utilizada para implementar o cadastro de funcionário (ROLE_EMPLOYEE)
-     */
-    public User createAdministrator(UserRequest input) {
-        log.info("Iniciando processo de cadastro de administrador para o email: {}", input.getEmail());
-        Role role = findRole(RoleEnum.ADMIN, "ADMIN");
-        return createUser(input, role);
-    }
-
-    private void validateUniqueEmail(String email) {
-        if (userRepository.existsByEmail(email)) {
-            log.error("Erro ao cadastrar usuário: email {} já está em uso", email);
+        if (userRepository.existsByEmail(input.getEmail())) {
+            log.error("Erro ao cadastrar usuário: email {} já está em uso", input.getEmail());
             throw new EmailAlreadyExistsException("Email já está em uso");
         }
-    }
 
-    private void validateUniqueCpf(String cpf) {
-        if (userRepository.existsByCpf(cpf)) {
-            log.error("Erro ao cadastrar usuário: CPF {} já está em uso", cpf);
+        if (userRepository.existsByCpf(input.getCpf())) {
+            log.error("Erro ao cadastrar usuário: CPF {} já está em uso", input.getCpf());
             throw new CpfAlreadyExistsException("CPF já está em uso");
         }
-    }
 
-    private Role findRole(RoleEnum roleEnum, String roleName) {
-        Optional<Role> optionalRole = roleRepository.findByName(roleEnum);
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
+
         if (optionalRole.isEmpty()) {
-            log.error("Erro ao cadastrar usuário: role {} não encontrada", roleName);
-            throw new RoleNotFoundException("Role " + roleName + " não encontrada");
+            log.error("Erro ao cadastrar usuário: role USER não encontrada");
+            throw new RoleNotFoundException("Role USER não encontrada");
         }
-        return optionalRole.get();
-    }
 
-    private User createUser(UserRequest input, Role role) {
         User user = User.builder()
                 .name(input.getName())
                 .email(input.getEmail())
@@ -94,31 +112,62 @@ public class AuthenticationService {
                 .active(true)
                 .cpf(input.getCpf())
                 .phoneNumber(input.getPhoneNumber())
-                .role(role)
+                .role(optionalRole.get())
                 .build();
+
         User savedUser = userRepository.save(user);
         log.info("Usuário cadastrado com sucesso: {}", savedUser.getId());
         return savedUser;
     }
 
-    private void authenticateUser(String email, String password) {
+    public User authenticate(LoginRequest input) {
+        log.info("Iniciando processo de autenticação para o email: {}", input.getEmail());
+
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
+                    new UsernamePasswordAuthenticationToken(
+                            input.getEmail(),
+                            input.getPassword()
+                    )
             );
-            log.info("Autenticação bem-sucedida para o email: {}", email);
-        } catch (AuthenticationException e) {
-            log.error("Falha na autenticação para o email: {}", email, e);
-            throw new AuthenticationException("Credenciais inválidas. Verifique seu e-mail");
+            log.info("Autenticação bem-sucedida para o email: {}", input.getEmail());
+        } catch (Exception e) {
+            log.error("Falha na autenticação para o email: {}", input.getEmail(), e);
+            throw e;
         }
-    }
 
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(() -> {
-                    log.error("Usuário não encontrado com o email: {}", email);
+                    log.error("Usuário não encontrado com o email: {}", input.getEmail());
                     return new UsernameNotFoundException(messageUtil.getMessage("usernameNotFound"));
                 });
+
+        log.info("Usuário autenticado com sucesso: {}", user.getId());
+        return user;
+    }
+
+    public User createAdministrator(UserRequest input) {
+
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.ADMIN);
+
+        if (optionalRole.isEmpty()) {
+            return null;
+        }
+
+        User user = User.builder()
+                .name(input.getName())
+                .email(input.getEmail())
+                .password(passwordEncoder.encode(input.getPassword()))
+                .active(true)
+                .cpf(input.getCpf())
+                .phoneNumber(input.getPhoneNumber())
+                .role(optionalRole.get())
+                .build();
+
+        User savedUser = userRepository.save(user);
+        log.info("Administrador cadastrado com sucesso: {}", savedUser.getId());
+        return savedUser;
+
     }
 
 }

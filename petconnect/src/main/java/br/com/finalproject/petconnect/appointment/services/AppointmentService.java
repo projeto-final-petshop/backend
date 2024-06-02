@@ -30,6 +30,7 @@ public class AppointmentService {
     private final AuthUtils authUtils;
     private final PetRepository petRepository;
     private final AppointmentRepository appointmentRepository;
+    private final AppointmentServiceUtil appointmentServiceUtil;
 
     @Transactional
     public AppointmentResponse scheduleAppointment(AppointmentRequest request,
@@ -38,6 +39,14 @@ public class AppointmentService {
         log.info("Iniciando agendamento para pet ID: {}", request.getPetId());
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
 
+        if (request.getAppointmentDate() == null) {
+            log.error("Data da consulta não pode ser nula.");
+            throw new IllegalArgumentException("dataInvalida");
+        }
+
+        appointmentServiceUtil.validateWeekday(request.getAppointmentDate());
+        appointmentServiceUtil.validateAvailableTimeSlot(request.getAppointmentDate(), request.getAppointmentTime());
+
         Pet pet = petRepository.findByIdAndUserId(request.getPetId(), user.getId())
                 .orElseThrow(() -> {
                     log.error("Pet não encontrado ou não pertence ao usuário. Pet ID: {}", request.getPetId());
@@ -45,6 +54,8 @@ public class AppointmentService {
                 });
 
         Appointment appointment = AppointmentMapper.petMapper().toEntity(request);
+        log.debug("Consulta mapeada para a entidade: {}", appointment);
+
         appointment.setUser(user);
         appointment.setPet(pet);
         appointment.setStatus(AppointmentStatus.SCHEDULED);

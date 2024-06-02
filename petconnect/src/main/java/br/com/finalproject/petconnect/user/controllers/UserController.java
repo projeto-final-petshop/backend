@@ -48,13 +48,10 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content)
     })
     @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserResponse> authenticatedUser() {
+    public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User response = (User) authentication.getPrincipal();
-        log.info("Usuário autenticado recuperado: {}", response);
-        UserResponse userResponse = UserMapper.INSTANCE.toUserResponse(response);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(summary = "Recupera todos os usuários", responses = {

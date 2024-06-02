@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.user.entities;
 
-import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -61,15 +60,15 @@ public class User implements UserDetails {
             message = "Por favor, insira um CPF válido no formato XXX.XXX.XXX-XX")
     private String cpf;
 
-    @Pattern(regexp = "^\\+?\\d{13,14}$",
+    @Pattern(regexp = "^\\+?\\d{9,14}$",
             message = "Por favor, insira um número de telefone válido no formato E.164.")
     private String phoneNumber;
 
     private boolean active;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Pet> pets;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+//            orphanRemoval = true, fetch = FetchType.LAZY)
+//    private List<Pet> pets;
 
     // @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne

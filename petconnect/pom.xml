@@ -19,6 +19,7 @@
         <lombok.version>1.18.32</lombok.version>
         <mapstruct.version>1.6.0.Beta1</mapstruct.version>
         <lombok.mapstruct.version>0.2.0</lombok.mapstruct.version>
+        <springdoc.version>2.5.0</springdoc.version>
     </properties>
     <dependencies>
 
@@ -106,12 +107,12 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.5.0</version>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-            <version>2.5.0</version>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- Runtime library -->
