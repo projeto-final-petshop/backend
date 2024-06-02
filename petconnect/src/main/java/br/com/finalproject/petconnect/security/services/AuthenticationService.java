@@ -123,7 +123,14 @@ public class AuthenticationService {
     public User authenticate(LoginRequest input) {
         log.info("Iniciando processo de autenticação para o email: {}", input.getEmail());
 
+        User user = userRepository.findByEmail(input.getEmail())
+                .orElseThrow(() -> {
+                    log.error("Usuário não encontrado com o email: {}", input.getEmail());
+                    return new UsernameNotFoundException(messageUtil.getMessage("usernameNotFound"));
+                });
+
         try {
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             input.getEmail(),
@@ -135,12 +142,6 @@ public class AuthenticationService {
             log.error("Falha na autenticação para o email: {}", input.getEmail(), e);
             throw e;
         }
-
-        User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> {
-                    log.error("Usuário não encontrado com o email: {}", input.getEmail());
-                    return new UsernameNotFoundException(messageUtil.getMessage("usernameNotFound"));
-                });
 
         log.info("Usuário autenticado com sucesso: {}", user.getId());
         return user;
