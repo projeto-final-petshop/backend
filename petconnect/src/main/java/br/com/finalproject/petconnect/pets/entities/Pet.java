@@ -4,7 +4,6 @@ import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -35,7 +34,7 @@ public class Pet implements Serializable {
     @JsonProperty("petId")
     private Long id;
 
-    @Size(min = 3, max = 50, message = "O nome do pet deve ter entre 3 e 50 caracteres.")
+    @Size(min = 3, max = 50, message = "O nome do pet deve ter entre {min} e {max} caracteres.")
     private String name;
 
     @PositiveOrZero(message = "A idade do pet deve ser um número positivo ou zero.")

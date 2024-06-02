@@ -33,5 +33,4 @@ public interface UserMapper {
 
     List<UserResponse> toUserResponseList(List<User> users);
 
-
 }

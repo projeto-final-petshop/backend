@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,7 +46,6 @@ public class PetController {
                     schema = @Schema(implementation = PetResponse.class, type = "object"))})
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = @Content)
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PetResponse> createPet(@RequestBody @Valid PetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
@@ -68,7 +66,6 @@ public class PetController {
     @ApiResponse(responseCode = "404", description = USER_NOT_FOUND, content = @Content)
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = @Content)
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<PetResponse>> listPets(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
@@ -91,7 +88,6 @@ public class PetController {
     @ApiResponse(responseCode = "404", description = USER_NOT_FOUND, content = @Content)
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = @Content)
     @GetMapping("/{petId}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PetResponse> getPetDetails(@PathVariable(name = "petId") Long petId,
                                                      @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
@@ -112,7 +108,6 @@ public class PetController {
                     schema = @Schema(implementation = PetResponse.class, type = "object"))})
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = @Content)
     @GetMapping("/list-all")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<PetResponse>> getAllPets() {
         try {
             List<PetResponse> pets = petService.getAllPets();
@@ -131,7 +126,6 @@ public class PetController {
     @ApiResponse(responseCode = "404", description = PET_NOT_FOUND, content = @Content)
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = @Content)
     @GetMapping("/admin/{petId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PetResponse> getPetById(@PathVariable Long petId) {
         try {
             PetResponse pet = petService.getPetById(petId);
@@ -153,7 +147,6 @@ public class PetController {
     @ApiResponse(responseCode = "404", description = PET_NOT_FOUND, content = @Content)
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = @Content)
     @PutMapping("/{petId}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PetResponse> updatePet(@PathVariable(name = "petId") Long petId,
                                                  @RequestBody @Valid PetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -174,7 +167,6 @@ public class PetController {
     @ApiResponse(responseCode = "404", description = PET_NOT_FOUND, content = @Content)
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = @Content)
     @DeleteMapping("/{petId}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deletePet(@PathVariable(name = "petId") Long petId,
                                           @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {

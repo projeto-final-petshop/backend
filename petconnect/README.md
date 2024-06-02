@@ -25,6 +25,65 @@
 * No terminal insira o comando: `mvn spring-boot:run`
 * Executar a aplicação pulando os testes: `mvn spring-boot:run -DskipTests`
 
+---
+
+## Check List
+
+### Frontend
+
+Identidade visual única em toda a aplicação (interface)
+
+- [ ] Todas as telas possuem mesmo padrão de cores, fontes, imagens e ícones.
+- [ ] Todas as telas exibem **usuário logado** (nome, perfil) e **opção de logout** (Sair).
+- [ ] Todas as telas permitem algum grau de **responsividade**.
+- [ ] Todas as **mensagens ao usuário seguem o mesmo padrão** da identidade visual da interface, tanto para exibir
+  informação (**info**), aviso (**warning**) ou erro (**error**).
+
+### Validação de Dados (input apenas de dados validados)
+
+- [ ] Todas os campos de entrada orientam seu preenchimento.
+- [ ] Todas os campos de entrada indicam se são ou não obrigatórios.
+- [X] Apenas aceita senhas fortes (exige no mínimo 8 caracteres, variedade de letras maiúsculas e minúsculas, números e
+  caractere especial).
+- [X] Não permite cadastro de dados únicos duplicados, como CPF, CNPJ, CRM, CREA, e-mail, usuário para login, etc.
+- [X] Permite visualizar senha
+- [X] Desejável: Permite confirmar senha.
+- [X] Desejável: máscara telefone, CPF, CNPJ, CEP, etc.
+- [ ] Desejável: obtém endereço a partir de CEP válido.
+
+* Consulta CEP - Correios (https://www.correios.com.br/).
+* Consulta ViaCep
+
+### Funcionalidades
+
+- [X] Login permite recuperação de senha
+- [ ] Login permite recuperação de usuário
+- [ ] Habilitar / desabilitar autenticação em 2 fatores (Two-Factor Authentication - 2FA). (desejável)
+
+### Persistência
+
+- [X] Senha é criptografada no Banco de Dados
+- [X] **BD Geral**: entidades fortes são nomeadas como substantivos.
+- [X] **BD relacional**: entidades estão relacionadas (PK x FK)
+- [X] **BD relacional**: diagrama gerado por engenharia reversa (BD implementado).
+- [X] Aplicação trata erros de BD: avisa o usuário (BD fora de serviço, dados únicos duplicados, ...).
+- [ ] **DELETE**: solicita confirmação antes da exclusão de registro
+- [ ] **UPDATE**: formulários para edição estão preenchidos com os dados persistidos em BD
+    - Diferencia dados editáveis (telefone, endereço, ... ) de dados não editáveis (CPF, CNPJ, ...)
+- [X] **UPDATE de senha**: não apresenta a senha criptografada para atualização (campo vazio)
+    - Criptografia de HASH é irreversível, logo a senha criptografada não pode ser revertida / recuperada para edição
+- [X] UPDATE de senha em tela exclusiva para trocar senha. (desejável)
+- [X] Log para auditoria. (desejável)
+
+### Sessão
+
+- [X] **Faz tratamento de restrição de acesso**: telas ou funcionalidade são acessíveis apenas a usuários com a devida
+  permissão, ou seja, existe bloqueio de acesso para usuários sem permissão. Nesse caso, o usuário sem permissão é
+  redirecionado à tela apropriada (tela inicial ou tela de login).
+- [ ] Expira sessão quando não há atividade do usuário logado – existe timeout de inatividade.
+
+---
+
 ## Executando a migração do Flyway
 
 * Desabilitar o flyway: `spring.flyway.enabled=false`
