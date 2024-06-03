@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,24 +37,32 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    @Operation(summary = "Agendar um novo serviço ou consulta",
+            description = "Endpoint para agendar um novo serviço ou consulta veterinária",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Agendamento criado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pet não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @PostMapping("/schedule")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AppointmentResponse> scheduleAppointment(@RequestBody @Valid AppointmentRequest request,
                                                                    @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        try {
-            log.info("Recebida solicitação de agendamento para o pet ID: {}", request.getPetId());
-            AppointmentResponse response = appointmentService.scheduleAppointment(request, authorizationHeader);
-            log.info("Agendamento criado com sucesso. Agendamento ID: {}", response.getId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (PetNotFoundException e) {
-            log.error("Erro ao criar agendamento: pet não encontrado. Pet ID: {}", request.getPetId());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (Exception e) {
-            log.error("Erro interno ao criar agendamento", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        log.info("Recebida solicitação de agendamento para o pet ID: {}", request.getPetId());
+        AppointmentResponse response = appointmentService.scheduleAppointment(request, authorizationHeader);
+        log.info("Agendamento criado com sucesso. Agendamento ID: {}", response.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "Atualizar um agendamento existente",
+            description = "Endpoint para atualizar um agendamento veterinário existente",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Agendamento atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Agendamento não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @PutMapping("/update/{appointmentId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
@@ -65,6 +74,14 @@ public class AppointmentController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Cancelar um agendamento",
+            description = "Endpoint para cancelar um agendamento veterinário",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Agendamento cancelado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Agendamento não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @DeleteMapping("/cancel/{appointmentId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> cancelAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
@@ -75,29 +92,58 @@ public class AppointmentController {
         return ResponseEntity.ok("Agendamento cancelado com sucesso.");
     }
 
+    @Operation(summary = "Listar todos os agendamentos do usuário",
+            description = "Endpoint para listar todos os agendamentos do usuário autenticado",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de agendamentos obtida com sucesso"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping("/all")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AppointmentResponse>> getAllAppointments(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        log.info("Recebida solicitação para listar todos os agendamentos do usuário");
         List<AppointmentResponse> appointments = appointmentService.getAllAppointmentsByUser(authorizationHeader);
+        log.info("Lista de agendamentos obtida com sucesso");
         return ResponseEntity.ok(appointments);
     }
 
+    @Operation(summary = "Listar agendamentos por pet",
+            description = "Endpoint para listar agendamentos de um pet específico",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de agendamentos obtida com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pet não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping("/pets/{petId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AppointmentResponse>> getAppointmentsByPet(
             @PathVariable(name = "petId") Long petId,
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        log.info("Recebida solicitação para listar agendamentos do pet ID: {}", petId);
         List<AppointmentResponse> appointments = appointmentService.getAppointmentsByPet(petId, authorizationHeader);
+        log.info("Lista de agendamentos do pet ID {} obtida com sucesso", petId);
         return ResponseEntity.ok(appointments);
     }
 
+    @Operation(summary = "Obter detalhes de um agendamento",
+            description = "Endpoint para obter detalhes de um agendamento específico",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Detalhes do agendamento obtidos com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Agendamento não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping("/{appointmentId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AppointmentResponse> getAppointmentById(
             @PathVariable(name = "appointmentId") Long appointmentId,
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        log.info("Recebida solicitação para obter detalhes do agendamento ID: {}", appointmentId);
         AppointmentResponse appointment = appointmentService.getAppointmentById(appointmentId, authorizationHeader);
+        log.info("Detalhes do agendamento ID {} obtidos com sucesso", appointmentId);
         return ResponseEntity.ok(appointment);
     }
 

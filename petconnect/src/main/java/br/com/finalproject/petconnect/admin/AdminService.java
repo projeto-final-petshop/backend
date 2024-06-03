@@ -61,7 +61,7 @@ public class AdminService {
             }
             default -> {
                 log.error("Código de role inválido: {}", roleCode);
-                throw new IllegalArgumentException("exception.validation.invalid_role_code");
+                throw new RequiredFieldException("exception.validation.invalid_role_code");
             }
         };
 
