@@ -1,10 +1,9 @@
 package br.com.finalproject.petconnect.password.service;
 
 import br.com.finalproject.petconnect.email.EmailService;
-import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.PasswordUpdateException;
-import br.com.finalproject.petconnect.exceptions.runtimes.TokenExpiredException;
-import br.com.finalproject.petconnect.exceptions.runtimes.TokenNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordChangeException;
 import br.com.finalproject.petconnect.password.dto.UpdatePasswordRequest;
 import br.com.finalproject.petconnect.password.entities.PasswordResetToken;
 import br.com.finalproject.petconnect.password.repositories.PasswordResetTokenRepository;
@@ -21,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static br.com.finalproject.petconnect.exceptions.dto.ErrorMessagesUtil.*;
-
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -34,17 +31,16 @@ public class PasswordService {
     private final PasswordResetTokenRepository tokenRepository;
 
     @Transactional
-    public void updatePassword(UpdatePasswordRequest passwordUpdateRequest)
-            throws PasswordUpdateException {
+    public void updatePassword(UpdatePasswordRequest passwordUpdateRequest) {
 
         User currentUser = getCurrentAuthenticatedUser();
 
         if (!passwordEncoder.matches(passwordUpdateRequest.getCurrentPassword(), currentUser.getPassword())) {
-            throw new PasswordUpdateException(INCORRECT_PASSWORD);
+            throw new PasswordChangeException("exception.password.change_error");
         }
 
         if (!passwordUpdateRequest.getNewPassword().equals(passwordUpdateRequest.getConfirmPassword())) {
-            throw new PasswordUpdateException(PASSWORDS_DO_NOT_MATCH);
+            throw new PasswordChangeException("exception.password.change_error");
         }
 
         currentUser.setPassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
@@ -54,32 +50,33 @@ public class PasswordService {
 
     private User getCurrentAuthenticatedUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
     }
 
     @Transactional
-    public void resetPassword(String email) throws EmailNotFoundException {
+    public void resetPassword(String email) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EmailNotFoundException(EMAIL_NOT_FOUND));
+                .orElseThrow(() -> new EmailNotFoundException("E-mail não encontrado."));
 
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
         tokenRepository.save(passwordResetToken);
 
         String resetLink = "http://localhost:8888/api/v1/reset-password?token=" + token;
-        emailService.sendEmail(user.getEmail(), PASSWORD_RESET_REQUEST, RESET_YOUR_PASSWORD + resetLink);
+        emailService.sendEmail(user.getEmail(),
+                "Solicitação de redefinição de senha.",
+                "Para redefinir sua senha, clique no link abaixo.\n" + resetLink);
     }
 
     @Transactional
-    public void updatePasswordWithToken(String token, String newPassword)
-            throws TokenNotFoundException, TokenExpiredException {
+    public void updatePasswordWithToken(String token, String newPassword) {
 
         PasswordResetToken resetToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new TokenNotFoundException(INVALID_TOKEN));
+                .orElseThrow(() -> new InvalidTokenException("exception.password.token_invalid"));
 
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new TokenExpiredException(TOKEN_EXPIRED);
+            throw new InvalidTokenException("exception.password.token_invalid");
         }
 
         User user = resetToken.getUser();

@@ -6,8 +6,8 @@ import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.entities.AppointmentStatus;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.AppointmentNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.pet.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceBookingNotFoundException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -18,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static br.com.finalproject.petconnect.exceptions.dto.ErrorMessagesUtil.APPOINTMENT_NOT_FOUND;
-import static br.com.finalproject.petconnect.exceptions.dto.ErrorMessagesUtil.PET_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -50,7 +47,7 @@ public class AppointmentService {
         Pet pet = petRepository.findByIdAndUserId(request.getPetId(), user.getId())
                 .orElseThrow(() -> {
                     log.error("Pet não encontrado ou não pertence ao usuário. Pet ID: {}", request.getPetId());
-                    return new PetNotFoundException(PET_NOT_FOUND);
+                    return new PetNotFoundException("Pet não encontrado ou não pertence ao usuário.");
                 });
 
         Appointment appointment = AppointmentMapper.petMapper().toEntity(request);
@@ -60,7 +57,7 @@ public class AppointmentService {
         appointment.setPet(pet);
         appointment.setStatus(AppointmentStatus.SCHEDULED);
 
-        log.info("Salvando agendamento para o pet ID: {} e usuário: {}", pet.getId(), user.getUsername());
+//        log.info("Salvando agendamento para o pet ID: {} e usuário: {}", pet.getId(), user.getUsername());
         Appointment savedAppointment = appointmentRepository.save(appointment);
         log.info("Agendamento salvo com sucesso. Agendamento ID: {}", savedAppointment.getId());
 
@@ -74,18 +71,18 @@ public class AppointmentService {
         log.info("Iniciando atualização do agendamento ID: {}", appointmentId);
 
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        log.info("Usuário autenticado: {}", user.getUsername());
+//        log.info("Usuário autenticado: {}", user.getUsername());
 
         Appointment appointment = appointmentRepository.findByIdAndUserId(appointmentId, user.getId())
                 .orElseThrow(() -> {
                     log.error("Agendamento não encontrado ou não pertence ao usuário. Agendamento ID: {}", appointmentId);
-                    return new AppointmentNotFoundException(APPOINTMENT_NOT_FOUND);
+                    return new ServiceBookingNotFoundException("Agendamento não encontrado ou não pertence ao usuário.");
                 });
 
         Pet pet = petRepository.findByIdAndUserId(request.getPetId(), user.getId())
                 .orElseThrow(() -> {
                     log.error("Pet não encontrado ou não pertence ao usuário. Pet ID: {}", request.getPetId());
-                    return new PetNotFoundException(PET_NOT_FOUND);
+                    return new PetNotFoundException("Pet não encontrado ou não pertence ao usuário.");
                 });
 
         appointment.setPet(pet);
@@ -106,7 +103,7 @@ public class AppointmentService {
         log.info("Iniciando cancelamento do agendamento ID: {}", appointmentId);
 
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        log.info("Usuário autenticado: {}", user.getUsername());
+//        log.info("Usuário autenticado: {}", user.getUsername());
 
         Appointment appointment = appointmentRepository.findByIdAndUserId(appointmentId, user.getId())
                 .orElseThrow(() -> {
@@ -131,7 +128,7 @@ public class AppointmentService {
     public List<AppointmentResponse> getAppointmentsByPet(Long petId, String authorizationHeader) {
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
         Pet pet = petRepository.findByIdAndUserId(petId, user.getId())
-                .orElseThrow(() -> new PetNotFoundException(PET_NOT_FOUND));
+                .orElseThrow(() -> new PetNotFoundException("Pet não encontrado ou não pertence ao usuário."));
         List<Appointment> appointments = appointmentRepository.findAllByPetId(pet.getId());
         return AppointmentMapper.petMapper().toResponseList(appointments);
     }
@@ -140,7 +137,7 @@ public class AppointmentService {
     public AppointmentResponse getAppointmentById(Long appointmentId, String authorizationHeader) {
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
         Appointment appointment = appointmentRepository.findByIdAndUserId(appointmentId, user.getId())
-                .orElseThrow(() -> new AppointmentNotFoundException(APPOINTMENT_NOT_FOUND));
+                .orElseThrow(() -> new ServiceBookingNotFoundException("Agendamento não encontrado ou não pertence ao usuário."));
         return AppointmentMapper.petMapper().toResponse(appointment);
     }
 

@@ -2,8 +2,7 @@ package br.com.finalproject.petconnect.appointment.services;
 
 import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.InvalidAppointmentDateException;
-import br.com.finalproject.petconnect.exceptions.runtimes.TimeSlotConflictException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.InvalidServiceBookingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,7 +23,7 @@ public class AppointmentServiceUtil {
         DayOfWeek dayOfWeek = appointmentDate.getDayOfWeek();
         if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
             log.error("Tentativa de agendamento em um final de semana: {}", appointmentDate);
-            throw new InvalidAppointmentDateException("invalidAppointmentDate");
+            throw new InvalidServiceBookingException("invalidAppointmentDate");
         }
     }
 
@@ -35,7 +34,7 @@ public class AppointmentServiceUtil {
 
         if (appointmentTime.isBefore(startTime) || appointmentTime.isAfter(endTime)) {
             log.error("Horário fora do expediente permitido: {}", appointmentTime);
-            throw new TimeSlotConflictException("timeSlotConflict");
+            throw new IllegalArgumentException("timeSlotConflict");
         }
 
         log.info("Validando a disponibilidade de horário para a consulta: {}", appointmentTime);
@@ -44,7 +43,7 @@ public class AppointmentServiceUtil {
                 .findByAppointmentDateAndAndAppointmentTime(appointmentDate, appointmentTime);
         consultaOptional.ifPresent(appointment -> {
             log.error("Conflito de horário detectado. Já existe uma consulta marcada para esta data e hora.");
-            throw new TimeSlotConflictException("conflitoAgendamento");
+            throw new IllegalArgumentException("conflitoAgendamento");
         });
 
     }

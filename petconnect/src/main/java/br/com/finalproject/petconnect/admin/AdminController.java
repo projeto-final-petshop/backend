@@ -16,12 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import static br.com.finalproject.petconnect.exceptions.dto.ErrorMessagesUtil.INVALID_INPUT_DATA;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequestMapping("/admins")
@@ -38,12 +33,30 @@ public class AdminController {
     @Operation(summary = "Cadastrar um novo Administrador")
     @ApiResponse(responseCode = "200", description = "Novo administrador cadastrado com sucesso.",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
-    @ApiResponse(responseCode = "400", description = INVALID_INPUT_DATA, content = @Content)
+    @ApiResponse(responseCode = "404", description = "Role não encontrada.", content = @Content)
+    @ApiResponse(responseCode = "409", description = "Email já cadastrado.", content = @Content)
+    @ApiResponse(responseCode = "409", description = "CPF já cadastrado.", content = @Content)
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> createAdministrator(@RequestBody @Valid UserRequest registerUserDto) {
         User createdAdmin = adminService.createAdministrator(registerUserDto);
         return ResponseEntity.ok(createdAdmin);
+    }
+
+    @Operation(summary = "Cadastrar um novo Usuário com role específica")
+    @ApiResponse(responseCode = "200", description = "Novo usuário cadastrado com sucesso.",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
+    @ApiResponse(responseCode = "400", description = "Campo obrigatório não preenchido.", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Role não encontrada.", content = @Content)
+    @ApiResponse(responseCode = "409", description = "Email ou CPF já cadastrado.", content = @Content)
+    @ApiResponse(responseCode = "403", description = "Usuário não possui permissão para cadastrar.", content = @Content)
+    @ApiResponse(responseCode = "500", description = "Erro no servidor.", content = @Content)
+    @PostMapping("/register/{roleCode}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> createUser(@RequestBody @Valid UserRequest registerUserDto,
+                                           @PathVariable(name = "roleCode") int roleCode) {
+        User createdUser = adminService.createUserWithRole(registerUserDto, roleCode);
+        return ResponseEntity.ok(createdUser);
     }
 
 }

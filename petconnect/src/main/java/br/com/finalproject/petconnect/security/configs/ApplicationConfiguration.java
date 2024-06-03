@@ -1,5 +1,7 @@
 package br.com.finalproject.petconnect.security.configs;
 
+import br.com.finalproject.petconnect.user.entities.User;
+import br.com.finalproject.petconnect.user.mapping.UserMapper;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +32,12 @@ public class ApplicationConfiguration {
         log.info("Configurando UserDetailsService");
         return username -> {
             log.info("Buscando usuário pelo email: {}", username);
-            return userRepository.findByEmail(username)
+            User user = userRepository.findByEmail(username)
                     .orElseThrow(() -> {
                         log.warn("Usuário não encontrado: {}", username);
                         return new UsernameNotFoundException("User not found");
                     });
+            return UserMapper.INSTANCE.toCustomUserDetails(user);
         };
     }
 
