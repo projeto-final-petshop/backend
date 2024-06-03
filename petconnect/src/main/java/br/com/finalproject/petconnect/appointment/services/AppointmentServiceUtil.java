@@ -2,9 +2,17 @@ package br.com.finalproject.petconnect.appointment.services;
 
 import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
+import br.com.finalproject.petconnect.exceptions.runtimes.pet.PetNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.InvalidServiceBookingException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceBookingNotFoundException;
+import br.com.finalproject.petconnect.pets.entities.Pet;
+import br.com.finalproject.petconnect.pets.repositories.PetRepository;
+import br.com.finalproject.petconnect.user.entities.User;
+import br.com.finalproject.petconnect.utils.AuthUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -17,13 +25,34 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AppointmentServiceUtil {
 
+    private final AuthUtils authUtils;
+    private final PetRepository petRepository;
+    private final MessageSource messageSource;
     private final AppointmentRepository appointmentRepository;
+
+    public User getUserFromAuthorizationHeader(String authorizationHeader) {
+        return authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+    }
+
+    public Pet getPetByIdAndUser(Long petId, User user) {
+        return petRepository.findByIdAndUserId(petId, user.getId())
+                .orElseThrow(() -> new PetNotFoundException(messageSource.getMessage("pet.not_found", null,
+                        LocaleContextHolder.getLocale())));
+    }
+
+    public Appointment getAppointmentByIdAndUser(Long appointmentId, User user) {
+        return appointmentRepository.findByIdAndUserId(appointmentId, user.getId())
+                .orElseThrow(() -> new ServiceBookingNotFoundException
+                        (messageSource.getMessage("appointment.not_found", null,
+                                LocaleContextHolder.getLocale())));
+    }
 
     public void validateWeekday(LocalDate appointmentDate) {
         DayOfWeek dayOfWeek = appointmentDate.getDayOfWeek();
         if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
             log.error("Tentativa de agendamento em um final de semana: {}", appointmentDate);
-            throw new InvalidServiceBookingException("invalidAppointmentDate");
+            throw new InvalidServiceBookingException(messageSource.getMessage("weekend_booking", null,
+                    LocaleContextHolder.getLocale()));
         }
     }
 
@@ -34,7 +63,8 @@ public class AppointmentServiceUtil {
 
         if (appointmentTime.isBefore(startTime) || appointmentTime.isAfter(endTime)) {
             log.error("Horário fora do expediente permitido: {}", appointmentTime);
-            throw new IllegalArgumentException("timeSlotConflict");
+            throw new InvalidServiceBookingException(messageSource.getMessage("outside_working_hours", null,
+                    LocaleContextHolder.getLocale()));
         }
 
         log.info("Validando a disponibilidade de horário para a consulta: {}", appointmentTime);
@@ -43,7 +73,8 @@ public class AppointmentServiceUtil {
                 .findByAppointmentDateAndAndAppointmentTime(appointmentDate, appointmentTime);
         consultaOptional.ifPresent(appointment -> {
             log.error("Conflito de horário detectado. Já existe uma consulta marcada para esta data e hora.");
-            throw new IllegalArgumentException("conflitoAgendamento");
+            throw new InvalidServiceBookingException(messageSource.getMessage("time_slot_conflict", null,
+                    LocaleContextHolder.getLocale()));
         });
 
     }

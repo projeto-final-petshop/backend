@@ -1,6 +1,8 @@
 package br.com.finalproject.petconnect.user.services;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.user.InvalidUserDataException;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
+import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.dto.request.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.dto.response.UserResponse;
@@ -23,6 +25,7 @@ import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.NOT_F
 @AllArgsConstructor
 public class UserService {
 
+    private final PetRepository petRepository;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
@@ -57,7 +60,9 @@ public class UserService {
      */
     @Transactional
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+        petRepository.deleteByUserId(user.getId());
         userRepository.delete(user);
     }
 

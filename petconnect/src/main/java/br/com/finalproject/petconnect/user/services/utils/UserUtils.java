@@ -9,9 +9,9 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +31,7 @@ public class UserUtils {
         }
         if (userRepository.findByEmail(email).isEmpty()) {
             String errorMessage = messageSource.getMessage(EMAIL_NOT_FOUND, new Object[]{email},
-                    Locale.of(EMAIL_NOT_FOUND));
+                    LocaleContextHolder.getLocale());
             throw new EmailNotFoundException(errorMessage);
         }
     }
@@ -42,7 +42,7 @@ public class UserUtils {
         }
         if (userRepository.findByCpf(cpf).isEmpty()) {
             String errorMessage = messageSource.getMessage(CPF_NOT_FOUND, new Object[]{cpf},
-                    Locale.of(CPF_NOT_FOUND));
+                    LocaleContextHolder.getLocale());
             throw new UserNotFoundException(errorMessage);
         }
     }
@@ -53,7 +53,7 @@ public class UserUtils {
         }
         if (userRepository.findByEmail(email).isPresent()) {
             String errorMessage = messageSource.getMessage(EMAIL_ALREADY_EXISTS, new Object[]{email},
-                    Locale.of(EMAIL_ALREADY_EXISTS));
+                    LocaleContextHolder.getLocale());
             throw new UserAlreadyExistsException(errorMessage);
         }
     }
@@ -64,13 +64,12 @@ public class UserUtils {
         }
         if (userRepository.findByCpf(cpf).isPresent()) {
             String errorMessage = messageSource.getMessage(CPF_ALREADY_EXISTS, new Object[]{cpf},
-                    Locale.of(CPF_ALREADY_EXISTS));
+                    LocaleContextHolder.getLocale());
             throw new UserAlreadyExistsException(errorMessage);
         }
     }
 
-    public void validateUserData(String name, String email, String cpf,
-                                 String password, String confirmPassword) throws InvalidUserDataException {
+    public void validateUserData(String name, String email, String cpf, String password, String confirmPassword) {
 
         validateField(name, NAME_NOT_NULL);
         validateField(email, EMAIL_NOT_NULL);
@@ -79,17 +78,17 @@ public class UserUtils {
 
         if (!password.equals(confirmPassword)) {
             throw new InvalidUserDataException(messageSource.getMessage(PASSWORD_MISMATCH,
-                    new Object[]{}, Locale.of(PASSWORD_MISMATCH)));
+                    new Object[]{}, LocaleContextHolder.getLocale()));
         }
 
         if (!isValidEmail(email)) {
             throw new InvalidUserDataException(messageSource.getMessage(INVALID_EMAIL,
-                    new Object[]{}, Locale.of(INVALID_EMAIL_FORMAT)));
+                    new Object[]{}, LocaleContextHolder.getLocale()));
         }
 
         if (!isValidCPF(cpf)) {
             throw new InvalidUserDataException(messageSource.getMessage(INVALID_CPF,
-                    new Object[]{}, Locale.of(INVALID_CPF_FORMAT)));
+                    new Object[]{}, LocaleContextHolder.getLocale()));
         }
 
     }
@@ -97,7 +96,7 @@ public class UserUtils {
     private void validateField(String field, String errorCode) {
         if (field == null || field.isEmpty()) {
             throw new InvalidUserDataException(messageSource.getMessage(errorCode,
-                    new Object[]{}, Locale.of(INVALID_FIELD)));
+                    new Object[]{}, LocaleContextHolder.getLocale()));
         }
     }
 
@@ -127,13 +126,13 @@ public class UserUtils {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException(
                         messageSource.getMessage(EMAIL_NOT_FOUND, new Object[]{email},
-                                Locale.of(EMAIL_NOT_FOUND))));
+                                LocaleContextHolder.getLocale())));
     }
 
     public String getMessageByEmail(String email) {
         return messageSource.getMessage(EMAIL_NOT_FOUND,
                 new Object[]{email},
-                Locale.of(EMAIL_NOT_FOUND));
+                LocaleContextHolder.getLocale());
     }
 
 }

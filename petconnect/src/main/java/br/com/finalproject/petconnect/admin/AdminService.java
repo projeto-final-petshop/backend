@@ -24,11 +24,24 @@ public class AdminService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
     private static final String REQUIRED_FIELD_MESSAGE = "exception.validation.required_field";
 
     public User createAdministrator(UserRequest input) {
-        Role role = findRoleByEnum(RoleEnum.ADMIN, "ADMIN");
-        return createUser(input, role);
+
+        Optional<Role> optionalRole = Optional.of(roleRepository.findByName(RoleEnum.ADMIN).orElseThrow());
+
+        User user = User.builder()
+                .name(input.getName())
+                .email(input.getEmail())
+                .password(passwordEncoder.encode(input.getPassword()))
+                .active(true)
+                .cpf(input.getCpf())
+                .phoneNumber(input.getPhoneNumber())
+                .role(optionalRole.get())
+                .build();
+
+        return userRepository.save(user);
     }
 
     public User createUserWithRole(UserRequest input, int roleCode) {

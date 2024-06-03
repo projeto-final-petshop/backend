@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.user.mapping;
 
+import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.dto.response.UserResponse;
-import br.com.finalproject.petconnect.user.entities.CustomUserDetails;
 import br.com.finalproject.petconnect.user.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,8 +23,8 @@ public interface UserMapper {
     @Mapping(source = "id", target = "userId")
     UserResponse toUserResponse(User user);
 
-    CustomUserDetails toCustomUserDetails(User user);
-
     List<UserResponse> toUserResponseList(List<User> users);
+
+    User toUser(UserRequest userRequest);
 
 }

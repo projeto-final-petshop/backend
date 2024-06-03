@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,15 +36,8 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
-    @Operation(summary = "Agendar um novo serviço ou uma nova consulta")
-    @ApiResponse(
-            responseCode = "200", description = "Agendamento realizado com sucesso.",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = AppointmentResponse.class, type = "object"))})
-    @ApiResponse(responseCode = "400", description = "INVALID_INPUT_DATA", content = @Content)
-    @ApiResponse(responseCode = "404", description = "APPOINTMENT_NOT_FOUND", content = @Content)
-    @ApiResponse(responseCode = "500", description = "Erro interno ao criar agendamento", content = @Content)
     @PostMapping("/schedule")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AppointmentResponse> scheduleAppointment(@RequestBody @Valid AppointmentRequest request,
                                                                    @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
@@ -60,15 +54,8 @@ public class AppointmentController {
         }
     }
 
-    @Operation(summary = "Atualização (reagendamento) do serviço ou consulta.")
-    @ApiResponse(
-            responseCode = "200", description = "Agendamento atualizado com sucesso.",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = AppointmentResponse.class, type = "object"))})
-    @ApiResponse(responseCode = "400", description = "INVALID_INPUT_DATA", content = @Content)
-    @ApiResponse(responseCode = "404", description = "APPOINTMENT_NOT_FOUND", content = @Content)
-    @ApiResponse(responseCode = "500", description = "Erro interno ao atualizar agendamento.", content = @Content)
     @PutMapping("/update/{appointmentId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
                                                                  @RequestBody @Valid AppointmentRequest request,
                                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -78,15 +65,8 @@ public class AppointmentController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Cancelamento do agendamento de serviço ou consulta.")
-    @ApiResponse(
-            responseCode = "200", description = "Agendamento cancelado com sucesso.",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = String.class, type = "object"))})
-    @ApiResponse(responseCode = "400", description = "INVALID_INPUT_DATA", content = @Content)
-    @ApiResponse(responseCode = "404", description = "APPOINTMENT_NOT_FOUND", content = @Content)
-    @ApiResponse(responseCode = "500", description = "Erro interno ao cancelar o agendamento.", content = @Content)
     @DeleteMapping("/cancel/{appointmentId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> cancelAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
                                                     @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("Recebida solicitação de cancelamento para o agendamento ID: {}", appointmentId);
@@ -95,29 +75,16 @@ public class AppointmentController {
         return ResponseEntity.ok("Agendamento cancelado com sucesso.");
     }
 
-    @Operation(summary = "Listar todos os serviços e agendamentos.")
-    @ApiResponse(
-            responseCode = "200", description = "Lista de Agendamento",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = AppointmentResponse.class, type = "array"))})
-    @ApiResponse(responseCode = "400", description = "INVALID_INPUT_DATA", content = @Content)
-    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content)
     @GetMapping("/all")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AppointmentResponse>> getAllAppointments(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         List<AppointmentResponse> appointments = appointmentService.getAllAppointmentsByUser(authorizationHeader);
         return ResponseEntity.ok(appointments);
     }
 
-    @Operation(summary = "Listar agendamentos de um único Pet.")
-    @ApiResponse(
-            responseCode = "200", description = "Lista de Agendamento do Pet",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = AppointmentResponse.class, type = "array"))})
-    @ApiResponse(responseCode = "400", description = "INVALID_INPUT_DATA", content = @Content)
-    @ApiResponse(responseCode = "404", description = "PET_NOT_FOUND", content = @Content)
-    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content)
     @GetMapping("/pets/{petId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AppointmentResponse>> getAppointmentsByPet(
             @PathVariable(name = "petId") Long petId,
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -125,15 +92,8 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
-    @Operation(summary = "Buscar (visualizar) agendamento.")
-    @ApiResponse(
-            responseCode = "200", description = "Detalhes do agendamento.",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = String.class, type = "object"))})
-    @ApiResponse(responseCode = "400", description = "INVALID_INPUT_DATA", content = @Content)
-    @ApiResponse(responseCode = "404", description = "PET_NOT_FOUND", content = @Content)
-    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content)
     @GetMapping("/{appointmentId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AppointmentResponse> getAppointmentById(
             @PathVariable(name = "appointmentId") Long appointmentId,
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {

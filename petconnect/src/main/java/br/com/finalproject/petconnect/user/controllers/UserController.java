@@ -39,10 +39,11 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User response = (User) authentication.getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        User currentUser = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(currentUser);
     }
 
     @PutMapping("/update")

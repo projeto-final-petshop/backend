@@ -56,37 +56,45 @@ public class PetService {
     @Transactional(readOnly = true)
     public PetResponse getPetDetails(Long petId, String authorizationHeader) {
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        Pet existingPet = PetServiceUtils.getPetByIdAndUser(petId, user);
-        log.info("Detalhes do Pet: {}", existingPet);
-        return PetMapper.petMapper().toResponse(existingPet);
+        Pet pet = getPetByIdAndUser(petId, user);
+        return PetMapper.INSTANCE.toResponse(pet);
     }
 
     @Transactional
     public PetResponse updatePet(Long petId, PetRequest petRequest, String authorizationHeader) {
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        Pet existingPet = PetServiceUtils.getPetByIdAndUser(petId, user);
-        PetServiceUtils.updatePetDetails(existingPet, petRequest);
+        Pet existingPet = getPetByIdAndUser(petId, user);
+        updatePetDetails(existingPet, petRequest);
         try {
             petRepository.save(existingPet);
             log.info("Pet com ID {} atualizado com sucesso!", existingPet.getId());
-            return PetMapper.petMapper().toResponse(existingPet);
+            return PetMapper.INSTANCE.toResponse(existingPet);
         } catch (Exception e) {
             log.error("Falha ao atualizar do Pet: {}", e.getMessage());
             throw new InvalidPetDataException("Falha ao atualizar do Pet. Por favor, tente novamente mais tarde.");
         }
     }
 
+    private Pet getPetByIdAndUser(Long petId, User user) {
+        return petRepository.findByIdAndUser(petId, user)
+                .orElseThrow(() -> new PetNotFoundException("Pet não encontrado."));
+    }
+
+    private void updatePetDetails(Pet existingPet, PetRequest petRequest) {
+        existingPet.setName(petRequest.getName());
+        existingPet.setAge(petRequest.getAge());
+        existingPet.setColor(petRequest.getColor());
+        existingPet.setBreed(petRequest.getBreed());
+        existingPet.setAnimalType(petRequest.getAnimalType());
+        existingPet.setBirthdate(petRequest.getBirthdate());
+    }
+
     @Transactional
     public void deletePet(Long petId, String authorizationHeader) {
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        Pet existingPet = PetServiceUtils.getPetByIdAndUser(petId, user);
-        try {
-            petRepository.delete(existingPet);
-            log.info("Pet com ID {} excluído com sucesso", existingPet.getId());
-        } catch (Exception e) {
-            log.error("Falha ao excluir do Pet: {}", e.getMessage());
-            throw new InvalidPetDataException("Falha ao excluir do Pet. Por favor, tente novamente mais tarde.");
-        }
+        Pet pet = getPetByIdAndUser(petId, user);
+        petRepository.delete(pet);
+        log.info("Pet com ID {} excluído com sucesso!", petId);
     }
 
     @Transactional(readOnly = true)
