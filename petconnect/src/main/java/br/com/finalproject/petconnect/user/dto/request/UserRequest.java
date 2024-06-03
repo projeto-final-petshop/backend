@@ -66,4 +66,6 @@ public class UserRequest {
             example = "true")
     private boolean active;
 
+    private String address;
+
 }

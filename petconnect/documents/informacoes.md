@@ -26,8 +26,70 @@
         * Com as informações do usuário extraídas do token, você pode então associar o pet ao usuário antes de salvá-lo
           no banco de dados.
 
+---
 
+## GET /search
 
+### Esrutura geral do cURL
 
+```
+curl -X GET "http://localhost:8080/users?parametros_de_busca" -H "accept: application/json"
+```
+
+Exemplos de cURL
+
+1. Buscar usuários ativos, com nome parcial "John", email "john@example.com", CPF "12345678900", na primeira página (
+   padrão) com 10 resultados por página, ordenados por nome ascendente.
+
+   ```
+   curl -X GET "http://localhost:8080/users?name=John&email=john@example.com&cpf=12345678900&active=true&page=0&size=10&sort=name,asc" -H "accept: application/json"
+   ```
+
+2. Buscar todos os usuários inativos, sem especificar nome, email ou CPF, na segunda página (página 1) com 5 resultados
+   por página, ordenados por data de criação descendente.
+
+   ```
+   curl -X GET "http://localhost:8080/users?active=false&page=1&size=5&sort=createdAt,desc" -H "accept: application/json"
+   ```
+
+3. Buscar usuários sem filtros, apenas paginando e ordenando por email ascendente.
+
+   ```
+   curl -X GET "http://localhost:8080/users?page=0&size=20&sort=email,asc" -H "accept: application/json"
+   ```
+
+### Explicação do parâmetros
+
+* `name`: filtro pelo nome (pode ser parcial)
+* `email`: filtro pelo email
+* `cpf`: filtro pelo CPF
+* `active`: filtro pelo status ativo/inativo (`true` ou `false`)
+* `page`: número de página (a contagem inicia em 0).
+* `size`: número de registros por página.
+* `sort`: campo e direção de ordenação
+    * Exemplo: `name,asc` para ordenar nome ascendente
+
+### Endpoints de Exemplo
+
+```java
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+    @Autowired
+    private UserService userService;
+
+    @GetMapping
+    public Page<UserResponse> searchUsers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String cpf,
+            @RequestParam(required = false) Boolean active,
+            @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return userService.searchUsers(name, email, cpf, active, pageable);
+    }
+}
+
+```
 
    

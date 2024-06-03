@@ -7,5 +7,30 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJvbGluYXZlcmFkZXBhdWxhQ
 GET http://localhost:8888/api/v1/users
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJvbGluYXZlcmFkZXBhdWxhQG5vdmFkZWxpdmVyaS5jb20uYnIiLCJpYXQiOjE3MTcxMTE1NTUsImV4cCI6MTcxNzE5Nzk1NX0.hvpBtwldaSoThvdvhzEMyMxdkVauDTOE7t4I0BsSIemfNP-uQXkZ1JEURisa9tmQ
 
+### Estrutura Geral do cURL
+GET http://localhost:8080/users?parametros_de_busca
+accept: application/json
+
+### Buscar usuários ativos, com nome parcial "John", email "john@example.com", CPF "12345678900", na primeira página (padrão) com 10 resultados por página, ordenados por nome ascendente.
+GET http://localhost:8080/users?name=John&email=john@example.com&cpf=12345678900&active=true&page=0&size=10&
+    sort=name,asc
+accept: application/json
+
+### Buscar todos os usuários inativos, sem especificar nome, email ou CPF, na segunda página (página 1) com 5 resultados por página, ordenados por data de criação descendente.
+GET http://localhost:8080/users?active=false&page=1&size=5&sort=createdAt,desc
+accept: application/json
+
+### Buscar usuários sem filtros, apenas paginando e ordenando por email ascendente.
+GET http://localhost:8080/users?page=0&size=20&sort=email,asc
+accept: application/json
+
 ###
+
+
+
+
+
+
+
+
 

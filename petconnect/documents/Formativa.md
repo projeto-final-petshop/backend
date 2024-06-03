@@ -99,7 +99,26 @@ public class User {
 
 **Passo 4: Atualizar o Serviço de Usuário**
 
-Modifique os métodos no seu serviço de usuário para lidar com os novos campos. Por exemplo, para inserir novos valores:
+Modifique os métodos no seu serviço de usuário para lidar com os novos campos.  
+Nas classes `AdminSeeder` e `AuthenticationService`, deve incluir o seguinte trecho de código:
+
+```java
+// NOVOS CAMPOS IMPLEMENTADOS
+User user = User.builder()
+        .name(input.getName())
+        .email(input.getEmail())
+        .password(passwordEncoder.encode(input.getPassword()))
+        .active(true)
+        .cpf(input.getCpf())
+        .phoneNumber(input.getPhoneNumber())
+        .luckyNumber(input.getLuckyNumber()) // NOVO CAMPO
+        .favoriteColor(input.getFavoriteColor()) // NOVO CAMPO
+        .ticketPrice(input.getTicketPrice()) // NOVO CAMPO
+        .role(optionalRole.get())
+        .build();
+```
+
+Por exemplo, para inserir novos valores:
 
 ```java
 
@@ -334,10 +353,10 @@ export class LoginComponent implements OnInit {
 Certifique-se de que o serviço de usuário (`UsuarioService`) está preparado para lidar com os novos campos:
 
 ```typescript
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -348,20 +367,21 @@ export class UsuarioService {
     private registerUrl = `${this.baseUrl}/register`;
     private loginUrl = 'http://localhost:8888/api/v1/auth/login';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
     registerUser(userData: any): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json'
         });
-        return this.http.post('http://localhost:8888/api/v1/auth/signup', userData, { headers });
+        return this.http.post('http://localhost:8888/api/v1/auth/signup', userData, {headers});
     }
 
     loginUser(userData: any): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json'
         });
-        return this.http.post(this.loginUrl, userData, { headers }).pipe(
+        return this.http.post(this.loginUrl, userData, {headers}).pipe(
             tap((response: any) => {
                 localStorage.setItem('token', response.token);
             })
@@ -374,7 +394,7 @@ export class UsuarioService {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
-        return this.http.put(`${this.baseUrl}/update`, userData, { headers });
+        return this.http.put(`${this.baseUrl}/update`, userData, {headers});
     }
 
     getUserById(): Observable<any> {
@@ -382,7 +402,7 @@ export class UsuarioService {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
-        return this.http.get(`${this.baseUrl}/me`, { headers });
+        return this.http.get(`${this.baseUrl}/me`, {headers});
     }
 
     deleteUser(userId: number): Observable<any> {
@@ -390,7 +410,7 @@ export class UsuarioService {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
-        return this.http.delete(`${this.baseUrl}/delete`, { headers });
+        return this.http.delete(`${this.baseUrl}/delete`, {headers});
     }
 }
 

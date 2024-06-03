@@ -26,8 +26,6 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
-    private static final long ALLOWED_CLOCK_SKEW_MILLIS = 300000; // 5 minutos
-
     public String extractEmail(String token) {
         log.info("Extracting username (subject) from JWT token: {}", token);
         return extractClaim(token, Claims::getSubject);
@@ -81,11 +79,6 @@ public class JwtService {
         return isValid;
     }
 
-//    public boolean isTokenValid(String token, UserDetails userDetails) {
-//        final String username = extractUsername(token);
-//        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-//    }
-
     private boolean isTokenExpired(String token) {
         log.info("Verificando se o token JWT está expirado");
         return extractExpiration(token).before(new Date());
@@ -101,9 +94,6 @@ public class JwtService {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
-                // permite um pequeno desvio no tempo (clock skew) ao validar tokens JWT para evitar problemas
-                // de sicronização de tempo entre o cliente e o servidor.
-                //.setAllowedClockSkewSeconds(ALLOWED_CLOCK_SKEW_MILLIS / 1000)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
