@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.pets.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.PetNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.PetServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.pet.InvalidPetDataException;
+import br.com.finalproject.petconnect.exceptions.runtimes.pet.PetNotFoundException;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.entities.Pet;
@@ -36,7 +36,7 @@ public class PetService {
             return PetMapper.petMapper().toResponse(savedPet);
         } catch (Exception e) {
             log.error("Falha ao cadastrar Pet: {}", e.getMessage());
-            throw new PetServiceException("Falha ao cadastrar Pet. Por favor, tente novamente mais tarde.");
+            throw new InvalidPetDataException("Falha ao cadastrar Pet. Por favor, tente novamente mais tarde.");
         }
     }
 
@@ -49,7 +49,7 @@ public class PetService {
             return PetMapper.petMapper().toResponseList(pets);
         } catch (Exception e) {
             log.error("Falha ao listar Pets: {}", e.getMessage());
-            throw new PetServiceException("Falha ao listar Pets. Por favor, tente novamente mais tarde.");
+            throw new InvalidPetDataException("Falha ao listar Pets. Por favor, tente novamente mais tarde.");
         }
     }
 
@@ -72,7 +72,7 @@ public class PetService {
             return PetMapper.petMapper().toResponse(existingPet);
         } catch (Exception e) {
             log.error("Falha ao atualizar do Pet: {}", e.getMessage());
-            throw new PetServiceException("Falha ao atualizar do Pet. Por favor, tente novamente mais tarde.");
+            throw new InvalidPetDataException("Falha ao atualizar do Pet. Por favor, tente novamente mais tarde.");
         }
     }
 
@@ -85,7 +85,7 @@ public class PetService {
             log.info("Pet com ID {} excluído com sucesso", existingPet.getId());
         } catch (Exception e) {
             log.error("Falha ao excluir do Pet: {}", e.getMessage());
-            throw new PetServiceException("Falha ao excluir do Pet. Por favor, tente novamente mais tarde.");
+            throw new InvalidPetDataException("Falha ao excluir do Pet. Por favor, tente novamente mais tarde.");
         }
     }
 
@@ -96,7 +96,7 @@ public class PetService {
             return PetMapper.petMapper().toResponseList(pets);
         } catch (Exception e) {
             log.error("Falha ao listar todos os Pets: {}", e.getMessage());
-            throw new PetServiceException("Falha ao listar todos os Pets. Por favor, tente novamente mais tarde.");
+            throw new InvalidPetDataException("Falha ao listar todos os Pets. Por favor, tente novamente mais tarde.");
         }
     }
 

@@ -1,9 +1,7 @@
 package br.com.finalproject.petconnect.user.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.CpfNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.EmailNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.NoInactiveUsersFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.UserNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
 import br.com.finalproject.petconnect.user.dto.request.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -12,6 +10,7 @@ import br.com.finalproject.petconnect.utils.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.Optional;
 import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.*;
 
 @Slf4j
+@Component
 @AllArgsConstructor
 public class UserServiceUtils {
 
@@ -66,18 +66,18 @@ public class UserServiceUtils {
         if (!inactiveUsers.isEmpty()) {
             return inactiveUsers.getFirst();
         }
-        throw new NoInactiveUsersFoundException(formatMessage(NO_INACTIVE_USERS_FOUND_MESSAGE,
+        throw new UserNotFoundException(formatMessage("No Inactive Users Found",
                 request.toString()));
     }
 
     public static User findUserByEmailOrThrowException(String email) {
         return findUserByEmail(email)
-                .orElseThrow(() -> new EmailNotFoundException(formatMessage(NOT_FOUND_EMAIL_MESSAGE, email)));
+                .orElseThrow(() -> new EmailNotFoundException(formatMessage("Email não encontrado", email)));
     }
 
     public static User findUserByCpfOrThrowException(String cpf) {
         return findUserByCpf(cpf)
-                .orElseThrow(() -> new CpfNotFoundException(formatMessage(NOT_FOUND_CPF_MESSAGE, cpf)));
+                .orElseThrow(() -> new UserNotFoundException(formatMessage("CPF não encontrado", cpf)));
     }
 
     public static User findUserByName(String name) {
@@ -107,12 +107,6 @@ public class UserServiceUtils {
         userRepository.save(user);
         log.info(successLogMessage, id);
         return messageUtil.getMessage(successMessageKey);
-    }
-
-    public static User getUserAndLog(Long id, String logMessage) {
-        log.info(logMessage, id);
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage(NOT_FOUND_USER_MESSAGE)));
     }
 
     public static User findAndLogUser(String messageTemplate, String arg, Optional<User> userOptional) {
@@ -148,6 +142,13 @@ public class UserServiceUtils {
 
     public static User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+    }
+
+
+    public static User getUserAndLog(Long id, String logMessage) {
+        log.info(logMessage, id);
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage(NOT_FOUND_USER_MESSAGE)));
     }
 

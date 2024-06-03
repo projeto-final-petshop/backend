@@ -53,6 +53,20 @@ spring:
             required: true
           auth: true
           from: 'petshop.petconnect@gmail.com'
+  data:
+    web:
+      pageable:
+        # Define o tamanho padrão da página se não for especificado na solicitação.
+        default-page-size: 20 # número padrão de itens por página
+        # Define o tamanho máximo permitido para uma página.
+        max-page-size: 100 # número máximo de itens por página
+        # Define se a numeração das páginas começa em 1 ao invés de 0.
+        one-indexed-parameters: false # se verdadeiro, páginas começam em 1 ao invés de 0
+        # Define o número padrão da página inicial.
+        default-page-number: 0 # número padrão de página inicial (geralmente 0)
+        sort:
+          # Define o nome do parâmetro na URL usado para ordenação.
+          sort-parameter: sort # parâmetro de ordenação na URL
 
 springdoc:
   default-consumes-media-type: 'application/json'

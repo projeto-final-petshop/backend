@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.user.entities;
 
+import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -10,12 +11,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,7 +28,7 @@ import java.util.List;
         @UniqueConstraint(name = "uk_cpf", columnNames = "cpf")
 })
 @Entity
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,11 +61,13 @@ public class User implements UserDetails {
             message = "Por favor, insira um número de telefone válido no formato E.164.")
     private String phoneNumber;
 
+    private String address;
+
     private boolean active;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-//            orphanRemoval = true, fetch = FetchType.LAZY)
-//    private List<Pet> pets;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Pet> pets;
 
     // @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
@@ -81,36 +80,5 @@ public class User implements UserDetails {
 
     @UpdateTimestamp
     private OffsetDateTime updatedAt;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        var authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
-        return List.of(authority);
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
 }
