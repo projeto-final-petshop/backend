@@ -1,8 +1,7 @@
 package br.com.finalproject.petconnect.utils;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.InvalidTokenException;
-import br.com.finalproject.petconnect.exceptions.runtimes.TokenFailureException;
-import br.com.finalproject.petconnect.exceptions.runtimes.UserNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.PasswordMismatchException;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
@@ -30,7 +29,7 @@ public class AuthUtils {
                     .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage(NOT_FOUND_USER_MESSAGE)));
         } catch (Exception e) {
             log.error(INVALID_TOKEN, e.getMessage());
-            throw new InvalidTokenException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE));
+            throw new PasswordMismatchException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE));
         }
     }
 
@@ -39,10 +38,10 @@ public class AuthUtils {
             return Optional.ofNullable(authorizationHeader)
                     .filter(header -> header.startsWith(BEARER_PREFIX))
                     .map(header -> header.substring(7)) // Remove "Bearer " do token
-                    .orElseThrow(() -> new InvalidTokenException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE)));
+                    .orElseThrow(() -> new PasswordMismatchException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE)));
         } catch (Exception e) {
             log.error(TOKEN_FAILURE, e.getMessage());
-            throw new TokenFailureException(messageUtil.getMessage(TOKEN_FAILURE_MESSAGE));
+            throw new PasswordMismatchException(messageUtil.getMessage(TOKEN_FAILURE_MESSAGE));
         }
     }
 

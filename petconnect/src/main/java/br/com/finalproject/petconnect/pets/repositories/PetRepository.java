@@ -15,4 +15,6 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     Optional<Pet> findByIdAndUserId(Long id, Long userId);
 
+    void deleteByUserId(Long id);
+
 }

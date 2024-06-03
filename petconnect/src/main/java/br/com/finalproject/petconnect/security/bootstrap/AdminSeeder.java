@@ -63,13 +63,14 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 .active(true)
                 .cpf(cpf)
                 .phoneNumber("+5521986548329")
+                .address("Avenida Brasil")
                 .build();
 
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(request.getPassword())
-                .active(request.isActive())
+                .active(request.getActive())
                 .cpf(request.getCpf())
                 .phoneNumber(request.getPhoneNumber())
                 .role(optionalRole.get())

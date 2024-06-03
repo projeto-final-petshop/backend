@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.pets.entities;
 
-import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,7 +14,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.List;
 
 /**
  * Representa o animal de estimação do usuário
@@ -47,24 +45,20 @@ public class Pet implements Serializable {
     private String animalType;
 
     @Past(message = "A data de nascimento do pet deve estar no passado.")
-    @JsonFormat(pattern = "dd/MM/yyyy",
-            shape = JsonFormat.Shape.STRING)
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
     @ManyToOne
-    @JsonProperty("userId")
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_pet_user"))
     private User user;
 
-    @Transient
-    private List<Appointment> appointments;
-
     @CreationTimestamp
     @Column(updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime updatedAt;
 
 }

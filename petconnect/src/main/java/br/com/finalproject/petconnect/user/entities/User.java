@@ -1,15 +1,16 @@
 package br.com.finalproject.petconnect.user.entities;
 
+import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,39 +39,39 @@ public class User implements UserDetails {
     @JsonProperty("userId")
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "O nome é obrigatório.")
     @Size(min = 3, max = 250, message = "O nome deve ter entre 3 e 250 caracteres.")
     private String name;
 
-    @Email(message = "Por favor, insira um endereço de e-mail válido.",
-            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+    @Email(message = "Por favor, insira um endereço de e-mail válido.")
+    @NotBlank(message = "O e-mail é obrigatório.")
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = "A senha é obrigatória.")
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
-            message = "A senha deve conter pelo menos 8 caracteres, " +
-                    "incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
+            message = "A senha deve conter pelo menos 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
+    @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
-    @CPF(message = "Por favor, insira um CPF válido.")
+    @NotBlank(message = "O CPF é obrigatório.")
     @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
             message = "Por favor, insira um CPF válido no formato XXX.XXX.XXX-XX")
+    @Column(unique = true, nullable = false)
     private String cpf;
 
     @Pattern(regexp = "^\\+?\\d{9,14}$",
             message = "Por favor, insira um número de telefone válido no formato E.164.")
     private String phoneNumber;
 
-    private boolean active;
+    private String address;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-//            orphanRemoval = true, fetch = FetchType.LAZY)
-//    private List<Pet> pets;
+    private Boolean active;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
+    @Transient
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Pet> pets;
+
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_user_role"))
     private Role role;

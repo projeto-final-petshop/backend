@@ -38,12 +38,10 @@ public class Appointment implements Serializable {
     @Enumerated(EnumType.STRING)
     private PetType petType;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
 
-    @JsonFormat(pattern = "HH:mm")
-    @Temporal(TemporalType.TIME)
+    @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalTime appointmentTime;
 
     @ManyToOne
@@ -56,11 +54,11 @@ public class Appointment implements Serializable {
 
     @CreationTimestamp
     @Column(updatable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime updatedAt;
 
 }

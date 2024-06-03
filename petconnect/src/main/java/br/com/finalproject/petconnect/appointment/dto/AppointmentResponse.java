@@ -19,68 +19,29 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class AppointmentResponse {
 
-    @Schema(name = "appointmentId", type = "integer", format = "int64",
-            requiredMode = Schema.RequiredMode.AUTO,
-            description = "Identificação única do agendamento",
-            example = "10")
     @JsonProperty("appointmentId")
     private Long id;
 
-    @Schema(name = "petId", type = "integer", format = "int64",
-            requiredMode = Schema.RequiredMode.AUTO,
-            description = "Identificação única do pet",
-            example = "10")
     private Long petId;
 
-    @Schema(name = "userId", type = "integer", format = "int64",
-            requiredMode = Schema.RequiredMode.AUTO,
-            description = "Identificação única do Usuário",
-            example = "10" )
     private Long userId;
 
-    @Schema(name = "serviceType", enumAsRef = true,
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Serviço (banho, tosa, banho e tosa) ou consulta veterinária.",
-            example = "BATH_AND_GROOMING")
     private ServiceType serviceType;
 
-    @Schema(name = "petType", enumAsRef = true,
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Tipo de animal de estimação (dog, cat, outros)",
-            example = "DOG")
     private PetType petType;
 
-    @Schema(name = "appointmentDate", type = "string",
-            format = "date", pattern = "dd/MM/yyyy",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "10/06/2024")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
 
-    @Schema(name = "appointmentTime", type = "string",
-            format = "time", pattern = "HH:mm",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "10:00")
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalTime appointmentTime;
 
-    @Schema(name = "status", enumAsRef = true,
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "SCHEDULED")
     private AppointmentStatus status;
 
-    @Schema(name = "createdAt", type = "String", format = "date-time",
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            requiredMode = Schema.RequiredMode.AUTO,
-            description = "Data de Criação", example = "31/05/2024 19:12:17")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime createdAt;
 
-    @Schema(name = "updatedAt", type = "String", format = "date-time",
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            requiredMode = Schema.RequiredMode.AUTO,
-            description = "Data de Atualização", example = "31/05/2024 19:12:17")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime updatedAt;
 
 }
