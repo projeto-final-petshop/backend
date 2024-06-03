@@ -2,6 +2,7 @@ package br.com.finalproject.petconnect.exceptions.handlers;
 
 import br.com.finalproject.petconnect.exceptions.dto.ExceptionResponse;
 import br.com.finalproject.petconnect.exceptions.runtimes.RequiredFieldException;
+import br.com.finalproject.petconnect.exceptions.runtimes.UserServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthenticationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthorizationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
@@ -35,7 +36,10 @@ import java.time.OffsetDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({
+            Exception.class,
+            UserServiceException.class
+    })
     public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }

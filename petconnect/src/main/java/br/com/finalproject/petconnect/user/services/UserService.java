@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.user.services;
 
+import br.com.finalproject.petconnect.exceptions.runtimes.UserServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.InvalidUserDataException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
@@ -18,13 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.NOT_FOUND_USER_MESSAGE;
-
 @Slf4j
 @Service
 @AllArgsConstructor
 public class UserService {
 
+    private final UserServiceUtils userServiceUtils;
     private final PetRepository petRepository;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
@@ -34,129 +34,155 @@ public class UserService {
      */
     @Transactional
     public void updateUser(String email, UserRequest userRequest) {
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
-        User user = userRepository.findByEmail(email).orElseThrow();
+            if (userRequest.getName() != null) {
+                user.setName(userRequest.getName());
+            }
 
-        if (userRequest.getName() != null) {
-            user.setName(userRequest.getName());
+            if (userRequest.getPhoneNumber() != null) {
+                user.setPhoneNumber(userRequest.getPhoneNumber());
+            }
+
+            if (userRequest.getAddress() != null) {
+                user.setAddress(userRequest.getAddress());
+            }
+
+            User savedUser = userRepository.save(user);
+            log.info("Usuário atualizado com sucesso: {}", savedUser.getId());
+        } catch (Exception e) {
+            log.error("Falha ao atualizar usuário: {}", e.getMessage());
+            throw new UserServiceException("Falha ao atualizar usuário");
         }
-
-        if (userRequest.getPhoneNumber() != null) {
-            user.setPhoneNumber(userRequest.getPhoneNumber());
-        }
-
-        if (userRequest.getAddress() != null) {
-            user.setAddress(userRequest.getAddress());
-        }
-
-        User savedUser = userRepository.save(user);
-
-        UserMapper.INSTANCE.toUserResponse(savedUser);
-
     }
 
-    /**
-     * Excluir usuário
-     */
     @Transactional
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
-        petRepository.deleteByUserId(user.getId());
-        userRepository.delete(user);
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+            petRepository.deleteByUserId(user.getId());
+            userRepository.delete(user);
+            log.info("Usuário excluído com sucesso: {}", email);
+        } catch (Exception e) {
+            log.error("Falha ao excluir usuário: {}", e.getMessage());
+            throw new UserServiceException("Falha ao excluir usuário");
+        }
     }
 
-    /**
-     * Buscar usuário por Email
-     */
     @Transactional
     public UserResponse findUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
-        return UserMapper.INSTANCE.toUserResponse(user);
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+            return userMapper.toUserResponse(user);
+        } catch (Exception e) {
+            log.error("Falha ao buscar usuário por email: {}", e.getMessage());
+            throw new UserServiceException("Falha ao buscar usuário por email");
+        }
     }
 
-    /**
-     * Buscar usuário por CPF
-     */
     @Transactional
     public UserResponse findUserByCpf(String cpf) {
-        User user = userRepository.findByCpf(cpf).orElseThrow();
-        return UserMapper.INSTANCE.toUserResponse(user);
+        try {
+            User user = userRepository.findByCpf(cpf)
+                    .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+            return userMapper.toUserResponse(user);
+        } catch (Exception e) {
+            log.error("Falha ao buscar usuário por CPF: {}", e.getMessage());
+            throw new UserServiceException("Falha ao buscar usuário por CPF");
+        }
     }
 
-    /**
-     * Listar todos os usuários cadastrados
-     */
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return UserMapper.INSTANCE.toUserResponseList(users);
+        try {
+            List<User> users = userRepository.findAll();
+            return userMapper.toUserResponseList(users);
+        } catch (Exception e) {
+            log.error("Falha ao buscar todos os usuários: {}", e.getMessage());
+            throw new UserServiceException("Falha ao buscar todos os usuários");
+        }
     }
 
-    /**
-     * Buscar usuários ativos
-     */
+    @Transactional(readOnly = true)
     public List<UserResponse> findActiveUsers() {
-        List<User> users = userRepository.findByActiveTrue();
-        return UserMapper.INSTANCE.toUserResponseList(users);
+        try {
+            List<User> users = userRepository.findByActiveTrue();
+            return userMapper.toUserResponseList(users);
+        } catch (Exception e) {
+            log.error("Falha ao buscar usuários ativos: {}", e.getMessage());
+            throw new UserServiceException("Falha ao buscar usuários ativos");
+        }
     }
 
-    /**
-     * Buscar usuários inativos
-     */
+    @Transactional(readOnly = true)
     public List<UserResponse> findInactiveUsers() {
-        List<User> users = userRepository.findByActiveFalse();
-        return UserMapper.INSTANCE.toUserResponseList(users);
+        try {
+            List<User> users = userRepository.findByActiveFalse();
+            return userMapper.toUserResponseList(users);
+        } catch (Exception e) {
+            log.error("Falha ao buscar usuários inativos: {}", e.getMessage());
+            throw new UserServiceException("Falha ao buscar usuários inativos");
+        }
     }
 
     @Transactional(readOnly = true)
     public Page<UserResponse> searchUsers(String name, String email, String cpf, Boolean active, Pageable pageable) {
-        Page<User> usersPage = userRepository
-                .findByNameContainingIgnoreCaseAndEmailContainingIgnoreCaseAndCpfContainingIgnoreCaseAndActive(
-                        name, email, cpf, active, pageable);
-        return usersPage.map(userMapper::toUserResponse);
+        try {
+            Page<User> usersPage = userRepository
+                    .findByNameContainingIgnoreCaseAndEmailContainingIgnoreCaseAndCpfContainingIgnoreCaseAndActive(
+                            name, email, cpf, active, pageable);
+            return usersPage.map(userMapper::toUserResponse);
+        } catch (Exception e) {
+            log.error("Falha ao buscar usuários: {}", e.getMessage());
+            throw new UserServiceException("Falha ao buscar usuários");
+        }
     }
 
     @Transactional(readOnly = true)
     public User findUser(FindUserRequest request) {
-        if (request.getName() != null) {
-            return UserServiceUtils.findUserByName(request.getName());
+        try {
+            if (request.getName() != null) {
+                return userServiceUtils.findUserByName(request.getName());
+            }
+            if (request.getEmail() != null) {
+                return userServiceUtils.findUserByEmailOrThrowException(request.getEmail());
+            }
+            if (request.getCpf() != null) {
+                return userServiceUtils.findUserByCpfOrThrowException(request.getCpf());
+            }
+            if (!request.getActive()) {
+                return userServiceUtils.findFirstInactiveUserOrThrowException();
+            }
+            throw new InvalidUserDataException("NO_SEARCH_CRITERIA_PROVIDED_MESSAGE");
+        } catch (Exception e) {
+            log.error("Erro ao buscar usuário: {}", e.getMessage());
+            throw new UserServiceException("Erro ao buscar usuário");
         }
-        if (request.getEmail() != null) {
-            return UserServiceUtils.findUserByEmailOrThrowException(request.getEmail());
-        }
-        if (request.getCpf() != null) {
-            return UserServiceUtils.findUserByCpfOrThrowException(request.getCpf());
-        }
-        if (!request.isActive()) {
-            return UserServiceUtils.findFirstInactiveUserOrThrowException(request);
-        }
-        throw new InvalidUserDataException(UserServiceUtils
-                .formatMessage("NO_SEARCH_CRITERIA_PROVIDED_MESSAGE", request.toString()));
     }
 
     @Transactional(readOnly = true)
     public List<User> listUsersByName(String name) {
-        return UserServiceUtils.findAndLogUsers("Listando usuários pelo nome: {}",
-                userRepository.findByName(name), "Total de usuários encontrados com o nome {}: {}");
-    }
-
-    @Transactional(readOnly = true)
-    public List<User> listActiveUsers() {
-        return UserServiceUtils.findAndLogUsers("Listando usuários ativos",
-                userRepository.findByActive(true), "Total de usuários ativos: {}");
-    }
-
-    @Transactional(readOnly = true)
-    public List<User> listInactiveUsers() {
-        return UserServiceUtils.findAndLogUsers("Listando usuários inativos",
-                userRepository.findByActive(false), "Total de usuários inativos: {}");
+        try {
+            return userRepository.findByName(name);
+        } catch (Exception e) {
+            log.error("Erro ao listar usuários pelo nome: {}", e.getMessage());
+            throw new UserServiceException("Erro ao listar usuários pelo nome");
+        }
     }
 
     @Transactional(readOnly = true)
     public User getUserById(Long id) {
-        return UserServiceUtils.findAndLogUserById(id, "Buscando usuário com ID: {}",
-                NOT_FOUND_USER_MESSAGE);
+        try {
+            return userRepository.findById(id)
+                    .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado com o ID: " + id));
+        } catch (Exception e) {
+            log.error("Erro ao buscar usuário pelo ID: {}", e.getMessage());
+            throw new UserServiceException("Erro ao buscar usuário pelo ID");
+        }
     }
 
 }

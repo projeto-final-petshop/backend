@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     var config = new CorsConfiguration();
-                    config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                    config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:9090"));
                     config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
                     config.setAllowedHeaders(Collections.singletonList("*"));
@@ -47,8 +47,10 @@ public class SecurityConfiguration {
                     return config;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(requests -> requests.requestMatchers("/api/v1", "/api/v1/**", "/auth/**",
-                                "/auth/login", "/auth/signup").permitAll()
+                .authorizeHttpRequests(requests -> requests.requestMatchers(
+                                "/api/v1", "/api/v1/**",
+                                "/auth/**", "/auth/login", "/auth/signup",
+                                "/actuator", "/actuator/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)

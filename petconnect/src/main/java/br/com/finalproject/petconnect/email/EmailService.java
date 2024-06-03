@@ -26,7 +26,7 @@ public class EmailService {
             log.info("E-mail enviado para: {}", to);
         } catch (Exception e) {
             log.error("Erro ao enviar e-mail para: {}", to, e);
-            throw new EmailSendException("Erro ao enviar e-mail. Por favor, tente novamente mais tarde.");
+            throw new EmailSendException("exception.email.send_error");
         }
     }
 
