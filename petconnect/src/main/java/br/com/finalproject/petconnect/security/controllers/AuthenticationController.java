@@ -6,7 +6,6 @@ import br.com.finalproject.petconnect.security.services.AuthenticationService;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Auth", description = "Responsável por lidar com operações de autenticação, como registro de usuários.")
+@CrossOrigin(maxAge = 36000, allowCredentials = "true",
+        value = "http://localhost:4200",
+        allowedHeaders = {"Authorization", "Content-Type"},
+        methods = {RequestMethod.POST})
 @Slf4j
 @RequestMapping("/auth")
 @RestController
 @AllArgsConstructor
-@CrossOrigin(
-        maxAge = 36000,
-        allowCredentials = "true",
-        value = "http://localhost:4200",
-        allowedHeaders = {"Authorization", "Content-Type"},
-        methods = {RequestMethod.POST})
 public class AuthenticationController {
 
     private final JwtService jwtService;

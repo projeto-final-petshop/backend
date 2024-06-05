@@ -94,10 +94,4 @@ public class PetService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public PetResponse getPetById(Long petId) {
-        Pet pet = PetServiceUtils.findPetById(petId);
-        return PetMapper.petMapper().toResponse(pet);
-    }
-
 }
