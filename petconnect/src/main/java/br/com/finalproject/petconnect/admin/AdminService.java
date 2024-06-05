@@ -1,136 +1,118 @@
 package br.com.finalproject.petconnect.admin;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.RequiredFieldException;
+import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
+import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
+import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
+import br.com.finalproject.petconnect.exceptions.runtimes.appointment.AppointmentServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.role.RoleNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.UserServiceException;
 import br.com.finalproject.petconnect.roles.entities.Role;
-import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
+import br.com.finalproject.petconnect.user.dto.response.UserResponse;
 import br.com.finalproject.petconnect.user.entities.User;
+import br.com.finalproject.petconnect.user.mapping.UserMapper;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class AdminService {
 
-    private final RoleRepository roleRepository;
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
+
+    private final RoleRepository roleRepository;
+
     private final PasswordEncoder passwordEncoder;
 
-    private static final String REQUIRED_FIELD_MESSAGE = "exception.validation.required_field";
+    private final AppointmentMapper appointmentMapper;
+    private final AppointmentRepository appointmentRepository;
 
-    public User createAdministrator(UserRequest input) {
+    @Transactional
+    public UserResponse registerUser(UserRequest input) {
 
-        Optional<Role> optionalRole = Optional.of(roleRepository.findByName(RoleEnum.ADMIN).orElseThrow());
-
-        User user = User.builder()
-                .name(input.getName())
-                .email(input.getEmail())
-                .password(passwordEncoder.encode(input.getPassword()))
-                .active(true)
-                .cpf(input.getCpf())
-                .phoneNumber(input.getPhoneNumber())
-                .role(optionalRole.get())
-                .build();
-
-        return userRepository.save(user);
-    }
-
-    public User createUserWithRole(UserRequest input, int roleCode) {
-        RoleEnum roleEnum;
-        String roleName = switch (roleCode) {
-            case 3 -> {
-                roleEnum = RoleEnum.GROOMING;
-                yield "GROOMING";
+        try {
+            if (userRepository.existsByEmail(input.getEmail())) {
+                log.error("Erro ao criar usuário: email {} já está cadastrado", input.getEmail());
+                throw new UserAlreadyExistsException("exception.user.email_already_exists");
             }
-            case 4 -> {
-                roleEnum = RoleEnum.VETERINARIAN;
-                yield "VETERINARIAN";
+
+            if (userRepository.existsByCpf(input.getCpf())) {
+                log.error("Erro ao criar usuário: CPF {} já está cadastrado", input.getCpf());
+                throw new UserAlreadyExistsException("exception.user.cpf_already_exists");
             }
-            case 5 -> {
-                roleEnum = RoleEnum.EMPLOYEE;
-                yield "EMPLOYEE";
-            }
-            default -> {
-                log.error("Código de role inválido: {}", roleCode);
-                throw new RequiredFieldException("exception.validation.invalid_role_code");
-            }
-        };
 
-        Role role = findRoleByEnum(roleEnum, roleName);
-        return createUser(input, role);
-    }
+            Role role = roleRepository.findById(input.getRole())
+                    .orElseThrow(() -> new RoleNotFoundException("Role not found"));
 
-    private Role findRoleByEnum(RoleEnum roleEnum, String roleName) {
-        log.info("Procurando role: {}", roleName);
-        Optional<Role> optionalRole = roleRepository.findByName(roleEnum);
-        return optionalRole.orElseThrow(() -> {
-            log.error("Erro ao cadastrar usuário: role {} não encontrada", roleName);
-            return new RoleNotFoundException("exception.permission.not_found");
-        });
-    }
+            User user = User.builder()
+                    .name(input.getName())
+                    .cpf(input.getCpf())
+                    .email(input.getEmail())
+                    .password(passwordEncoder.encode(input.getPassword()))
+                    .phoneNumber(input.getPhoneNumber())
+                    .role(role)
+                    .active(true)
+                    .build();
 
-    private User createUser(UserRequest input, Role role) {
+            User savedUser = userRepository.save(user);
 
-        validateUserInput(input);
+            log.info("Usuário registrado com sucesso: {}", input.getEmail());
 
-        if (userRepository.existsByEmail(input.getEmail())) {
-            log.error("Erro ao criar usuário: email {} já está cadastrado", input.getEmail());
-            throw new UserAlreadyExistsException("exception.user.email_already_exists");
+            return UserMapper.INSTANCE.toUserResponse(savedUser);
+
+        } catch (RoleNotFoundException | UserAlreadyExistsException e) {
+            log.error("Erro ao registrar usuário: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Erro inesperado ao registrar usuário: {}", e.getMessage());
+            throw new UserServiceException("exception.user.registration_failed");
         }
-
-        if (userRepository.existsByCpf(input.getCpf())) {
-            log.error("Erro ao criar usuário: CPF {} já está cadastrado", input.getCpf());
-            throw new UserAlreadyExistsException("exception.user.cpf_already_exists");
-        }
-
-        log.info("Criando usuário com email: {}", input.getEmail());
-        User user = User.builder()
-                .name(input.getName())
-                .email(input.getEmail())
-                .password(passwordEncoder.encode(input.getPassword()))
-                .active(true)
-                .cpf(input.getCpf())
-                .phoneNumber(input.getPhoneNumber())
-                .role(role)
-                .build();
-
-        User savedUser = userRepository.save(user);
-        log.info("Usuário criado com sucesso: id {}", savedUser.getId());
-        return savedUser;
 
     }
 
-    private void validateUserInput(UserRequest input) {
+    @Transactional(readOnly = true)
+    public Page<UserResponse> listAllUsers(Boolean active, Pageable pageable) {
+        try {
+            Page<User> usersPage = (active != null)
+                    ? userRepository.findByActive(active, pageable)
+                    : userRepository.findAll(pageable);
 
-        if (input.getName() == null || input.getName().isEmpty()) {
-            log.error("Erro ao criar usuário: nome é um campo obrigatório");
-            throw new RequiredFieldException(REQUIRED_FIELD_MESSAGE);
+            return usersPage.map(userMapper::toUserResponse);
+        } catch (Exception e) {
+            log.error("Falha ao listar Usuários: {}", e.getMessage());
+            throw new UserServiceException("Falha ao listar Usuários. Por favor, tente mais tarde.");
         }
+    }
 
-        if (input.getEmail() == null || input.getEmail().isEmpty()) {
-            log.error("Erro ao criar usuário: email é um campo obrigatório");
-            throw new RequiredFieldException(REQUIRED_FIELD_MESSAGE);
+    @Transactional(readOnly = true)
+    public Page<UserResponse> searchUsers(String name, String email, String cpf, Boolean active, Pageable pageable) {
+        try {
+            Page<User> usersPage = userRepository.searchUsers(name, email, cpf, active, pageable);
+            return usersPage.map(userMapper::toUserResponse);
+        } catch (Exception e) {
+            log.error("Falha ao buscar Usuários: {}", e.getMessage());
+            throw new UserServiceException("Falha ao buscar Usuários. Por favor, tente mais tarde.");
         }
+    }
 
-        if (input.getPassword() == null || input.getPassword().isEmpty()) {
-            log.error("Erro ao criar usuário: senha é um campo obrigatório");
-            throw new RequiredFieldException(REQUIRED_FIELD_MESSAGE);
+    @Transactional(readOnly = true)
+    public Page<AppointmentResponse> listAllAppointments(Pageable pageable) {
+        try {
+            return appointmentRepository.findAll(pageable).map(appointmentMapper::toAppointmentResponse);
+        } catch (Exception e) {
+            log.error("Falha ao listar Agendamentos: {}", e.getMessage());
+            throw new AppointmentServiceException("Falha ao listar Agendamentos. Por favor, tente mais tarde.");
         }
-
-        if (input.getCpf() == null || input.getCpf().isEmpty()) {
-            log.error("Erro ao criar usuário: CPF é um campo obrigatório");
-            throw new RequiredFieldException(REQUIRED_FIELD_MESSAGE);
-        }
-
     }
 
 }

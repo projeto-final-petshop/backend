@@ -7,13 +7,11 @@ import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-
-import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.NOT_FOUND_USER_MESSAGE;
 
 @Slf4j
 @Component
@@ -57,15 +55,15 @@ public class UserServiceUtils {
         }
     }
 
-    public User findFirstInactiveUserOrThrowException() {
-        List<User> inactiveUsers = findUsersByActive(false);
-        if (!inactiveUsers.isEmpty()) {
-            User firstInactiveUser = inactiveUsers.getFirst();
-            log.info("Primeiro usuário inativo encontrado: {}", firstInactiveUser.getId());
-            return firstInactiveUser;
-        }
-        throw new UserNotFoundException("Nenhum usuário inativo encontrado");
-    }
+//    public User findFirstInactiveUserOrThrowException() {
+//        List<User> inactiveUsers = findUsersByActive(false);
+//        if (!inactiveUsers.isEmpty()) {
+//            User firstInactiveUser = inactiveUsers.getFirst();
+//            log.info("Primeiro usuário inativo encontrado: {}", firstInactiveUser.getId());
+//            return firstInactiveUser;
+//        }
+//        throw new UserNotFoundException("Nenhum usuário inativo encontrado");
+//    }
 
     public User findUserByEmailOrThrowException(String email) {
         return findUserByEmail(email)
@@ -94,12 +92,12 @@ public class UserServiceUtils {
         return null;
     }
 
-    public List<User> findUsersByActive(boolean active) {
-        log.info("Listando usuários com status ativo: {}", active);
-        List<User> users = userRepository.findByActive(active);
-        log.info("Total de usuários com status ativo {}: {}", active, users.size());
-        return users;
-    }
+//    public Page<User> findUsersByActive(boolean active) {
+//        log.info("Listando usuários com status ativo: {}", active);
+//        Page<User> users = userRepository.findByActive(active);
+//        log.info("Total de usuários com status ativo {}: {}", active, users.size());
+//        return users;
+//    }
 
     public Optional<User> findUserByEmail(String email) {
         log.info("Buscando usuário pelo email: {}", email);

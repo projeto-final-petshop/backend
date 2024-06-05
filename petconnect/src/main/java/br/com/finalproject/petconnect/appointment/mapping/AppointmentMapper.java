@@ -33,7 +33,7 @@ public interface AppointmentMapper {
     @Mapping(target = "serviceType", source = "serviceType")
     @Mapping(target = "appointmentTime", dateFormat = "HH:mm")
     @Mapping(target = "appointmentDate", dateFormat = "dd/MM/yyyy")
-    AppointmentResponse toResponse(Appointment appointment);
+    AppointmentResponse toAppointmentResponse(Appointment appointment);
 
     List<AppointmentResponse> toResponseList(List<Appointment> appointmentList);
 

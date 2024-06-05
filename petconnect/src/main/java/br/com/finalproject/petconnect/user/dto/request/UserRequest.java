@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -64,7 +63,7 @@ public class UserRequest {
     private String cpf;
 
     @Schema(description = "O número de telefone do usuário",
-            example = "+5511987654321", pattern =  "^\\+?\\d{13,14}$",
+            example = "+5511987654321", pattern = "^\\+?\\d{13,14}$",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
             accessMode = Schema.AccessMode.READ_WRITE,
             type = "string", format = "phone")
@@ -85,5 +84,7 @@ public class UserRequest {
             accessMode = Schema.AccessMode.READ_WRITE,
             type = "string")
     private String address;
+
+    private Long role;
 
 }

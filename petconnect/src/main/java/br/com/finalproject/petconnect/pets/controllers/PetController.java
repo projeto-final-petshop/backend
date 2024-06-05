@@ -90,38 +90,6 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Operation(summary = "Listar Todos os Pets",
-            description = "Lista todos os animais de estimação cadastrados no sistema")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de pets recuperada com sucesso"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado")
-    })
-    @GetMapping("/list-all")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PetResponse>> getAllPets() {
-        log.info("Recuperando todos os animais de estimação.");
-        List<PetResponse> pets = petService.getAllPets();
-        log.info("Todos os animais de estimação recuperados com sucesso.");
-        return new ResponseEntity<>(pets, HttpStatus.OK);
-    }
-
-    @Operation(summary = "Obter Pet pelo ID (Admin)",
-            description = "Obtém um animal de estimação pelo ID, apenas para administradores")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Detalhes do pet recuperados com sucesso"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado"),
-            @ApiResponse(responseCode = "403", description = "Acesso proibido"),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado")
-    })
-    @GetMapping("/admin/{petId}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PetResponse> getPetById(@PathVariable Long petId) {
-        log.info("Recuperando detalhes do animal de estimação com ID: {}", petId);
-        PetResponse pet = petService.getPetById(petId);
-        log.info("Detalhes do animal de estimação recuperados com sucesso.");
-        return new ResponseEntity<>(pet, HttpStatus.OK);
-    }
-
     @Operation(summary = "Atualizar Pet",
             description = "Atualiza os detalhes de um animal de estimação pelo ID")
     @ApiResponses(value = {
