@@ -1,14 +1,15 @@
 package br.com.finalproject.petconnect.exceptions.handlers;
 
 import br.com.finalproject.petconnect.exceptions.dto.ExceptionResponse;
-import br.com.finalproject.petconnect.exceptions.runtimes.RequiredFieldException;
-import br.com.finalproject.petconnect.exceptions.runtimes.UserServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.appointment.AppointmentServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthenticationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthorizationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
 import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailSendException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.AccessDeniedException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.RequiredFieldException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordChangeException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordResetTokenInvalidException;
 import br.com.finalproject.petconnect.exceptions.runtimes.pet.InvalidPetDataException;
@@ -17,10 +18,7 @@ import br.com.finalproject.petconnect.exceptions.runtimes.service.InvalidService
 import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceBookingNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.store.InvalidStoreOperationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.store.StoreNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.InvalidUserDataException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.PasswordMismatchException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.UserAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.*;
 import br.com.finalproject.petconnect.exceptions.runtimes.vet.InvalidVetAppointmentException;
 import br.com.finalproject.petconnect.exceptions.runtimes.vet.VetAppointmentNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +37,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             Exception.class,
-            UserServiceException.class
+            UserServiceException.class,
+            AppointmentServiceException.class
     })
     public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
@@ -54,7 +53,10 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
-    @ExceptionHandler(AuthorizationException.class)
+    @ExceptionHandler({
+            AuthorizationException.class,
+            AccessDeniedException.class
+    })
     public ResponseEntity<ExceptionResponse> handleForbiddenException(AuthorizationException ex) {
         return buildResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage());
     }
@@ -101,7 +103,7 @@ public class GlobalExceptionHandler {
                 status.getReasonPhrase(),
                 message
         );
-        return new ResponseEntity<>(response, status);
+        return ResponseEntity.status(status).body(response);
     }
 
 }

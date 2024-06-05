@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.exceptions.runtimes;
+package br.com.finalproject.petconnect.exceptions.runtimes.generic;
 
 public class RequiredFieldException extends RuntimeException {
 

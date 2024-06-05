@@ -1,26 +1,20 @@
 package br.com.finalproject.petconnect.admin;
 
+import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
-import br.com.finalproject.petconnect.user.entities.User;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import br.com.finalproject.petconnect.user.dto.response.UserResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Admin", description = "Cadastro de Administrador, Funcionários e Médicos Veterinários")
-@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer",
-        bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
-@SecurityRequirement(name = "bearerAuth")
 @Slf4j
 @RequestMapping("/admins")
 @RestController
@@ -30,46 +24,61 @@ import org.springframework.web.bind.annotation.*;
         allowCredentials = "true",
         value = "http://localhost:4200",
         allowedHeaders = {"Authorization", "Content-Type"},
-        methods = {RequestMethod.POST})
+        methods = {RequestMethod.POST, RequestMethod.GET})
 public class AdminController {
 
     private final AdminService adminService;
 
-    @Operation(summary = "Cria um novo administrador",
-            description = "Endpoint para criar um novo administrador",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Administrador criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado"),
-            @ApiResponse(responseCode = "403", description = "Acesso negado")
-    })
-    @PostMapping("/register")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createAdministrator(@RequestBody @Valid UserRequest registerUserDto) {
-        log.info("Iniciando criação de um novo administrador");
-        User createdAdmin = adminService.createAdministrator(registerUserDto);
-        log.info("Administrador criado com sucesso: {}", createdAdmin);
-        return ResponseEntity.ok(createdAdmin);
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @PostMapping(value = "/register")
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest request) {
+        log.info("Iniciando criação de um novo usuário com email: {}", request.getEmail());
+        UserResponse createdUser = adminService.registerUser(request);
+        log.info("Usuário criado com sucesso: {}", createdUser.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @Operation(summary = "Cria um novo usuário com um código de papel específico",
-              description = "Endpoint para criar um novo usuário com base no código do papel fornecido",
-              security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado"),
-            @ApiResponse(responseCode = "403", description = "Acesso negado")
-    })
-    @PostMapping("/register/{roleCode}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody @Valid UserRequest registerUserDto,
-                                           @PathVariable(name = "roleCode") int roleCode) {
-        log.info("Iniciando criação de um novo usuário com código de papel: {}", roleCode);
-        User createdUser = adminService.createUserWithRole(registerUserDto, roleCode);
-        log.info("Usuário criado com sucesso: {}", createdUser);
-        return ResponseEntity.ok(createdUser);
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
+    @GetMapping(value = "/users/all")
+    public ResponseEntity<Page<UserResponse>> listAllUsers(@RequestParam(required = false) Boolean active,
+                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "10") int size,
+                                                           @RequestParam(defaultValue = "name") String sortField,
+                                                           @RequestParam(defaultValue = "asc") String sortOrder) {
+
+        Sort.Direction direction = sortOrder.equalsIgnoreCase("desc")
+                ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
+
+        Page<UserResponse> users = adminService.listAllUsers(active, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+
+    }
+
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
+    @GetMapping(value = "/users/search")
+    public ResponseEntity<Page<UserResponse>> searchUsers(@RequestParam(required = false) String name,
+                                                          @RequestParam(required = false) String email,
+                                                          @RequestParam(required = false) String cpf,
+                                                          @RequestParam(required = false) Boolean active,
+                                                          @RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserResponse> users = adminService.searchUsers(name, email, cpf, active, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/appointments/all")
+    public ResponseEntity<Page<AppointmentResponse>> listAllAppointments(@RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AppointmentResponse> appointments = adminService.listAllAppointments(pageable);
+        return ResponseEntity.ok(appointments);
     }
 
 }

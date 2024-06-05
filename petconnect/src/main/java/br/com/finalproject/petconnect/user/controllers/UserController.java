@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.user.controllers;
 
-import br.com.finalproject.petconnect.user.dto.request.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.dto.response.UserResponse;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -18,18 +17,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -53,7 +46,7 @@ public class UserController {
             description = "Retorna o usuário autenticado atualmente",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Usuário autenticado retornado com sucesso",
+            @ApiResponse(responseCode = "200", description = "Usuário autenticado retornado com sucesso",
                     content = {@Content(schema = @Schema(implementation = User.class), mediaType = "application/json")}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = {@Content(schema = @Schema())})
@@ -85,139 +78,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Usuário atualizado com sucesso!");
     }
 
-    @Operation(summary = "Obter todos os usuários",
-            description = "Retorna uma lista de todos os usuários cadastrados",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
-                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> response = userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @Operation(summary = "Obter usuários ativos",
-            description = "Retorna uma lista de usuários ativos",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários ativos retornada com sucesso",
-                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping("/active")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserResponse>> getActiveUsers() {
-        List<UserResponse> response = userService.findActiveUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @Operation(summary = "Obter usuários inativos",
-            description = "Retorna uma lista de usuários inativos",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários inativos retornada com sucesso",
-                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping("/inactive")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserResponse>> getInactiveUsers() {
-        List<UserResponse> response = userService.findInactiveUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @Operation(summary = "Buscar usuário por CPF",
-            description = "Retorna as informações do usuário associado ao CPF fornecido",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários inativos retornada com sucesso",
-                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping("/{cpf}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> getUserByCpf(@PathVariable String cpf) {
-        UserResponse response = userService.findUserByCpf(cpf);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @Operation(summary = "Buscar usuários",
-            description = "Retorna uma lista de usuários com base nos parâmetros fornecidos",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
-                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping("/search/page")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Page<UserResponse> searchUsers(@RequestParam(required = false, name = "name") String name,
-                                          @RequestParam(required = false, name = "email") String email,
-                                          @RequestParam(required = false, name = "cpf") String cpf,
-                                          @RequestParam(required = false, name = "active") Boolean active,
-                                          @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
-        return userService.searchUsers(name, email, cpf, active, pageable);
-    }
-
-    @Operation(summary = "Buscar usuários",
-            description = "Retorna uma lista de usuários com base nos parâmetros fornecidos",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
-                    content = {@Content(schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping("/search")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> findUser(@RequestParam @Valid FindUserRequest request) {
-        User user = userService.findUser(request);
-        log.info("Usuário encontrado: {}", user != null ? user : "Nenhum usuário encontrado para a pesquisa.");
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
-    }
-
-    @Operation(summary = "Listar usuários pelo nome",
-            description = "Retorna uma lista de usuários cujo nome corresponde ao fornecido",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
-                    content = {@Content(schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> listUsersByName(@RequestParam(name = "name") String name) {
-        List<User> response = userService.listUsersByName(name);
-        log.info("Usuários listados por nome ({}): {}", name, response);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @Operation(summary = "Buscar usuário por ID",
-            description = "Retorna as informações do usuário associado ao ID fornecido",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
-                    content = {@Content(schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
-                    content = {@Content(schema = @Schema())})
-    })
-    @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getUserById(@PathVariable(name = "userId") Long userId) {
-        User response = userService.getUserById(userId);
-        log.info("Usuário recuperado pelo ID ({}): {}", userId, response);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
 
     @Operation(summary = "Excluir usuário",
             description = "Exclui o usuário autenticado atualmente",
@@ -236,6 +96,16 @@ public class UserController {
         userService.deleteUser(currentPrincipalName);
         log.info("Usuário excluído com sucesso: {}", currentPrincipalName);
         return ResponseEntity.ok("Usuário excluído com sucesso!");
+    }
+
+    @DeleteMapping("/deactivate")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> deactivateUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        userService.deactivateUser(currentPrincipalName);
+        log.info("Usuário desativado com sucesso: {}", currentPrincipalName);
+        return ResponseEntity.ok("Usuário desativado com sucesso!");
     }
 
     @GetMapping("/{email}")

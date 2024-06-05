@@ -39,7 +39,7 @@ public class AppointmentService {
             Appointment savedAppointment = appointmentRepository.save(appointment);
             log.info("Agendamento salvo com sucesso. Agendamento ID: {}", savedAppointment.getId());
 
-            return AppointmentMapper.petMapper().toResponse(savedAppointment);
+            return AppointmentMapper.petMapper().toAppointmentResponse(savedAppointment);
         } catch (PetNotFoundException e) {
             log.error("Erro ao criar agendamento: pet não encontrado. Pet ID: {}", request.getPetId(), e);
             throw e;
@@ -66,7 +66,7 @@ public class AppointmentService {
             Appointment updatedAppointment = appointmentRepository.save(appointment);
             log.info("Agendamento atualizado com sucesso. Agendamento ID: {}", updatedAppointment.getId());
 
-            return AppointmentMapper.petMapper().toResponse(updatedAppointment);
+            return AppointmentMapper.petMapper().toAppointmentResponse(updatedAppointment);
         } catch (PetNotFoundException e) {
             log.error("Erro ao atualizar agendamento: pet não encontrado. Pet ID: {}", request.getPetId(), e);
             throw e;
@@ -127,7 +127,7 @@ public class AppointmentService {
         try {
             User user = appointmentServiceUtil.getUserFromAuthorizationHeader(authorizationHeader);
             Appointment appointment = appointmentServiceUtil.getAppointmentByIdAndUser(appointmentId, user);
-            return AppointmentMapper.petMapper().toResponse(appointment);
+            return AppointmentMapper.petMapper().toAppointmentResponse(appointment);
         } catch (Exception e) {
             log.error("Erro interno ao obter detalhes do agendamento ID: {}", appointmentId, e);
             throw e;

@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.exceptions.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 
@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class ExceptionResponse {
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime timestamp;
 
     private int status;

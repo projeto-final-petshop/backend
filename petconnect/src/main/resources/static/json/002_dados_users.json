@@ -33,5 +33,40 @@
     "email": "mariacarolinepeixoto@ambarnet.com.br",
     "password": "P4$$w0rD",
     "phoneNumber": "+5544989529075"
+  },
+  {
+    "nome": "Bruna Clara da Mata",
+    "cpf": "954.777.586-35",
+    "email": "brunaclaradamata@htmail.com",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5584983848374"
+  },
+  {
+    "name": "Calebe Renato Thales Corte Real",
+    "cpf": "624.803.750-72",
+    "email": "calebe_renato_cortereal@lphbrasil.com.br",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5571998825457"
+  },
+  {
+    "name": "Patrícia Andrea Eloá Moura",
+    "cpf": "731.793.555-73",
+    "email": "patricia.andrea.moura@budsoncorporation.com",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5527989225020"
+  },
+  {
+    "name": "Jennifer Milena Eloá Pires",
+    "cpf": "140.193.072-70",
+    "email": "jennifermilenapires@ocaconsultoria.com",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5591986764495"
+  },
+  {
+    "name": "Luiza Lavínia Alves",
+    "cpf": "776.018.224-43",
+    "email": "luizalaviniaalves@dkcarmo.com",
+    "password": "P4$$w0rD",
+    "phoneNumber": "+5527984455793"
   }
 ]

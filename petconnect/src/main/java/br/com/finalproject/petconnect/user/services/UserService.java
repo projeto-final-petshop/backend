@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.user.services;
 
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.UserServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.InvalidUserDataException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.UserServiceException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.dto.request.FindUserRequest;
@@ -14,8 +14,6 @@ import br.com.finalproject.petconnect.user.mapping.UserMapper;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +66,23 @@ public class UserService {
         } catch (Exception e) {
             log.error("Falha ao atualizar usuário: {}", e.getMessage());
             throw new UserServiceException("Falha ao atualizar usuário");
+        }
+    }
+
+    @Transactional
+    public void deactivateUser(String email) {
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+
+            // Atualizar o status do usuário para 'inactive'
+            user.setActive(false);
+            userRepository.save(user);
+
+            log.info("Usuário desativado com sucesso: {}", email);
+        } catch (Exception e) {
+            log.error("Falha ao desativar usuário: {}", e.getMessage());
+            throw new UserServiceException("Falha ao desativar usuário");
         }
     }
 
@@ -155,19 +170,6 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserResponse> searchUsers(String name, String email, String cpf, Boolean active, Pageable pageable) {
-        try {
-            Page<User> usersPage = userRepository
-                    .findByNameContainingIgnoreCaseAndEmailContainingIgnoreCaseAndCpfContainingIgnoreCaseAndActive(
-                            name, email, cpf, active, pageable);
-            return usersPage.map(userMapper::toUserResponse);
-        } catch (Exception e) {
-            log.error("Falha ao buscar usuários: {}", e.getMessage());
-            throw new UserServiceException("Falha ao buscar usuários");
-        }
-    }
-
-    @Transactional(readOnly = true)
     public User findUser(FindUserRequest request) {
         try {
             if (request.getName() != null) {
@@ -179,9 +181,7 @@ public class UserService {
             if (request.getCpf() != null) {
                 return userServiceUtils.findUserByCpfOrThrowException(request.getCpf());
             }
-            if (!request.getActive()) {
-                return userServiceUtils.findFirstInactiveUserOrThrowException();
-            }
+
             throw new InvalidUserDataException("NO_SEARCH_CRITERIA_PROVIDED_MESSAGE");
         } catch (Exception e) {
             log.error("Erro ao buscar usuário: {}", e.getMessage());
@@ -209,5 +209,6 @@ public class UserService {
             throw new UserServiceException("Erro ao buscar usuário pelo ID");
         }
     }
+
 
 }
