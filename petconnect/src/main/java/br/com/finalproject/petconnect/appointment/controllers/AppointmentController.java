@@ -33,6 +33,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/appointments")
 @RequiredArgsConstructor
+@CrossOrigin(
+        maxAge = 36000,
+        allowCredentials = "true",
+        value = "http://localhost:4200",
+        allowedHeaders = {"Authorization", "Content-Type"},
+        methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE})
 public class AppointmentController {
 
     private final AppointmentService appointmentService;

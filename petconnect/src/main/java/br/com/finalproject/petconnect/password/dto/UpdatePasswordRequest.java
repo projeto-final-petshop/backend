@@ -12,22 +12,38 @@ import lombok.*;
 @NoArgsConstructor
 public class UpdatePasswordRequest {
 
-    @Schema(name = "currentPassword", type = "String",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Confirmar senha", example = "s3nh@A7uaL")
+    @Schema(
+            description = "password.currentPassword",
+            example = "SenhaAtual@123",
+            accessMode = Schema.AccessMode.WRITE_ONLY,
+            type = "string",
+            format = "password",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String currentPassword;
 
-    @Schema(name = "newPassword", type = "String",
-            pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Nova senha", example = "P4$$w0rD")
+    @Schema(
+            description = "password.pattern.message",
+            example = "password.example",
+            pattern = "password.pattern.regexp",
+            accessMode = Schema.AccessMode.WRITE_ONLY,
+            type = "string",
+            format = "password",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String newPassword;
 
-    @Schema(name = "confirmPassword", type = "String",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Confirmar senha", example = "P4$$w0rD")
+    @Schema(
+            description = "password.confirmPassword",
+            example = "password.example",
+            accessMode = Schema.AccessMode.WRITE_ONLY,
+            type = "string",
+            format = "password",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
 

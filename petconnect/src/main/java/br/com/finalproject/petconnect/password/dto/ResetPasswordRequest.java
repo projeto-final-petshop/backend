@@ -11,16 +11,22 @@ import lombok.*;
 @NoArgsConstructor
 public class ResetPasswordRequest {
 
-    @Schema(name = "newPassword", type = "String",
-            pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
+    @Schema(description = "password.pattern.message",
+            example = "schema.example.password",
+            pattern = "password.pattern.regexp",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Nova senha", example = "P4$$w0rD")
+            accessMode = Schema.AccessMode.WRITE_ONLY,
+            type = "string",
+            format = "password")
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$")
     private String newPassword;
 
-    @Schema(name = "confirmPassword", type = "String",
+    @Schema(description = "password.confirmPassword",
+            example = "password.example",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Confirmar senha", example = "P4$$w0rD")
+            accessMode = Schema.AccessMode.WRITE_ONLY,
+            type = "string",
+            format = "password")
     private String confirmPassword;
 
 }

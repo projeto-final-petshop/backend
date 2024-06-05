@@ -18,4 +18,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Optional<Appointment> findByAppointmentDateAndAndAppointmentTime(LocalDate date, LocalTime time);
 
+    void deleteByPetId(Long petId);
+
 }

@@ -2,6 +2,7 @@ package br.com.finalproject.petconnect.password.service;
 
 import br.com.finalproject.petconnect.email.EmailService;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordChangeException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordResetTokenInvalidException;
@@ -73,7 +74,7 @@ public class PasswordService {
             PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
             tokenRepository.save(passwordResetToken);
 
-            String resetLink = "http://localhost:8888/api/v1/reset-password?token=" + token;
+            String resetLink = "http://localhost:8888/api/v1/reset-password/confirm?token=" + token;
             emailService.sendEmail(user.getEmail(),
                     "Solicitação de redefinição de senha.",
                     "Para redefinir sua senha, clique no link abaixo.\n" + resetLink);
@@ -86,25 +87,44 @@ public class PasswordService {
 
     @Transactional
     public void updatePasswordWithToken(String token, String newPassword) {
+        PasswordResetToken resetToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new InvalidTokenException("Token inválido ou expirado"));
 
-        try {
-            log.info("Iniciando atualização de senha com token: {}", token);
-            PasswordResetToken resetToken = tokenRepository.findByToken(token)
-                    .orElseThrow(() -> new InvalidTokenException("exception.password.token_invalid"));
-
-            if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-                throw new InvalidTokenException("exception.password.token_invalid");
-            }
-
-            User user = resetToken.getUser();
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-            tokenRepository.delete(resetToken);
-            log.info("Senha atualizada com sucesso para o usuário: {}", user.getEmail());
-        } catch (PasswordResetTokenInvalidException e) {
-            log.error("Erro ao atualizar senha com token: {}", e.getMessage());
-            throw new PasswordResetTokenInvalidException("Erro ao atualizar senha com token: " + e.getMessage());
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new InvalidTokenException("Token inválido ou expirado");
         }
+
+        User user = resetToken.getUser();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        tokenRepository.delete(resetToken);
+        log.info("Senha atualizada com sucesso para o usuário: {}", user.getEmail());
+    }
+
+    @Transactional
+    public void resetPasswordByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EmailNotFoundException("E-mail não encontrado."));
+        sendPasswordResetEmail(user);
+    }
+
+    @Transactional
+    public void resetPasswordByCpf(String cpf) {
+        User user = userRepository.findByCpf(cpf)
+                .orElseThrow(() -> new CpfNotFoundException("CPF não encontrado."));
+        sendPasswordResetEmail(user);
+    }
+
+    private void sendPasswordResetEmail(User user) {
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
+        tokenRepository.save(passwordResetToken);
+
+        String resetLink = "http://localhost:8888/api/v1/auth/reset-password/confirm?token=" + token;
+        emailService.sendEmail(user.getEmail(),
+                "Solicitação de redefinição de senha.",
+                "Para redefinir sua senha, clique no link abaixo:\n" + resetLink);
+        log.info("E-mail de redefinição de senha enviado para o usuário: {}", user.getEmail());
     }
 
 }

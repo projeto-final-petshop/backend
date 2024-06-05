@@ -10,18 +10,33 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Tag(name = "Auth", description = "Responsável por lidar com operações de autenticação, como registro de usuários.")
 @Slf4j
 @RequestMapping("/auth")
 @RestController
 @AllArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(
+        maxAge = 36000,
+        allowCredentials = "true",
+        value = "http://localhost:4200",
+        allowedHeaders = {"Authorization", "Content-Type"},
+        methods = {RequestMethod.POST})
 public class AuthenticationController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
     @PostMapping("/signup")
     public ResponseEntity<User> register(@RequestBody UserRequest registerUserDto) {
@@ -31,10 +46,25 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
-        User authenticatedUser = authenticationService.authenticate(loginRequest);
-        String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-        return ResponseEntity.ok(loginResponse);
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
+        final String jwt = jwtService.generateToken(userDetails);
+        final long expiresAt = jwtService.extractExpiration(jwt).getTime();
+        final String username = userDetails.getUsername();
+        final List<String> roles = new ArrayList<>();
+        for (GrantedAuthority authority : userDetails.getAuthorities()) {
+            String grantedAuthorityAuthority = authority.getAuthority();
+            roles.add(grantedAuthorityAuthority);
+        }
+
+        LoginResponse response = new LoginResponse(jwt, "Bearer", expiresAt, username, loginRequest.getEmail(), roles);
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -25,6 +25,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admins")
 @RestController
 @AllArgsConstructor
+@CrossOrigin(
+        maxAge = 36000,
+        allowCredentials = "true",
+        value = "http://localhost:4200",
+        allowedHeaders = {"Authorization", "Content-Type"},
+        methods = {RequestMethod.POST})
 public class AdminController {
 
     private final AdminService adminService;

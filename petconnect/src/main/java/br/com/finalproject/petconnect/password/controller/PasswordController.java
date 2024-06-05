@@ -12,14 +12,21 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Password", description = "Operações relacionadas ao gerenciamento de senhas de usuários.")
+@CrossOrigin(
+        maxAge = 36000,
+        allowCredentials = "true",
+        value = "http://localhost:4200",
+        allowedHeaders = {"Authorization", "Content-Type"},
+        methods = {RequestMethod.POST})
 @Slf4j
 @RestController
-@RequestMapping
 @AllArgsConstructor
+@RequestMapping(produces = MediaType.ALL_VALUE, consumes = MediaType.ALL_VALUE)
 public class PasswordController {
 
     private final PasswordService passwordService;
@@ -52,13 +59,21 @@ public class PasswordController {
         return ResponseEntity.status(HttpStatus.OK).body("O link de redefinição de senha foi enviado para seu e-mail.");
     }
 
-    @Operation(summary = "Confirmar redefinição de senha",
-            description = "Confirma a redefinição de senha com base no token fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Reset de senha realizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição")
-    })
-    @PostMapping("/auth/reset-password/confirm")
+    @PostMapping(value = "/reset-password-by-cpf")
+    public ResponseEntity<String> resetPasswordByCpf(@RequestParam String cpf) {
+        log.info("Recebida solicitação para redefinir senha do usuário com CPF: {}", cpf);
+        passwordService.resetPasswordByCpf(cpf);
+        return ResponseEntity.status(HttpStatus.OK).body("O link de redefinição de senha foi enviado para o e-mail associado ao CPF.");
+    }
+
+    @PostMapping(value = "/reset-password-by-email")
+    public ResponseEntity<String> resetPasswordByEmail(@RequestParam String email) {
+        log.info("Recebida solicitação para redefinir senha do usuário com email: {}", email);
+        passwordService.resetPasswordByEmail(email);
+        return ResponseEntity.status(HttpStatus.OK).body("O link de redefinição de senha foi enviado para seu e-mail.");
+    }
+
+    @PostMapping("/reset-password/confirm")
     public ResponseEntity<String> confirmResetPassword(@RequestParam(name = "token") String token,
                                                        @RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
         log.info("Recebida solicitação para confirmar reset de senha com token: {}", token);
@@ -67,7 +82,6 @@ public class PasswordController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("As senhas não conferem.");
         }
         passwordService.updatePasswordWithToken(token, resetPasswordRequest.getNewPassword());
-        log.info("Reset de senha realizado com sucesso!");
         return ResponseEntity.status(HttpStatus.OK).body("Reset de senha realizado com sucesso!");
     }
 

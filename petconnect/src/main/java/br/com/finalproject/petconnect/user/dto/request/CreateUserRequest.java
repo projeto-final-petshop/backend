@@ -1,5 +1,7 @@
 package br.com.finalproject.petconnect.user.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -13,28 +15,67 @@ import org.hibernate.validator.constraints.br.CPF;
 @NoArgsConstructor
 public class CreateUserRequest {
 
-    @Size(min = 3, max = 250, message = "O nome deve ter entre 3 e 250 caracteres.")
+    @Schema(description = "O nome do usuário",
+            example = "João da Silva",
+            minLength = 3, maxLength = 250,
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string")
+    @Size(min = 3, max = 250, message = "name.size.message")
     private String name;
 
-    @Email(message = "Por favor, insira um endereço de e-mail válido.")
+    @Schema(description = "Endereço de email do usuário.",
+            example = "usario@dominio.com",
+            pattern = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string", format = "email",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @Email(message = "invalid.email.format", regexp = "email.pattern.regexp")
     private String email;
 
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
-            message = "A senha deve conter pelo menos 8 caracteres, " +
-                    "incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
+    @Schema(description = "A senha deve conter pelo menos 8 caracteres, incluindo pelo menos uma letra maiúscula, " +
+            "uma letra minúscula, um número e um caractere especial.",
+            example = "SenhaForte@123",
+            pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            accessMode = Schema.AccessMode.WRITE_ONLY,
+            type = "string", format = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Pattern(regexp = "schema.password.pattern.regexp", message = "password.pattern.message")
     private String password;
 
+    @Schema(description = "Confirmação da nova senha.",
+            example = "SenhaForte@123",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            accessMode = Schema.AccessMode.WRITE_ONLY,
+            type = "string", format = "password")
     private String confirmPassword;
 
-    @CPF(message = "Por favor, insira um CPF válido.")
+    @Schema(description = "O CPF do usuário",
+            example = "123.456.789-10",
+            pattern = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string", format = "cpf")
+    @CPF(message = "invalid.cpf")
     @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
-            message = "Por favor, insira um CPF válido no formato XXX.XXX.XXX-XX")
+            message = "cpf.message")
     private String cpf;
 
+    @Schema(description = "O número de telefone do usuário",
+            example = "+5511987654321", pattern =  "^\\+?\\d{13,14}$",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string", format = "phone")
     @Pattern(regexp = "^\\+?\\d{13,14}$",
-            message = "Por favor, insira um número de telefone válido no formato E.164.")
+            message = "phoneNumber.message")
     private String phoneNumber;
 
+    @Schema(description = "O endereço do usuário",
+            example = "Rua Exemplo, 123, Bairro Exemplo, Cidade Exemplo",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string")
     private String address;
 
 }

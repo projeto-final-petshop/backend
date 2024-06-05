@@ -6,6 +6,8 @@ server:
 spring:
   application:
     name: petconnect
+  devtools:
+    add-properties: false # para desabilitar
   banner:
     location: classpath:banner.txt
     charset: UTF-8
@@ -53,6 +55,12 @@ spring:
             required: true
           auth: true
           from: 'petshop.petconnect@gmail.com'
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    cache: false
   data:
     web:
       pageable:
@@ -67,12 +75,21 @@ spring:
         sort:
           # Define o nome do parâmetro na URL usado para ordenação.
           sort-parameter: sort # parâmetro de ordenação na URL
+  cloud:
+    openfeign:
+      autoconfiguration:
+        jackson:
+          enabled: false
+      client:
+        default-config:
+          connect-timeout: 5000 # 5 segundos
+
 
 springdoc:
-  default-consumes-media-type: 'application/json'
-  default-produces-media-type: 'application/json'
+  default-consumes-media-type: '*/*'
+  default-produces-media-type: '*/*'
   show-actuator: true
-  use-management-port: true
+  #  use-management-port: true
   override-with-generic-response: true # adiciona @RestControllerAdvice
   cache:
     disabled: false # desabilita o chace springdoc-openapi
@@ -98,9 +115,13 @@ security:
     secret-key: '05955a2232d7f31a0a9879c9233e661f6e2923d5334ec67b7a64c79911407afc'
     expiration-time: 86400000
 
+feign:
+  name: viacep-api
+  url: https://viacep.com.br/ws
+
 management:
-  server:
-    port: 9090
+  #  server:
+  #    port: 9090
   endpoints:
     web:
       exposure:
@@ -115,3 +136,4 @@ logging:
     web: DEBUG
     org.springframework.boot: DEBUG
     br.com.finalproject.petconnect: INFO
+
