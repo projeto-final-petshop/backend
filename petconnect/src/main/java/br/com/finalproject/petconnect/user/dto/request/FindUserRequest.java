@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.user.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -13,11 +14,29 @@ import org.hibernate.validator.constraints.br.CPF;
 @NoArgsConstructor
 public class FindUserRequest {
 
-    @Size(min = 3, max = 250, message = "O nome deve ter entre 3 e 250 caracteres.")
+    @Schema(
+            description = "O nome do usuário",
+            example = "João da Silva",
+            minLength = 3,
+            maxLength = 250,
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string"
+    )
+    @Size(min = 3, max = 250, message = "name.size.message")
     private String name;
 
-    @Email(message = "Por favor, insira um endereço de e-mail válido.",
-            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+    @Schema(
+            description = "Endereço de email do usuário.",
+            example = "usario@dominio.com",
+            pattern = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string",
+            format = "email",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    @Email(message = "email.message",
+            regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$")
     private String email;
 
     @CPF(message = "Por favor, insira um CPF válido.")

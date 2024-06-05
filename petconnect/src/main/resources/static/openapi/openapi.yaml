@@ -6,30 +6,26 @@ info:
 servers:
   - url: http://localhost:8888/api/v1
 tags:
-  - name: Auth
-    description: Cadastro e Autenticação de Usuário
-  - name: Password
-    description: Atualização e Reset de Senha
-  - name: User
-    description: Usuários
   - name: Pets
-    description: Animal de Estimação
+    description: Operações relacionadas a animais de estimação
+  - name: Usuários
+    description: Operações relacionadas aos usuários
+  - name: Auth
+    description: Responsável por lidar com operações de autenticação, como registro de usuários.
   - name: Appointment
     description: Agendamento de Serviços e Consultas Veterinárias
+  - name: Password
+    description: Operações relacionadas ao gerenciamento de senhas de usuários.
   - name: Admin
     description: Cadastro de Administrador, Funcionários e Médicos Veterinários
 paths:
   /users/update:
     put:
       tags:
-        - User
+        - Usuários
+      summary: Atualizar usuário
+      description: Atualiza as informações do usuário atualmente autenticado
       operationId: updateUser
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -38,17 +34,17 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: string
+          description: Usuário atualizado com sucesso
+        '500':
+          description: Erro interno no servidor
       security:
         - bearerAuth: []
   /users/update-password:
     put:
       tags:
         - Password
+      summary: Atualizar senha do usuário
+      description: Atualiza a senha do usuário.
       operationId: updatePassword
       requestBody:
         content:
@@ -58,18 +54,26 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: Senha atualizada com sucesso
           content:
-            '*/*':
+            application/json:
               schema:
                 type: string
-  /pets/{id}:
+        '400':
+          description: Erro na requisição
+          content:
+            application/json:
+              schema:
+                type: string
+  /pets/{petId}:
     get:
       tags:
         - Pets
+      summary: Obter Detalhes do Pet
+      description: Obtém os detalhes de um animal de estimação pelo ID
       operationId: getPetDetails
       parameters:
-        - name: id
+        - name: petId
           in: path
           required: true
           schema:
@@ -82,7 +86,19 @@ paths:
             type: string
       responses:
         '200':
-          description: OK
+          description: Detalhes do pet recuperados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '404':
+          description: Pet não encontrado
           content:
             application/json:
               schema:
@@ -92,9 +108,11 @@ paths:
     put:
       tags:
         - Pets
+      summary: Atualizar Pet
+      description: Atualiza os detalhes de um animal de estimação pelo ID
       operationId: updatePet
       parameters:
-        - name: id
+        - name: petId
           in: path
           required: true
           schema:
@@ -113,9 +131,27 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: Pet atualizado com sucesso
           content:
-            '*/*':
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '400':
+          description: Solicitação inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '404':
+          description: Pet não encontrado
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/PetResponse'
       security:
@@ -123,9 +159,11 @@ paths:
     delete:
       tags:
         - Pets
+      summary: Excluir Pet
+      description: Exclui um animal de estimação pelo ID
       operationId: deletePet
       parameters:
-        - name: id
+        - name: petId
           in: path
           required: true
           schema:
@@ -137,15 +175,22 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: Pet excluído com sucesso
+        '401':
+          description: Não autorizado
+        '403':
+          description: Acesso proibido
+        '404':
+          description: Pet não encontrado
       security:
         - bearerAuth: []
   /appointments/update/{appointmentId}:
     put:
       tags:
         - Appointment
-      summary: Atualização (reagendamento) do serviço ou consulta.
+      summary: Atualizar um agendamento existente
+      description: Endpoint para atualizar um agendamento veterinário existente
       operationId: updateAppointment
       parameters:
         - name: appointmentId
@@ -167,23 +212,31 @@ paths:
         required: true
       responses:
         '200':
-          description: Agendamento atualizado com sucesso.
+          description: Agendamento atualizado com sucesso
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppointmentResponse'
-        '400':
-          description: Requisição inválida
         '404':
-          description: Agendamento não encontrado ou não pertence ao usuário.
+          description: Agendamento não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
         '500':
-          description: Erro interno ao atualizar agendamento
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
       security:
         - bearerAuth: []
   /pets/create:
     post:
       tags:
         - Pets
+      summary: Criar Pet
+      description: Cria um novo registro de animal de estimação
       operationId: createPet
       parameters:
         - name: Authorization
@@ -198,10 +251,22 @@ paths:
               $ref: '#/components/schemas/PetRequest'
         required: true
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Pet criado com sucesso
           content:
-            '*/*':
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '400':
+          description: Solicitação inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/PetResponse'
       security:
@@ -215,19 +280,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterUserRequest'
+              $ref: '#/components/schemas/UserRequest'
         required: true
       responses:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/User'
   /auth/reset-password:
     post:
       tags:
         - Password
+      summary: Redefinir senha do usuário
+      description: Envia um e-mail com link para redefinição da senha do usuário.
       operationId: resetPassword
       requestBody:
         content:
@@ -237,15 +304,23 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: E-mail de redefinição de senha enviado com sucesso
           content:
-            '*/*':
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Erro na requisição
+          content:
+            application/json:
               schema:
                 type: string
   /auth/reset-password/confirm:
     post:
       tags:
         - Password
+      summary: Confirmar redefinição de senha
+      description: Confirma a redefinição de senha com base no token fornecido.
       operationId: confirmResetPassword
       parameters:
         - name: token
@@ -261,9 +336,15 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: Reset de senha realizado com sucesso
           content:
-            '*/*':
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Erro na requisição
+          content:
+            application/json:
               schema:
                 type: string
   /auth/login:
@@ -281,14 +362,15 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
   /appointments/schedule:
     post:
       tags:
         - Appointment
-      summary: Agendar um novo serviço ou uma nova consulta
+      summary: Agendar um novo serviço ou consulta
+      description: Endpoint para agendar um novo serviço ou consulta veterinária
       operationId: scheduleAppointment
       parameters:
         - name: Authorization
@@ -303,114 +385,226 @@ paths:
               $ref: '#/components/schemas/AppointmentRequest'
         required: true
       responses:
-        '200':
-          description: Agendamento realizado com sucesso.
+        '201':
+          description: Agendamento criado com sucesso
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppointmentResponse'
-        '400':
-          description: Requisição inválida
         '404':
-          description: Pet não encontrado.
+          description: Pet não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
         '500':
-          description: Erro interno ao criar agendamento
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
       security:
         - bearerAuth: []
   /admins/register:
     post:
       tags:
         - Admin
-      summary: Cadastrar um novo Administrador
+      summary: Cria um novo administrador
+      description: Endpoint para criar um novo administrador
       operationId: createAdministrator
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: role
-          in: query
-          schema:
-            type: string
-            enum: [ ADMIN ]
-          required: true
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterUserRequest'
+              $ref: '#/components/schemas/UserRequest'
         required: true
       responses:
         '200':
-          description: Novo administrador cadastrado com sucesso.
+          description: Administrador criado com sucesso
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
           description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Acesso negado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
+  /admins/register/{roleCode}:
+    post:
+      tags:
+        - Admin
+      summary: Cria um novo usuário com um código de papel específico
+      description: Endpoint para criar um novo usuário com base no código do papel fornecido
+      operationId: createUser
+      parameters:
+        - name: roleCode
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      responses:
+        '200':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Acesso negado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearerAuth: []
   /users:
     get:
       tags:
-        - User
-      operationId: allUsers
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
+        - Usuários
+      summary: Obter todos os usuários
+      description: Retorna uma lista de todos os usuários cadastrados
+      operationId: getAllUsers
       responses:
         '200':
-          description: OK
+          description: Lista de usuários retornada com sucesso
           content:
-            '*/*':
+            application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: Erro interno no servidor
       security:
-        - bearerAuth: [ ADMIN ]
-  /users/{id}:
+        - bearerAuth: []
+  /users/{userId}:
     get:
       tags:
-        - User
+        - Usuários
+      summary: Buscar usuário por ID
+      description: Retorna as informações do usuário associado ao ID fornecido
       operationId: getUserById
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: Authorization
-          in: header
+      responses:
+        '200':
+          description: Usuário encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearerAuth: []
+  /users/{email}:
+    get:
+      tags:
+        - Usuários
+      summary: Buscar usuário por e-mail
+      description: Retorna as informações do usuário associado ao e-mail fornecido
+      operationId: findUserByEmail
+      parameters:
+        - name: email
+          in: path
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: OK
+          description: Usuário encontrado com sucesso
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
       security:
-        - bearerAuth: [ ADMIN ]
-  /users/search:
+        - bearerAuth: []
+  /users/{cpf}:
     get:
       tags:
-        - User
-      operationId: findUser
+        - Usuários
+      summary: Buscar usuário por CPF
+      description: Retorna as informações do usuário associado ao CPF fornecido
+      operationId: getUserByCpf
       parameters:
-        - name: Authorization
-          in: header
+        - name: cpf
+          in: path
           required: true
           schema:
             type: string
+      responses:
+        '200':
+          description: Lista de usuários inativos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: Erro interno no servidor
+      security:
+        - bearerAuth: []
+  /users/search:
+    get:
+      tags:
+        - Usuários
+      summary: Buscar usuários
+      description: Retorna uma lista de usuários com base nos parâmetros fornecidos
+      operationId: findUser
+      parameters:
         - name: request
           in: query
           required: true
@@ -418,37 +612,83 @@ paths:
             $ref: '#/components/schemas/FindUserRequest'
       responses:
         '200':
-          description: OK
+          description: Lista de usuários retornada com sucesso
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '500':
+          description: Erro interno no servidor
+      security:
+        - bearerAuth: []
+  /users/search/page:
+    get:
+      tags:
+        - Usuários
+      summary: Buscar usuários
+      description: Retorna uma lista de usuários com base nos parâmetros fornecidos
+      operationId: searchUsers
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: cpf
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: active
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: Usuário encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Usuário não encontrado
       security:
         - bearerAuth: []
   /users/me:
     get:
       tags:
-        - User
+        - Usuários
+      summary: Obter usuário autenticado
+      description: Retorna o usuário autenticado atualmente
       operationId: authenticatedUser
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
       responses:
         '200':
-          description: OK
+          description: Usuário autenticado retornado com sucesso
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Erro interno no servidor
       security:
         - bearerAuth: []
   /users/list:
     get:
       tags:
-        - User
+        - Usuários
+      summary: Listar usuários pelo nome
+      description: Retorna uma lista de usuários cujo nome corresponde ao fornecido
       operationId: listUsersByName
       parameters:
         - name: name
@@ -456,16 +696,17 @@ paths:
           required: true
           schema:
             type: string
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
       responses:
         '200':
-          description: OK
+          description: Lista de usuários retornada com sucesso
           content:
-            '*/*':
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
               schema:
                 type: array
                 items:
@@ -475,51 +716,45 @@ paths:
   /users/inactive:
     get:
       tags:
-        - User
-      operationId: listInactiveUsers
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
+        - Usuários
+      summary: Obter usuários inativos
+      description: Retorna uma lista de usuários inativos
+      operationId: getInactiveUsers
       responses:
         '200':
-          description: OK
+          description: Lista de usuários inativos retornada com sucesso
           content:
-            '*/*':
+            application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: Erro interno no servidor
       security:
         - bearerAuth: []
   /users/active:
     get:
       tags:
-        - User
-      operationId: listActiveUsers
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
+        - Usuários
+      summary: Obter usuários ativos
+      description: Retorna uma lista de usuários ativos
+      operationId: getActiveUsers
       responses:
         '200':
-          description: OK
+          description: Lista de usuários ativos retornada com sucesso
           content:
-            '*/*':
+            application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: Erro interno no servidor
       security:
         - bearerAuth: []
   /pets:
     get:
       tags:
         - Pets
+      summary: Listar Pets
+      description: Lista todos os animais de estimação do usuário
       operationId: listPets
       parameters:
         - name: Authorization
@@ -529,7 +764,15 @@ paths:
             type: string
       responses:
         '200':
-          description: OK
+          description: Lista de pets recuperada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+        '401':
+          description: Não autorizado
           content:
             application/json:
               schema:
@@ -538,11 +781,79 @@ paths:
                   $ref: '#/components/schemas/PetResponse'
       security:
         - bearerAuth: []
+  /pets/list-all:
+    get:
+      tags:
+        - Pets
+      summary: Listar Todos os Pets
+      description: Lista todos os animais de estimação cadastrados no sistema
+      operationId: getAllPets
+      responses:
+        '200':
+          description: Lista de pets recuperada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+      security:
+        - bearerAuth: []
+  /pets/admin/{petId}:
+    get:
+      tags:
+        - Pets
+      summary: Obter Pet pelo ID (Admin)
+      description: Obtém um animal de estimação pelo ID, apenas para administradores
+      operationId: getPetById
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Detalhes do pet recuperados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '403':
+          description: Acesso proibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '404':
+          description: Pet não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+      security:
+        - bearerAuth: []
   /appointments/{appointmentId}:
     get:
       tags:
         - Appointment
-      summary: Buscar (visualizar) agendamento.
+      summary: Obter detalhes de um agendamento
+      description: Endpoint para obter detalhes de um agendamento específico
       operationId: getAppointmentById
       parameters:
         - name: appointmentId
@@ -558,24 +869,31 @@ paths:
             type: string
       responses:
         '200':
-          description: Agendamento encontrado!
+          description: Detalhes do agendamento obtidos com sucesso
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppointmentResponse'
-        '400':
-          description: Requisição inválida
         '404':
-          description: Agendamento não encontrado.
+          description: Agendamento não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
         '500':
-          description: Erro interno ao buscar agendamento
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
       security:
         - bearerAuth: []
   /appointments/pets/{petId}:
     get:
       tags:
         - Appointment
-      summary: Listar agendamentos de um único Pet.
+      summary: Listar agendamentos por pet
+      description: Endpoint para listar agendamentos de um pet específico
       operationId: getAppointmentsByPet
       parameters:
         - name: petId
@@ -591,22 +909,37 @@ paths:
             type: string
       responses:
         '200':
-          description: Lista de agendamentos.
+          description: Lista de agendamentos obtida com sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppointmentResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
         '404':
-          description: Pet não encontrado.
+          description: Pet não encontrado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
         '500':
-          description: Erro interno ao carregar agendamento
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
       security:
         - bearerAuth: []
   /appointments/all:
     get:
       tags:
         - Appointment
-      summary: Listar todos os serviços e agendamentos.
+      summary: Listar todos os agendamentos do usuário
+      description: Endpoint para listar todos os agendamentos do usuário autenticado
       operationId: getAllAppointments
       parameters:
         - name: Authorization
@@ -616,33 +949,37 @@ paths:
             type: string
       responses:
         '200':
-          description: Lista de agendamentos.
+          description: Lista de agendamentos obtida com sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppointmentResponse'
-        '400':
-          description: Você não possui  nenhum agendamento cadastrado.
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
         '500':
-          description: Erro interno ao carregar agendamento
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
       security:
         - bearerAuth: []
   /users/delete:
     delete:
       tags:
-        - User
+        - Usuários
+      summary: Excluir usuário
+      description: Exclui o usuário autenticado atualmente
       operationId: deleteUser
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
       responses:
         '200':
-          description: OK
+          description: Usuário excluído com sucesso
+        '404':
+          description: Usuário não encontrado
           content:
-            '*/*':
+            application/json:
               schema:
                 type: string
       security:
@@ -651,7 +988,8 @@ paths:
     delete:
       tags:
         - Appointment
-      summary: Cancelamento do agendamento de serviço ou consulta.
+      summary: Cancelar um agendamento
+      description: Endpoint para cancelar um agendamento veterinário
       operationId: cancelAppointment
       parameters:
         - name: appointmentId
@@ -667,76 +1005,80 @@ paths:
             type: string
       responses:
         '200':
-          description: 'Agendamento cancelado com sucesso.'
+          description: Agendamento cancelado com sucesso
           content:
             application/json:
               schema:
                 type: string
-        '400':
-          description: 'Requisição inválida'
         '404':
-          description: 'Agendamento não encontrado ou não pertence ao usuário.'
+          description: Agendamento não encontrado
+          content:
+            application/json:
+              schema:
+                type: string
         '500':
-          description: 'Erro interno ao cancelar o agendamento.'
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                type: string
       security:
         - bearerAuth: []
 components:
   schemas:
     UserRequest:
-      required:
-        - confirmPassword
-        - cpf
-        - email
-        - name
-        - password
       type: object
       properties:
+        name:
+          maxLength: 250
+          minLength: 3
+          type: string
         email:
           type: string
-          description: Email do Usuário
         password:
-          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$
           type: string
-          description: 'Senha do Usuário'
           writeOnly: true
         confirmPassword:
           type: string
-          description: 'Confirmar senha'
-          writeOnly: true
-        name:
-          minLength: 3
-          type: string
-          description: 'Nome do Usuário'
         cpf:
-          maxLength: 11
-          minLength: 11
+          pattern: \d{3}\.\d{3}\.\d{3}-\d{2}
           type: string
-          description: 'Número do CPF do Usuário. Deve ser um número válido'
         phoneNumber:
-          maxLength: 14
-          minLength: 13
+          pattern: ^\+?\d{13,14}$
           type: string
-          description: 'Número de telefone do Usuário'
         active:
           type: boolean
-          description: 'Informa se o usuário está ativo ou não no sistema'
-        roleId:
-          type: integer
-          description: 'Número de identificação única da Role'
-          format: int64
+        address:
+          type: string
     UpdatePasswordRequest:
+      required:
+        - confirmPassword
+        - currentPassword
+        - newPassword
       type: object
       properties:
         currentPassword:
           type: string
+          description: Confirmar senha
+          example: s3nh@A7uaL
         newPassword:
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$
           type: string
+          description: Nova senha
+          writeOnly: true
+          example: P4$$w0rD
         confirmPassword:
           type: string
+          description: Confirmar senha
+          writeOnly: true
+          example: P4$$w0rD
     PetRequest:
       type: object
       properties:
         name:
+          maxLength: 50
+          minLength: 3
           type: string
         age:
           type: integer
@@ -753,9 +1095,6 @@ components:
     PetResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         name:
           type: string
         age:
@@ -776,6 +1115,9 @@ components:
         updatedAt:
           type: string
           format: date-time
+        petId:
+          type: integer
+          format: int64
         userId:
           type: integer
           format: int64
@@ -821,87 +1163,12 @@ components:
     AppointmentResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         petId:
           type: integer
           format: int64
-        serviceType:
-          type: string
-          enum:
-            - BATH
-            - GROOMING
-            - BATH_AND_GROOMING
-            - VETERINARY_CONSULTATION
-        petType:
-          type: string
-          enum:
-            - DOG
-            - CAT
-            - OTHER
-        appointmentDate:
-          type: string
-          format: date
-        appointmentTime:
-          $ref: '#/components/schemas/LocalTime'
         userId:
           type: integer
           format: int64
-        status:
-          type: string
-          enum:
-            - SCHEDULED
-            - CANCELLED
-            - COMPLETED
-            - PEDING
-            - CONFIRMED
-    RegisterUserRequest:
-      required:
-        - confirmPassword
-        - cpf
-        - email
-        - name
-        - password
-      type: object
-      properties:
-        email:
-          type: string
-          description: 'Email do Usuário'
-        password:
-          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
-          type: string
-          description: 'Senha do Usuário'
-          writeOnly: true
-        confirmPassword:
-          type: string
-          description: 'Confirmar senha'
-          writeOnly: true
-        name:
-          minLength: 3
-          type: string
-          description: 'Nome do Usuário'
-        cpf:
-          maxLength: 11
-          minLength: 11
-          type: string
-          description: 'Número do CPF do Usuário. Deve ser um número válido'
-        phoneNumber:
-          maxLength: 14
-          minLength: 13
-          type: string
-          description: 'Número de telefone do Usuário'
-        active:
-          type: boolean
-          description: 'Informa se o usuário está ativo ou não no sistema'
-    Appointment:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        pet:
-          $ref: '#/components/schemas/Pet'
         serviceType:
           type: string
           enum:
@@ -920,8 +1187,6 @@ components:
           format: date
         appointmentTime:
           $ref: '#/components/schemas/LocalTime'
-        user:
-          $ref: '#/components/schemas/User'
         status:
           type: string
           enum:
@@ -936,6 +1201,9 @@ components:
         updatedAt:
           type: string
           format: date-time
+        appointmentId:
+          type: integer
+          format: int64
     GrantedAuthority:
       type: object
       properties:
@@ -944,10 +1212,9 @@ components:
     Pet:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         name:
+          maxLength: 50
+          minLength: 3
           type: string
         age:
           type: integer
@@ -961,31 +1228,28 @@ components:
         birthdate:
           type: string
           format: date
+        user:
+          $ref: '#/components/schemas/User'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-        user:
-          $ref: '#/components/schemas/User'
-        appointments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Appointment'
+        petId:
+          type: integer
+          format: int64
     Role:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         name:
           type: string
           enum:
             - USER
             - ADMIN
-            - EMPLOYEE
+            - GROOMING
             - VETERINARIAN
+            - EMPLOYEE
         description:
           type: string
         createdAt:
@@ -994,23 +1258,28 @@ components:
         updatedAt:
           type: string
           format: date-time
+        roleId:
+          type: integer
+          format: int64
     User:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         name:
+          maxLength: 250
+          minLength: 3
           type: string
         email:
           type: string
         password:
-          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$
           type: string
-          writeOnly: true
         cpf:
+          pattern: \d{3}\.\d{3}\.\d{3}-\d{2}
           type: string
         phoneNumber:
+          pattern: ^\+?\d{9,14}$
+          type: string
+        address:
           type: string
         active:
           type: boolean
@@ -1034,24 +1303,41 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GrantedAuthority'
-        accountNonExpired:
+        accountNonLocked:
           type: boolean
         credentialsNonExpired:
           type: boolean
-        accountNonLocked:
+        accountNonExpired:
           type: boolean
+        userId:
+          type: integer
+          format: int64
+      description: Representa o usuário do sistema
     PasswordResetRequest:
+      required:
+        - email
       type: object
       properties:
         email:
+          pattern: ^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$
           type: string
+          description: Email do Usuário
+          example: username@domain.com
     ResetPasswordRequest:
+      required:
+        - confirmPassword
+        - newPassword
       type: object
       properties:
         newPassword:
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$
           type: string
+          description: Nova senha
+          example: P4$$w0rD
         confirmPassword:
           type: string
+          description: Confirmar senha
+          example: P4$$w0rD
     LoginRequest:
       type: object
       properties:
@@ -1067,85 +1353,83 @@ components:
         expiresIn:
           type: integer
           format: int64
-    FindUserRequest:
-      required:
-        - cpf
-        - email
-        - name
+    RoleResponse:
       type: object
       properties:
-        email:
-          type: string
-          description: 'Email do Usuário'
         name:
-          minLength: 3
           type: string
-          description: 'Nome do Usuário'
-        cpf:
-          maxLength: 11
-          minLength: 11
+          enum:
+            - USER
+            - ADMIN
+            - GROOMING
+            - VETERINARIAN
+            - EMPLOYEE
+        description:
           type: string
-          description: 'Número do CPF do Usuário. Deve ser um número válido'
-        active:
-          type: boolean
-          description: 'Informa se o usuário está ativo ou não no sistema'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        roleId:
+          type: integer
+          format: int64
     UserResponse:
-      required:
-        - confirmPassword
-        - cpf
-        - email
-        - name
-        - password
       type: object
       properties:
         userId:
           type: integer
-          description: 'Número de identificação única do usuário'
           format: int64
+        name:
+          type: string
         email:
           type: string
-          description: 'Email do Usuário'
-        password:
-          pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$'
-          type: string
-          description: 'Senha do Usuário'
-          writeOnly: true
-        confirmPassword:
-          type: string
-          description: 'Confirmar senha'
-          writeOnly: true
-        name:
-          minLength: 3
-          type: string
-          description: 'Nome do Usuário'
         cpf:
-          maxLength: 11
-          minLength: 11
           type: string
-          description: 'Número do CPF do Usuário. Deve ser um número válido'
         phoneNumber:
-          maxLength: 14
-          minLength: 13
           type: string
-          description: 'Número de telefone do Usuário'
         active:
           type: boolean
-          description: 'Informa se o usuário está ativo ou não no sistema'
         role:
-          type: string
-          description: 'Tipo de permissão que o Usuário possui.'
+          $ref: '#/components/schemas/RoleResponse'
         createdAt:
-          pattern: 'yyyy-MM-dd HH:mm:ss'
           type: string
-          description: 'Data da Criação do Cadastro'
           format: date-time
         updatedAt:
-          pattern: 'yyyy-MM-dd HH:mm:ss'
           type: string
-          description: 'Data de Atualização do Cadastro'
           format: date-time
+    FindUserRequest:
+      type: object
+      properties:
+        name:
+          maxLength: 250
+          minLength: 3
+          type: string
+        email:
+          type: string
+        cpf:
+          pattern: \d{3}\.\d{3}\.\d{3}-\d{2}
+          type: string
+        active:
+          type: boolean
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
   securitySchemes:
     bearerAuth:
       type: http
-      scheme: 'bearer'
+      scheme: bearer
       bearerFormat: JWT

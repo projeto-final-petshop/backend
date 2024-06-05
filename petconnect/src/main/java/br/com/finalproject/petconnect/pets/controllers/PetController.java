@@ -30,6 +30,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/pets")
 @AllArgsConstructor
+@CrossOrigin(
+        maxAge = 36000,
+        allowCredentials = "true",
+        value = "http://localhost:4200",
+        allowedHeaders = {"Authorization", "Content-Type"},
+        methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE})
 public class PetController {
 
     private final PetService petService;
@@ -41,7 +47,7 @@ public class PetController {
             @ApiResponse(responseCode = "400", description = "Solicitação inválida"),
             @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
-    @PostMapping("/create")
+    @PostMapping("/register")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> createPet(@RequestBody @Valid PetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {

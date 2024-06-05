@@ -1,8 +1,10 @@
 package br.com.finalproject.petconnect.user.services;
 
+import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
 import br.com.finalproject.petconnect.exceptions.runtimes.UserServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.InvalidUserDataException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
+import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.dto.request.FindUserRequest;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
@@ -14,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,8 @@ public class UserService {
     private final PetRepository petRepository;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final AppointmentRepository appointmentRepository;
 
     /**
      * Atualizar Usuário
@@ -50,6 +55,14 @@ public class UserService {
                 user.setAddress(userRequest.getAddress());
             }
 
+            if (userRequest.getPassword() != null && userRequest.getConfirmPassword() != null) {
+                if (userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
+                    user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+                } else {
+                    throw new IllegalArgumentException("As senhas não coincidem");
+                }
+            }
+
             User savedUser = userRepository.save(user);
             log.info("Usuário atualizado com sucesso: {}", savedUser.getId());
         } catch (Exception e) {
@@ -61,9 +74,21 @@ public class UserService {
     @Transactional
     public void deleteUser(String email) {
         try {
+
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+
+            // Deletar registros dependentes
+            // Primeiro, deletar os appointments que referenciam os pets do usuário
+            List<Pet> pets = petRepository.findByUserId(user.getId());
+            for (Pet pet : pets) {
+                appointmentRepository.deleteByPetId(pet.getId());
+            }
+
+            // Depois, deletar os pets do usuário
             petRepository.deleteByUserId(user.getId());
+
+            // Finalmente, deletar o usuário
             userRepository.delete(user);
             log.info("Usuário excluído com sucesso: {}", email);
         } catch (Exception e) {

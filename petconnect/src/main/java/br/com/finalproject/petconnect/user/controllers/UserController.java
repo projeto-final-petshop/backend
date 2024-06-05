@@ -8,6 +8,8 @@ import br.com.finalproject.petconnect.user.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,6 +39,12 @@ import java.util.List;
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer",
         bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
 @SecurityRequirement(name = "bearerAuth")
+@CrossOrigin(
+        maxAge = 36000,
+        allowCredentials = "true",
+        value = "http://localhost:4200",
+        allowedHeaders = {"Authorization", "Content-Type"},
+        methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE})
 public class UserController {
 
     private final UserService userService;
@@ -45,8 +53,10 @@ public class UserController {
             description = "Retorna o usuário autenticado atualmente",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário autenticado retornado com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200",description = "Usuário autenticado retornado com sucesso",
+                    content = {@Content(schema = @Schema(implementation = User.class), mediaType = "application/json")}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -60,8 +70,10 @@ public class UserController {
             description = "Atualiza as informações do usuário atualmente autenticado",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso",
+                    content = {@Content(schema = @Schema())}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     @PutMapping("/update")
     @PreAuthorize("isAuthenticated()")
@@ -77,8 +89,10 @@ public class UserController {
             description = "Retorna uma lista de todos os usuários cadastrados",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
+                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -91,8 +105,10 @@ public class UserController {
             description = "Retorna uma lista de usuários ativos",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários ativos retornada com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Lista de usuários ativos retornada com sucesso",
+                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/active")
     @PreAuthorize("hasRole('ADMIN')")
@@ -105,8 +121,10 @@ public class UserController {
             description = "Retorna uma lista de usuários inativos",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários inativos retornada com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Lista de usuários inativos retornada com sucesso",
+                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/inactive")
     @PreAuthorize("hasRole('ADMIN')")
@@ -118,6 +136,12 @@ public class UserController {
     @Operation(summary = "Buscar usuário por CPF",
             description = "Retorna as informações do usuário associado ao CPF fornecido",
             security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de usuários inativos retornada com sucesso",
+                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
+    })
     @GetMapping("/{cpf}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getUserByCpf(@PathVariable String cpf) {
@@ -129,8 +153,10 @@ public class UserController {
             description = "Retorna uma lista de usuários com base nos parâmetros fornecidos",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
+                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/search/page")
     @PreAuthorize("hasRole('ADMIN')")
@@ -146,8 +172,10 @@ public class UserController {
             description = "Retorna uma lista de usuários com base nos parâmetros fornecidos",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
+                    content = {@Content(schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/search")
     @PreAuthorize("hasRole('ADMIN')")
@@ -161,8 +189,10 @@ public class UserController {
             description = "Retorna uma lista de usuários cujo nome corresponde ao fornecido",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
+                    content = {@Content(schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
@@ -176,8 +206,10 @@ public class UserController {
             description = "Retorna as informações do usuário associado ao ID fornecido",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
+                    content = {@Content(schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -191,8 +223,10 @@ public class UserController {
             description = "Exclui o usuário autenticado atualmente",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "200", description = "Usuário excluído com sucesso",
+                    content = {@Content(schema = @Schema())}),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = {@Content(schema = @Schema())})
     })
     @DeleteMapping("/delete")
     @PreAuthorize("isAuthenticated()")
@@ -210,9 +244,12 @@ public class UserController {
             description = "Retorna as informações do usuário associado ao e-mail fornecido",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
+                    content = {@Content(schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = {@Content(schema = @Schema())}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = {@Content(schema = @Schema())})
     })
     public ResponseEntity<UserResponse> findUserByEmail(@PathVariable String email) {
         UserResponse response = userService.findUserByEmail(email);

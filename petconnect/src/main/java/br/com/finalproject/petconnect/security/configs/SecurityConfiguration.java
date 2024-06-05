@@ -15,10 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 
 @Slf4j
@@ -36,21 +32,16 @@ public class SecurityConfiguration {
 
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-                    var config = new CorsConfiguration();
-                    config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:9090"));
-                    config.setAllowedMethods(Collections.singletonList("*"));
-                    config.setAllowCredentials(true);
-                    config.setAllowedHeaders(Collections.singletonList("*"));
-                    config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
-                    config.setMaxAge(3600L);
-                    return config;
-                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests.requestMatchers(
-                                "/api/v1", "/api/v1/**",
+                                "/api/v1", "/api/v1/**", "/error",
+                                "/actuator", "/actuator/**", "/webjars/**",
                                 "/auth/**", "/auth/login", "/auth/signup",
-                                "/actuator", "/actuator/**").permitAll()
+                                "/auth/reset-password-by-cpf", "/auth/reset-password-by-email",
+                                "/auth/reset-password", "/reset-password/confirm",
+                                "/users/update-password", "/auth/authenticate",
+                                "/swagger-ui*/*swagger-initializer.js", "/swagger-ui*/**",
+                                "/addresses/**", "/addresses").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)

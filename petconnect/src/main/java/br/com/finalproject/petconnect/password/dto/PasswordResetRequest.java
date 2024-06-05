@@ -11,11 +11,17 @@ import lombok.*;
 @NoArgsConstructor
 public class PasswordResetRequest {
 
-    @Schema(name = "email", type = "String",
+    @Schema(
+            description = "Endereço de email do usuário.",
+            example = "usario@dominio.com",
             pattern = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            description = "Email do Usuário", example = "username@domain.com")
-    @Email
+            accessMode = Schema.AccessMode.READ_WRITE,
+            type = "string",
+            format = "email",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    @Email(message = "email.message",
+            regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$")
     private String email;
 
 }

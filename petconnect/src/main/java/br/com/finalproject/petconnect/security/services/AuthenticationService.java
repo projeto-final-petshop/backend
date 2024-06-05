@@ -14,8 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +61,7 @@ public class AuthenticationService {
     @Transactional
     public User signup(UserRequest input) {
 
-        Role role = roleRepository.findByName(RoleEnum.ADMIN)
+        Role role = roleRepository.findByName(RoleEnum.USER)
                 .orElseThrow(() -> new IllegalStateException("Role não encontrada."));
 
         User user = User.builder()
@@ -82,19 +80,13 @@ public class AuthenticationService {
 
     @Transactional
     public User authenticate(LoginRequest input) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            input.email(),
-                            input.password()
-                    )
-            );
-        } catch (AuthenticationException e) {
-            throw new IllegalArgumentException("Credenciais inválidas.");
-        }
-
-        return userRepository.findByEmail(input.email())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        input.getEmail(),
+                        input.getPassword()
+                )
+        );
+        return userRepository.findByEmail(input.getEmail()).orElseThrow();
     }
 
 }

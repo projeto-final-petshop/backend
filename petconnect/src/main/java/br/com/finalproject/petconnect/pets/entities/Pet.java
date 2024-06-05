@@ -3,6 +3,10 @@ package br.com.finalproject.petconnect.pets.entities;
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -32,10 +36,10 @@ public class Pet implements Serializable {
     @JsonProperty("petId")
     private Long id;
 
-    @Size(min = 3, max = 50, message = "O nome do pet deve ter entre {min} e {max} caracteres.")
+    @Size(min = 3, max = 50, message = "name.size.message")
     private String name;
 
-    @PositiveOrZero(message = "A idade do pet deve ser um número positivo ou zero.")
+    @PositiveOrZero(message = "age.message")
     private int age;
 
     private String color;
@@ -44,8 +48,10 @@ public class Pet implements Serializable {
 
     private String animalType;
 
-    @Past(message = "A data de nascimento do pet deve estar no passado.")
-    @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @Past(message = "birthdate.message")
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
     @ManyToOne

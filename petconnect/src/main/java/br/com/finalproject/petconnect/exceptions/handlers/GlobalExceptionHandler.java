@@ -6,6 +6,7 @@ import br.com.finalproject.petconnect.exceptions.runtimes.UserServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthenticationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthorizationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailSendException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordChangeException;
@@ -64,7 +65,8 @@ public class GlobalExceptionHandler {
             StoreNotFoundException.class,
             VetAppointmentNotFoundException.class,
             ServiceBookingNotFoundException.class,
-            EmailNotFoundException.class
+            EmailNotFoundException.class,
+            CpfNotFoundException.class
     })
     public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex) {
         return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage());
