@@ -39,12 +39,4 @@ public class PetServiceUtils {
         existingPet.setBirthdate(petRequest.getBirthdate());
     }
 
-    public static Pet findPetById(Long petId) {
-        return petRepository.findById(petId)
-                .orElseThrow(() -> {
-                    log.error("Pet não encontrado com ID: {}", petId);
-                    return new PetNotFoundException("Pet não encontrado com ID: " + petId);
-                });
-    }
-
 }

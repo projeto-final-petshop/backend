@@ -3,14 +3,6 @@ package br.com.finalproject.petconnect.pets.controllers;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.services.PetService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Pets", description = "Operações relacionadas a animais de estimação")
-@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer",
-        bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
-@SecurityRequirement(name = "bearerAuth")
 @Slf4j
 @RestController
 @RequestMapping("/pets")
 @AllArgsConstructor
-@CrossOrigin(
-        maxAge = 36000,
-        allowCredentials = "true",
+@CrossOrigin(maxAge = 36000, allowCredentials = "true",
         value = "http://localhost:4200",
         allowedHeaders = {"Authorization", "Content-Type"},
         methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE})
@@ -40,13 +26,6 @@ public class PetController {
 
     private final PetService petService;
 
-    @Operation(summary = "Criar Pet",
-            description = "Cria um novo registro de animal de estimação")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Pet criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Solicitação inválida"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado")
-    })
     @PostMapping("/register")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> createPet(@RequestBody @Valid PetRequest request,
@@ -57,12 +36,6 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Listar Pets",
-            description = "Lista todos os animais de estimação do usuário")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de pets recuperada com sucesso"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado")
-    })
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PetResponse>> listPets(
@@ -73,13 +46,6 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Operation(summary = "Obter Detalhes do Pet",
-            description = "Obtém os detalhes de um animal de estimação pelo ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Detalhes do pet recuperados com sucesso"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado"),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado")
-    })
     @GetMapping("/{petId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> getPetDetails(@PathVariable(name = "petId") Long petId,
@@ -90,14 +56,6 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Operation(summary = "Atualizar Pet",
-            description = "Atualiza os detalhes de um animal de estimação pelo ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pet atualizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Solicitação inválida"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado"),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado")
-    })
     @PutMapping("/{petId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> updatePet(@PathVariable(name = "petId") Long petId,
@@ -109,14 +67,6 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Operation(summary = "Excluir Pet",
-            description = "Exclui um animal de estimação pelo ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Pet excluído com sucesso"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado"),
-            @ApiResponse(responseCode = "403", description = "Acesso proibido"),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado")
-    })
     @DeleteMapping("/{petId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deletePet(@PathVariable(name = "petId") Long petId,
