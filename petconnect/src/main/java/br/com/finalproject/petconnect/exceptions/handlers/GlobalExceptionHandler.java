@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.exceptions.handlers;
 
 import br.com.finalproject.petconnect.exceptions.dto.ExceptionResponse;
-import br.com.finalproject.petconnect.exceptions.runtimes.appointment.AppointmentServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.PetConnectServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthenticationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthorizationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             Exception.class,
             UserServiceException.class,
-            AppointmentServiceException.class
+            PetConnectServiceException.class
     })
     public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());

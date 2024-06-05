@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.admin;
 
 import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
+import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.dto.response.UserResponse;
 import jakarta.validation.Valid;
@@ -78,6 +79,16 @@ public class AdminController {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<AppointmentResponse> appointments = adminService.listAllAppointments(pageable);
+        return ResponseEntity.ok(appointments);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/pets/all")
+    public ResponseEntity<Page<PetResponse>> listAllPets(@RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PetResponse> appointments = adminService.listAllPets(pageable);
         return ResponseEntity.ok(appointments);
     }
 
