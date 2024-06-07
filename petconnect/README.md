@@ -136,12 +136,12 @@ Rollback da migração: `flyway undo -configFiles=flyway.properties`
 
 ## Documentações
 
-* [Swagger OpenAPI](/src/main/resources/static/openapi/petconnect.yaml)
-* [Collection](/src/main/resources/static/postman_collection)
-* [‘Scripts’ SQL para migração utilizando Flyway](/src/main/resources/db/migration)
+* [Swagger OpenAPI](/static/openapi/petconnect.yaml)
+* [Collection](/static/postman_collection)
+* [‘Scripts’ SQL para migração utilizando Flyway](/db/migration)
 * [Flyway Migration](/documents/flyway.md): Controle de versão para o seu banco de dados, permitindo a migração de
   qualquer versão (incluíndo um banco de dados vazio) para a versão mais recente do schema.
-* [Spring Security](/documents/security.md): 'Framework' altamente personalizável de autenticação e controle de acesso
+* [Spring Security](/README): 'Framework' altamente personalizável de autenticação e controle de acesso
   para aplicações Spring.
 * [Sentry](/documents/sentry.md)
 * [História de Usuário](/documents/HISTORIA_DE_USUARIO.md)

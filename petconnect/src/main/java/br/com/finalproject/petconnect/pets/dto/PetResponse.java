@@ -30,6 +30,8 @@ public class PetResponse {
 
     private String breed;
 
+    private float peso;
+
     private String animalType;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
