@@ -1,7 +1,6 @@
 package br.com.finalproject.petconnect.exceptions.handlers;
 
 import br.com.finalproject.petconnect.exceptions.dto.ExceptionResponse;
-import br.com.finalproject.petconnect.exceptions.runtimes.generic.PetConnectServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthenticationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthorizationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
@@ -9,6 +8,7 @@ import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfNotFoundExcepti
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailSendException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generic.AccessDeniedException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.PetConnectServiceException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generic.RequiredFieldException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordChangeException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordResetTokenInvalidException;
@@ -21,7 +21,6 @@ import br.com.finalproject.petconnect.exceptions.runtimes.store.StoreNotFoundExc
 import br.com.finalproject.petconnect.exceptions.runtimes.user.*;
 import br.com.finalproject.petconnect.exceptions.runtimes.vet.InvalidVetAppointmentException;
 import br.com.finalproject.petconnect.exceptions.runtimes.vet.VetAppointmentNotFoundException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.OffsetDateTime;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

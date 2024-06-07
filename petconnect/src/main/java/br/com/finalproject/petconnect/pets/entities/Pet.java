@@ -44,6 +44,8 @@ public class Pet implements Serializable {
 
     private String color;
 
+    private float peso;
+
     private String breed;
 
     private String animalType;

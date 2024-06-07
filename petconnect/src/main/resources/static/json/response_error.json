@@ -1,7 +1,62 @@
-{
-  "title": "Unauthorized",
-  "status": 401,
-  "detail": "Bad Credentials",
-  "instance": "/api/v1/auth/login",
-  "type": "Usuário não autenticado."
-}
+[
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 400,
+    "error": "Invalid credentials",
+    "message": "As credenciais fornecidas são inválidas."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 401,
+    "error": "Unauthorized",
+    "message": "Usuário não autenticado."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 401,
+    "error": "Token expired/invalid",
+    "message": "O Token de autenticação fornecido é inválido ou expirou."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 403,
+    "error": "Forbidden",
+    "message": "Usuário não possui permissão para acessar esta página."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 404,
+    "error": "User not found",
+    "message": "Usuário não encontrado encontrado."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 405,
+    "error": "Method not allowed",
+    "message": "O método HTTP usado na solicitação não é permitido para o recurso."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 422,
+    "error": "Invalid input",
+    "message": "Dados de entrada inválidos. Verifique se os campos foram preenchidos corretamente."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 429,
+    "error": "Too many login attempts",
+    "message": "Você atingiu o limite de tentativas. Tente novamente mais tarde."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 500,
+    "error": "Internal Server Error",
+    "message": "Ops... Ocorreu um erro interno no servidor. Tente novamente mais tarde."
+  },
+  {
+    "timestamp": "dd/MM/yyyy HH:mm:ss",
+    "status": 503,
+    "error": "Serviço de email indisponível",
+    "message": "O serviço de envio de email está temporariamente indisponível."
+  }
+]

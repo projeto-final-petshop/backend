@@ -38,27 +38,28 @@ public class User implements UserDetails {
     @JsonProperty("userId")
     private Long id;
 
-    @Size(min = 3, max = 250, message = "name.size.message")
+    @Size(min = 3, max = 250, message = "O nome deve ter entre {min} e {max} caracteres.")
     private String name;
 
-    @Email(message = "email.message")
+    @Email(message = "Por favor, insira um endereço de e-mail válido.")
     @Column(unique = true, nullable = false)
     private String email;
 
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
-            message = "password.pattern.message")
+            message = "A senha deve ter pelo menos 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
     @Column(nullable = false)
     private String password;
 
     @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
-            message = "cpf.message")
+            message = "Por favor, insira um CPF válido.")
     @Column(unique = true, nullable = false)
     private String cpf;
 
-    @Pattern(regexp = "^\\+?\\d{9,14}$",
-            message = "phoneNumber.message")
+        @Pattern(regexp = "^\\+?\\d{9,14}$",
+            message = "Por favor, insira um número de telefone que tenha entre 9 e 14 dígitos numéricos. O sinal de + é opcional.")
     private String phoneNumber;
 
+    @Size(min = 10, max = 250, message = "O endereço deve ter entre {min} e {max} caracteres.")
     private String address;
 
     private Boolean active;
