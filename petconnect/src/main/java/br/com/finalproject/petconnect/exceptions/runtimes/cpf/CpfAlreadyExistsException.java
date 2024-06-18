@@ -1,19 +1,19 @@
-package br.com.finalproject.petconnect.exceptions.runtimes.email;
+package br.com.finalproject.petconnect.exceptions.runtimes.cpf;
 
-public class EmailAlreadyExistsException extends RuntimeException {
+public class CpfAlreadyExistsException extends RuntimeException {
 
-    public EmailAlreadyExistsException(String message) {
+    public CpfAlreadyExistsException(String message) {
         super(message);
     }
 
-    public EmailAlreadyExistsException(String message, Throwable cause) {
+    public CpfAlreadyExistsException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public EmailAlreadyExistsException(Throwable cause) {
+    public CpfAlreadyExistsException(Throwable cause) {
         super(cause);
     }
 
-    public EmailAlreadyExistsException() {
+    public CpfAlreadyExistsException() {
     }
 }

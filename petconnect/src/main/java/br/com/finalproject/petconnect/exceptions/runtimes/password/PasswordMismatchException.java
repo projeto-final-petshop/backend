@@ -1,8 +1,19 @@
 package br.com.finalproject.petconnect.exceptions.runtimes.password;
 
-public class PasswordResetTokenInvalidException extends RuntimeException {
+public class PasswordMismatchException extends RuntimeException {
 
-    public PasswordResetTokenInvalidException(String message) {
+    public PasswordMismatchException(String message) {
         super(message);
+    }
+
+    public PasswordMismatchException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PasswordMismatchException(Throwable cause) {
+        super(cause);
+    }
+
+    public PasswordMismatchException() {
     }
 }

@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.exceptions;
+package br.com.finalproject.petconnect.exceptions.appointment;
 
 public class OffHoursException extends RuntimeException {
 

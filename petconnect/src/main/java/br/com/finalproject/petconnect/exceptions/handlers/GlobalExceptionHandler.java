@@ -1,26 +1,14 @@
 package br.com.finalproject.petconnect.exceptions.handlers;
 
 import br.com.finalproject.petconnect.exceptions.dto.ExceptionResponse;
-import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthenticationException;
-import br.com.finalproject.petconnect.exceptions.runtimes.auth.AuthorizationException;
-import br.com.finalproject.petconnect.exceptions.runtimes.auth.InvalidTokenException;
-import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailSendException;
-import br.com.finalproject.petconnect.exceptions.runtimes.generic.AccessDeniedException;
-import br.com.finalproject.petconnect.exceptions.runtimes.generic.PetConnectServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generic.RequiredFieldException;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordChangeException;
-import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordResetTokenInvalidException;
-import br.com.finalproject.petconnect.exceptions.runtimes.pet.InvalidPetDataException;
-import br.com.finalproject.petconnect.exceptions.runtimes.pet.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordMismatchException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.InvalidServiceBookingException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceBookingNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.store.InvalidStoreOperationException;
-import br.com.finalproject.petconnect.exceptions.runtimes.store.StoreNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.*;
+import br.com.finalproject.petconnect.exceptions.runtimes.user.InvalidUserDataException;
 import br.com.finalproject.petconnect.exceptions.runtimes.vet.InvalidVetAppointmentException;
-import br.com.finalproject.petconnect.exceptions.runtimes.vet.VetAppointmentNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,56 +21,55 @@ import java.time.OffsetDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({
-            Exception.class,
-            UserServiceException.class,
-            PetConnectServiceException.class
-    })
-    public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
-        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-    }
-
-    @ExceptionHandler({
-            AuthenticationException.class,
-            InvalidTokenException.class,
-            PasswordResetTokenInvalidException.class
-    })
-    public ResponseEntity<ExceptionResponse> handleUnauthorizedException(RuntimeException ex) {
-        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
-    }
-
-    @ExceptionHandler({
-            AuthorizationException.class,
-            AccessDeniedException.class
-    })
-    public ResponseEntity<ExceptionResponse> handleForbiddenException(AuthorizationException ex) {
-        return buildResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage());
-    }
-
-    @ExceptionHandler({
-            UserNotFoundException.class,
-            PetNotFoundException.class,
-            StoreNotFoundException.class,
-            VetAppointmentNotFoundException.class,
-            ServiceBookingNotFoundException.class,
-            EmailNotFoundException.class,
-            CpfNotFoundException.class
-    })
-    public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex) {
-        return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage());
-    }
-
-    @ExceptionHandler({
-            UserAlreadyExistsException.class,
-            EmailSendException.class
-    })
-    public ResponseEntity<ExceptionResponse> handleConflictException(RuntimeException ex) {
-        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage());
-    }
-
+    //    @ExceptionHandler({
+//            Exception.class,
+//            UserServiceException.class,
+//            DataModificationException.class
+//    })
+//    public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
+//        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+//    }
+//
+//    @ExceptionHandler({
+//            AuthenticationException.class,
+//            InvalidTokenException.class,
+//            PasswordResetTokenInvalidException.class
+//    })
+//    public ResponseEntity<ExceptionResponse> handleUnauthorizedException(RuntimeException ex) {
+//        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
+//    }
+//
+//    @ExceptionHandler({
+//            AuthorizationException.class,
+//            AccessDeniedException.class
+//    })
+//    public ResponseEntity<ExceptionResponse> handleForbiddenException(AuthorizationException ex) {
+//        return buildResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage());
+//    }
+//
+//    @ExceptionHandler({
+//            UserNotFoundException.class,
+//            PetNotFoundException.class,
+//            StoreNotFoundException.class,
+//            AppointmentNotFoundException.class,
+//            ServiceBookingNotFoundException.class,
+//            EmailNotFoundException.class,
+//            CpfNotFoundException.class
+//    })
+//    public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex) {
+//        return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage());
+//    }
+//
+//    @ExceptionHandler({
+//            EmailAlreadyExistsException.class,
+//            EmailSendException.class
+//    })
+//    public ResponseEntity<ExceptionResponse> handleConflictException(RuntimeException ex) {
+//        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage());
+//    }
+//
     @ExceptionHandler({
             PasswordMismatchException.class,
-            InvalidPetDataException.class,
             InvalidStoreOperationException.class,
             InvalidVetAppointmentException.class,
             InvalidServiceBookingException.class,
@@ -90,7 +77,7 @@ public class GlobalExceptionHandler {
             RequiredFieldException.class,
             PasswordChangeException.class
     })
-    public ResponseEntity<ExceptionResponse> handleBadRequestException(RuntimeException ex) {
+    public ResponseEntity<ExceptionResponse> handleBadRequestsException(RuntimeException ex) {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
@@ -102,6 +89,24 @@ public class GlobalExceptionHandler {
                 message
         );
         return ResponseEntity.status(status).body(response);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        // Lógica de tratamento para exceções genéricas
+        return new ResponseEntity<>("Erro interno do servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleBadRequestException(RuntimeException ex) {
+        // Lógica de tratamento para exceções de runtime
+        return new ResponseEntity<>("Requisição inválida", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataModificationException.class)
+    public ResponseEntity<String> handleDataModificationException(DataModificationException ex) {
+        // Lógica de tratamento específica para DataModificationException
+        return new ResponseEntity<>("Erro na modificação de dados", HttpStatus.BAD_REQUEST);
     }
 
 }

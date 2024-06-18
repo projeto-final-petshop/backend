@@ -40,11 +40,11 @@ public class PasswordService {
             User currentUser = getCurrentAuthenticatedUser();
 
             if (!passwordEncoder.matches(passwordUpdateRequest.getCurrentPassword(), currentUser.getPassword())) {
-                throw new PasswordChangeException("exception.password.change_error");
+                throw new PasswordChangeException("Erro ao alterar a senha.");
             }
 
             if (!passwordUpdateRequest.getNewPassword().equals(passwordUpdateRequest.getConfirmPassword())) {
-                throw new PasswordChangeException("exception.password.change_error");
+                throw new PasswordChangeException("Erro ao alterar a senha.");
             }
 
             currentUser.setPassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));

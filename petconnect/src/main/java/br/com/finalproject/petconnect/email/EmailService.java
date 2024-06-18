@@ -32,7 +32,7 @@ public class EmailService {
             log.info("E-mail enviado para: {}", to);
         } catch (Exception e) {
             log.error("Erro ao enviar e-mail para: {}", to, e);
-            throw new EmailSendException("Erro ao enviar e-mail: " + e.getMessage());
+            throw new EmailSendException();
         }
     }
 
@@ -40,7 +40,7 @@ public class EmailService {
     public void sendResetPasswordEmail(String to, String name, String link) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            var helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(to);
             helper.setSubject("Reset de Senha");
@@ -57,7 +57,7 @@ public class EmailService {
             log.info("E-mail enviado para: {}", to);
         } catch (MessagingException e) {
             log.error("Erro ao enviar e-mail para: {}", to, e);
-            throw new EmailSendException("exception.email.send_error");
+            throw new EmailSendException();
         }
     }
 

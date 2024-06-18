@@ -3,9 +3,10 @@ package br.com.finalproject.petconnect.admin;
 import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.generic.PetConnectServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.role.RoleNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.UserAlreadyExistsException;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.mapping.PetMapper;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
@@ -45,17 +46,17 @@ public class AdminService {
 
         try {
             if (userRepository.existsByEmail(input.getEmail())) {
-                log.error("Erro ao criar usuário: email {} já está cadastrado", input.getEmail());
-                throw new UserAlreadyExistsException("exception.user.email_already_exists");
+                log.error("Email {} já está cadastrado.", input.getEmail());
+                throw new EmailAlreadyExistsException("Email já cadastrado.");
             }
 
             if (userRepository.existsByCpf(input.getCpf())) {
-                log.error("Erro ao criar usuário: CPF {} já está cadastrado", input.getCpf());
-                throw new UserAlreadyExistsException("exception.user.cpf_already_exists");
+                log.error("CPF {} já está cadastrado.", input.getCpf());
+                throw new CpfAlreadyExistsException("CPF já cadastrado.");
             }
 
             Role role = roleRepository.findById(input.getRole())
-                    .orElseThrow(() -> new RoleNotFoundException("Role not found"));
+                    .orElseThrow(() -> new RoleNotFoundException("Permissão não encontrada."));
 
             User user = User.builder()
                     .name(input.getName())
@@ -73,12 +74,12 @@ public class AdminService {
 
             return UserMapper.INSTANCE.toUserResponse(savedUser);
 
-        } catch (RoleNotFoundException | UserAlreadyExistsException e) {
+        } catch (RoleNotFoundException | EmailAlreadyExistsException e) {
             log.error("Erro ao registrar usuário: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
             log.error("Erro inesperado ao registrar usuário: {}", e.getMessage());
-            throw new PetConnectServiceException("exception.user.registration_failed");
+            throw new DataModificationException("Falha ao cadastrar o usuário. Dados inválidos ou erro na requisição.", e);
         }
 
     }
@@ -93,7 +94,7 @@ public class AdminService {
             return usersPage.map(userMapper::toUserResponse);
         } catch (Exception e) {
             log.error("Falha ao listar Usuários: {}", e.getMessage());
-            throw new PetConnectServiceException("Falha ao listar Usuários. Por favor, tente mais tarde.");
+            throw new DataModificationException("Falha ao listar Usuários. Por favor, tente mais tarde.", e);
         }
     }
 
@@ -104,7 +105,7 @@ public class AdminService {
             return usersPage.map(userMapper::toUserResponse);
         } catch (Exception e) {
             log.error("Falha ao buscar Usuários: {}", e.getMessage());
-            throw new PetConnectServiceException("Falha ao buscar Usuários. Por favor, tente mais tarde.");
+            throw new DataModificationException("Falha ao buscar Usuários. Por favor, tente mais tarde.", e);
         }
     }
 
@@ -114,7 +115,7 @@ public class AdminService {
             return appointmentRepository.findAll(pageable).map(appointmentMapper::toAppointmentResponse);
         } catch (Exception e) {
             log.error("Falha ao listar Agendamentos: {}", e.getMessage());
-            throw new PetConnectServiceException("Falha ao listar Agendamentos. Por favor, tente mais tarde.");
+            throw new DataModificationException("Falha ao listar Agendamentos. Por favor, tente mais tarde.", e);
         }
     }
 
@@ -124,7 +125,7 @@ public class AdminService {
             return petRepository.findAll(pageable).map(petMapper::toResponse);
         } catch (Exception e) {
             log.error("Falha ao listar Pets: {}", e.getMessage());
-            throw new PetConnectServiceException("Falha ao listar Pets. Por favor, tente mais tarde.");
+            throw new DataModificationException("Falha ao listar Pets. Por favor, tente mais tarde.", e);
         }
     }
 

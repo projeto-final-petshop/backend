@@ -1,19 +1,19 @@
-package br.com.finalproject.petconnect.exceptions.runtimes.user;
+package br.com.finalproject.petconnect.exceptions.runtimes.email;
 
-public class UserAlreadyExistsException extends RuntimeException {
+public class EmailAlreadyExistsException extends RuntimeException {
 
-    public UserAlreadyExistsException(String message) {
+    public EmailAlreadyExistsException(String message) {
         super(message);
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause) {
+    public EmailAlreadyExistsException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UserAlreadyExistsException(Throwable cause) {
+    public EmailAlreadyExistsException(Throwable cause) {
         super(cause);
     }
 
-    public UserAlreadyExistsException() {
+    public EmailAlreadyExistsException() {
     }
 }

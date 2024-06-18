@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.utils;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.user.PasswordMismatchException;
+import br.com.finalproject.petconnect.exceptions.dto.ExceptionMessageEnum;
+import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordMismatchException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.*;
+import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.BEARER_PREFIX;
 
 @Slf4j
 @Component
@@ -19,17 +20,15 @@ import static br.com.finalproject.petconnect.utils.constants.ConstantsUtil.*;
 public class AuthUtils {
 
     private final JwtService jwtService;
-    private final MessageUtil messageUtil;
     private final UserRepository userRepository;
 
     public User getUserFromAuthorizationHeader(String authorizationHeader) {
         try {
             String userEmail = jwtService.extractEmail(extractToken(authorizationHeader));
-            return userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new UserNotFoundException(messageUtil.getMessage(NOT_FOUND_USER_MESSAGE)));
+            return userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         } catch (Exception e) {
-            log.error(INVALID_TOKEN, e.getMessage());
-            throw new PasswordMismatchException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE));
+            log.error("Falha ao obter usuário do cabeçalho de autorização: {}", e.getMessage());
+            throw new PasswordMismatchException("Token de autenticação inválido.");
         }
     }
 
@@ -38,10 +37,10 @@ public class AuthUtils {
             return Optional.ofNullable(authorizationHeader)
                     .filter(header -> header.startsWith(BEARER_PREFIX))
                     .map(header -> header.substring(7)) // Remove "Bearer " do token
-                    .orElseThrow(() -> new PasswordMismatchException(messageUtil.getMessage(INVALID_AUTH_TOKEN_MESSAGE)));
+                    .orElseThrow(() -> new PasswordMismatchException("Token de autenticação inválido."));
         } catch (Exception e) {
-            log.error(TOKEN_FAILURE, e.getMessage());
-            throw new PasswordMismatchException(messageUtil.getMessage(TOKEN_FAILURE_MESSAGE));
+            log.error("Falha ao extrair token: {}", e.getMessage());
+            throw new PasswordMismatchException("Falha ao extrair Token");
         }
     }
 

@@ -1,8 +1,19 @@
-package br.com.finalproject.petconnect.exceptions.runtimes.pet;
+package br.com.finalproject.petconnect.exceptions.runtimes.generic;
 
-public class InvalidPetDataException extends RuntimeException {
+public class DataModificationException extends RuntimeException {
 
-    public InvalidPetDataException(String message) {
+    public DataModificationException(String message) {
         super(message);
+    }
+
+    public DataModificationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DataModificationException(Throwable cause) {
+        super(cause);
+    }
+
+    public DataModificationException() {
     }
 }

@@ -1,8 +1,8 @@
 package br.com.finalproject.petconnect.exceptions.runtimes.vet;
 
-public class VetAppointmentNotFoundException extends RuntimeException {
+public class AppointmentNotFoundException extends RuntimeException {
 
-    public VetAppointmentNotFoundException(String message) {
+    public AppointmentNotFoundException(String message) {
         super(message);
     }
 }

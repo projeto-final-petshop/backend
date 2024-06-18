@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.exceptions.runtimes.pet;
+package br.com.finalproject.petconnect.exceptions.appointment;
 
 public class PetNotFoundException extends RuntimeException {
 

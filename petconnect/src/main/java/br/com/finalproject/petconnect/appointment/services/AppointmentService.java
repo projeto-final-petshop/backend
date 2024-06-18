@@ -5,7 +5,7 @@ import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
 import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.pet.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.appointment.PetNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.InvalidServiceBookingException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.user.entities.User;
