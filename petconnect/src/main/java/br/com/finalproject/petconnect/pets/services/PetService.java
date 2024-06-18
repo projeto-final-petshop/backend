@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.pets.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.pet.InvalidPetDataException;
+import br.com.finalproject.petconnect.exceptions.appointment.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.PetResponse;
 import br.com.finalproject.petconnect.pets.entities.Pet;
@@ -36,7 +37,7 @@ public class PetService {
             return PetMapper.petMapper().toResponse(savedPet);
         } catch (Exception e) {
             log.error("Falha ao cadastrar Pet: {}", e.getMessage());
-            throw new InvalidPetDataException("Falha ao cadastrar Pet. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException("Falha ao cadastrar Pet. Por favor, tente novamente mais tarde.");
         }
     }
 
@@ -49,21 +50,31 @@ public class PetService {
             return PetMapper.petMapper().toResponseList(pets);
         } catch (Exception e) {
             log.error("Falha ao listar Pets: {}", e.getMessage());
-            throw new InvalidPetDataException("Falha ao listar Pets. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException("Falha ao listar Pets. Por favor, tente novamente mais tarde.");
         }
     }
 
     @Transactional(readOnly = true)
-    public PetResponse getPetDetails(Long petId, String authorizationHeader) {
-        User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        Pet pet = petServiceUtils.getPetByIdAndUser(petId, user);
+    public PetResponse getPetDetails(Long id, String authorizationHeader) {
+        authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+        Pet pet = petRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Pet não encontrado para o ID: {}", id);
+                    return new PetNotFoundException("Pet não encontrado.");
+                });
         return PetMapper.INSTANCE.toResponse(pet);
     }
 
     @Transactional
-    public PetResponse updatePet(Long petId, PetRequest petRequest, String authorizationHeader) {
-        User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        Pet existingPet = petServiceUtils.getPetByIdAndUser(petId, user);
+    public PetResponse updatePet(Long id, PetRequest petRequest, String authorizationHeader) {
+
+        authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+
+        Pet existingPet = petRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Pet não encontrado para o ID: {}", id);
+                    return new PetNotFoundException("Pet não encontrado.");
+                });
         petServiceUtils.updatePetDetails(existingPet, petRequest);
         try {
             petRepository.save(existingPet);
@@ -71,16 +82,20 @@ public class PetService {
             return PetMapper.INSTANCE.toResponse(existingPet);
         } catch (Exception e) {
             log.error("Falha ao atualizar do Pet: {}", e.getMessage());
-            throw new InvalidPetDataException("Falha ao atualizar do Pet. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException("Falha ao atualizar do Pet. Por favor, tente novamente mais tarde.");
         }
     }
 
     @Transactional
-    public void deletePet(Long petId, String authorizationHeader) {
-        User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-        Pet pet = petServiceUtils.getPetByIdAndUser(petId, user);
+    public void deletePet(Long id, String authorizationHeader) {
+        authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+        Pet pet = petRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Pet não encontrado para o ID: {}", id);
+                    return new PetNotFoundException("Pet não encontrado.");
+                });
         petRepository.delete(pet);
-        log.info("Pet com ID {} excluído com sucesso!", petId);
+        log.info("Pet com ID {} excluído com sucesso!", id);
     }
 
     @Transactional(readOnly = true)
@@ -90,7 +105,7 @@ public class PetService {
             return PetMapper.petMapper().toResponseList(pets);
         } catch (Exception e) {
             log.error("Falha ao listar todos os Pets: {}", e.getMessage());
-            throw new InvalidPetDataException("Falha ao listar todos os Pets. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException("Falha ao listar todos os Pets. Por favor, tente novamente mais tarde.");
         }
     }
 

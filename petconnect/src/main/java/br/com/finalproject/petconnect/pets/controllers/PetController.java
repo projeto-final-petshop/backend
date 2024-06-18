@@ -46,33 +46,33 @@ public class PetController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{petId}")
+    @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PetResponse> getPetDetails(@PathVariable(name = "petId") Long petId,
+    public ResponseEntity<PetResponse> getPetDetails(@PathVariable(name = "id") Long id,
                                                      @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recuperando detalhes do animal de estimação com ID: {}", petId);
-        PetResponse response = petService.getPetDetails(petId, authorizationHeader);
+        log.info("Recuperando detalhes do animal de estimação com ID: {}", id);
+        PetResponse response = petService.getPetDetails(id, authorizationHeader);
         log.info("Detalhes do animal de estimação recuperados com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{petId}")
+    @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PetResponse> updatePet(@PathVariable(name = "petId") Long petId,
+    public ResponseEntity<PetResponse> updatePet(@PathVariable(name = "id") Long id,
                                                  @RequestBody @Valid PetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Atualizando detalhes do animal de estimação com ID: {}", petId);
-        PetResponse response = petService.updatePet(petId, request, authorizationHeader);
+        log.info("Atualizando detalhes do animal de estimação com ID: {}", id);
+        PetResponse response = petService.updatePet(id, request, authorizationHeader);
         log.info("Detalhes do animal de estimação atualizados com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{petId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> deletePet(@PathVariable(name = "petId") Long petId,
+    public ResponseEntity<Void> deletePet(@PathVariable(name = "id") Long id,
                                           @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Excluindo animal de estimação com ID: {}", petId);
-        petService.deletePet(petId, authorizationHeader);
+        log.info("Excluindo animal de estimação com ID: {}", id);
+        petService.deletePet(id, authorizationHeader);
         log.info("Animal de estimação excluído com sucesso.");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

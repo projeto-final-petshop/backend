@@ -19,7 +19,6 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class PetResponse {
 
-    @JsonProperty("petId")
     private Long id;
 
     private String name;
@@ -29,8 +28,6 @@ public class PetResponse {
     private String color;
 
     private String breed;
-
-    private float peso;
 
     private String animalType;
 
@@ -47,4 +44,19 @@ public class PetResponse {
 
     private OffsetDateTime updatedAt;
 
+    @Override
+    public String toString() {
+        return "PetResponse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", color='" + color + '\'' +
+                ", breed='" + breed + '\'' +
+                ", animalType='" + animalType + '\'' +
+                ", birthdate=" + birthdate +
+                ", userId=" + userId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

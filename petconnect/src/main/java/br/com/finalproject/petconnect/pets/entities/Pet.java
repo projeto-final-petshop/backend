@@ -2,7 +2,6 @@ package br.com.finalproject.petconnect.pets.entities;
 
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -33,7 +32,6 @@ public class Pet implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("petId")
     private Long id;
 
     @Size(min = 3, max = 50, message = "name.size.message")
@@ -43,8 +41,6 @@ public class Pet implements Serializable {
     private int age;
 
     private String color;
-
-    private float peso;
 
     private String breed;
 
@@ -69,4 +65,19 @@ public class Pet implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime updatedAt;
 
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", color='" + color + '\'' +
+                ", breed='" + breed + '\'' +
+                ", animalType='" + animalType + '\'' +
+                ", birthdate=" + birthdate +
+                ", user=" + user +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

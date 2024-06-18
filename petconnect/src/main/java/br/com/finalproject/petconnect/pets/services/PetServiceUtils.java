@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.pets.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.pet.InvalidPetDataException;
-import br.com.finalproject.petconnect.exceptions.runtimes.pet.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
+import br.com.finalproject.petconnect.exceptions.appointment.PetNotFoundException;
 import br.com.finalproject.petconnect.pets.dto.PetRequest;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
@@ -17,16 +17,16 @@ public class PetServiceUtils {
 
     static PetRepository petRepository;
 
-    public Pet getPetByIdAndUser(Long petId, User user) {
+    public Pet getPetByIdAndUser(Long id, User user) {
         try {
-            return petRepository.findByIdAndUser(petId, user)
+            return petRepository.findByIdAndUser(id, user)
                     .orElseThrow(() -> {
-                        log.error("Pet não encontrado para o usuário {} com ID: {}", user.getUsername(), petId);
+                        log.error("Pet não encontrado para o usuário {} com ID: {}", user.getId(), id);
                         return new PetNotFoundException("Pet não encontrado.");
                     });
         } catch (Exception e) {
             log.error("Falha ao obter Pet pelo ID e usuário: {}", e.getMessage());
-            throw new InvalidPetDataException("Falha ao obter Pet pelo ID e usuário.");
+            throw new DataModificationException("Falha ao obter Pet pelo ID e usuário.");
         }
     }
 
