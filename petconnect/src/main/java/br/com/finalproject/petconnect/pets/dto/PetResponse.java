@@ -1,7 +1,6 @@
 package br.com.finalproject.petconnect.pets.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -37,7 +36,6 @@ public class PetResponse {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
-    @JsonProperty("userId")
     private Long userId;
 
     private OffsetDateTime createdAt;

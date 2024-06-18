@@ -5,7 +5,6 @@ import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.entities.AppointmentStatus;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.ExceptionMessages;
 import br.com.finalproject.petconnect.exceptions.appointment.*;
 import br.com.finalproject.petconnect.exceptions.runtimes.vet.AppointmentNotFoundException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
@@ -63,7 +62,7 @@ public class AppointmentServiceUtil {
         log.info("Validando a disponibilidade de horário para a consulta: {}", appointmentTime);
 
         Optional<Appointment> consultaOptional = appointmentRepository
-                .findByAppointmentDateAndAndAppointmentTime(appointmentDate, appointmentTime);
+                .findAppointmentByAppointmentDateAndAppointmentTime(appointmentDate, appointmentTime);
         consultaOptional.ifPresent(appointment -> {
             log.error("Já existe um agendamento para a data {} e hora {}", appointmentDate, appointmentTime);
             throw new TimeSlotConflictException("Já existe um agendamento para a data e hora informadas.");

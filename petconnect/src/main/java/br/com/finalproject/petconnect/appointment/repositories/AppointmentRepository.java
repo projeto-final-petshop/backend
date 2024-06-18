@@ -14,10 +14,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     List<Appointment> findAllByUserId(Long userId);
 
-    List<Appointment> findAllByPetId(Long petId);
+    List<Appointment> findAllByPet_Id(Long petId);
 
-    Optional<Appointment> findByAppointmentDateAndAndAppointmentTime(LocalDate date, LocalTime time);
-
-    void deleteByPetId(Long petId);
+    Optional<Appointment> findAppointmentByAppointmentDateAndAppointmentTime(LocalDate date, LocalTime time);
 
 }

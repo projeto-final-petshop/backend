@@ -30,6 +30,8 @@ public interface AppointmentMapper {
 
     @Mapping(target = "status", source = "status")
     @Mapping(target = "petType", source = "petType")
+    @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "pet.id", target = "petId")
     @Mapping(target = "serviceType", source = "serviceType")
     @Mapping(target = "appointmentTime", dateFormat = "HH:mm")
     @Mapping(target = "appointmentDate", dateFormat = "dd/MM/yyyy")

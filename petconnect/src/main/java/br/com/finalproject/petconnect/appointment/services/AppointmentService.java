@@ -111,7 +111,7 @@ public class AppointmentService {
         try {
             User user = appointmentServiceUtil.getUserFromAuthorizationHeader(authorizationHeader);
             Pet pet = appointmentServiceUtil.getPetByIdAndUser(petId, user);
-            List<Appointment> appointments = appointmentRepository.findAllByPetId(pet.getId());
+            List<Appointment> appointments = appointmentRepository.findAllByPet_Id(pet.getId());
             return AppointmentMapper.petMapper().toResponseList(appointments);
         } catch (PetNotFoundException e) {
             log.error("Erro ao listar agendamentos: pet não encontrado. Pet ID: {}", petId, e);
