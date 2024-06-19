@@ -29,8 +29,6 @@ public class PetRequest {
 
     private String breed;
 
-    private float peso;
-
     private String animalType;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -39,4 +37,15 @@ public class PetRequest {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
+    @Override
+    public String toString() {
+        return "PetRequest{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", color='" + color + '\'' +
+                ", breed='" + breed + '\'' +
+                ", animalType='" + animalType + '\'' +
+                ", birthdate=" + birthdate +
+                '}';
+    }
 }

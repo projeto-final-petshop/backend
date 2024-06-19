@@ -5,7 +5,7 @@ import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
 import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.pet.PetNotFoundException;
+import br.com.finalproject.petconnect.exceptions.appointment.PetNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.InvalidServiceBookingException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -111,7 +111,7 @@ public class AppointmentService {
         try {
             User user = appointmentServiceUtil.getUserFromAuthorizationHeader(authorizationHeader);
             Pet pet = appointmentServiceUtil.getPetByIdAndUser(petId, user);
-            List<Appointment> appointments = appointmentRepository.findAllByPetId(pet.getId());
+            List<Appointment> appointments = appointmentRepository.findAllByPet_Id(pet.getId());
             return AppointmentMapper.petMapper().toResponseList(appointments);
         } catch (PetNotFoundException e) {
             log.error("Erro ao listar agendamentos: pet não encontrado. Pet ID: {}", petId, e);

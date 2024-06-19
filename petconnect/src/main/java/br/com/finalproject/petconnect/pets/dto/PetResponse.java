@@ -1,7 +1,6 @@
 package br.com.finalproject.petconnect.pets.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -19,7 +18,6 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class PetResponse {
 
-    @JsonProperty("petId")
     private Long id;
 
     private String name;
@@ -30,8 +28,6 @@ public class PetResponse {
 
     private String breed;
 
-    private float peso;
-
     private String animalType;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -40,11 +36,25 @@ public class PetResponse {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
-    @JsonProperty("userId")
     private Long userId;
 
     private OffsetDateTime createdAt;
 
     private OffsetDateTime updatedAt;
 
+    @Override
+    public String toString() {
+        return "PetResponse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", color='" + color + '\'' +
+                ", breed='" + breed + '\'' +
+                ", animalType='" + animalType + '\'' +
+                ", birthdate=" + birthdate +
+                ", userId=" + userId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

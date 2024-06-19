@@ -21,9 +21,14 @@ public interface PetMapper {
         return INSTANCE;
     }
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")
     Pet toEntity(PetRequest petRequest);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")

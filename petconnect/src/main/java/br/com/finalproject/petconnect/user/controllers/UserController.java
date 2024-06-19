@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Usuário atualizado com sucesso!");
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/deactivate")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> deactivateUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,6 +51,16 @@ public class UserController {
         userService.deactivateUser(currentPrincipalName);
         log.info("Usuário desativado com sucesso: {}", currentPrincipalName);
         return ResponseEntity.ok("Usuário desativado com sucesso!");
+    }
+
+    @DeleteMapping("/delete")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        userService.deleteUser(currentPrincipalName);
+        log.info("Usuário deletado com sucesso: {}", currentPrincipalName);
+        return ResponseEntity.ok("Usuário deletado com sucesso!");
     }
 
 }

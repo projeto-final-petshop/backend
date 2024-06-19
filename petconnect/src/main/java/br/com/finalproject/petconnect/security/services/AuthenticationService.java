@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.security.services;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.role.RoleNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.UserAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
@@ -53,7 +53,7 @@ public class AuthenticationService {
      *
      * @return O usuário recém-registrado em formato UserResponse.
      *
-     * @throws UserAlreadyExistsException
+     * @throws EmailAlreadyExistsException
      *         Se o e-mail ou CPF fornecido já estiverem em uso.
      * @throws RoleNotFoundException
      *         Se a função de usuário padrão não puder ser encontrada.
