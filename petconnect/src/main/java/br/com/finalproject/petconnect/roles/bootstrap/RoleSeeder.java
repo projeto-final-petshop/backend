@@ -3,6 +3,7 @@ package br.com.finalproject.petconnect.roles.bootstrap;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
+import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +35,11 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
         RoleEnum[] roleNames = RoleEnum.values();
 
         Map<RoleEnum, String> roleDescriptionMap = Map.of(
-                RoleEnum.USER, "Dono do animal de estimação (Pet)",
-                RoleEnum.ADMIN, "Dono da loja petshop",
-                RoleEnum.GROOMING, "Funcionário responsável pelo banho e tosa",
-                RoleEnum.VETERINARIAN, "Médico veterinário que realiza atendimento no petshop",
-                RoleEnum.EMPLOYEE, "Funcionário do petshop"
+                RoleEnum.USER, ConstantsUtil.USER_DESCRIPTION,
+                RoleEnum.ADMIN, ConstantsUtil.ADMIN_DESCRIPTION,
+                RoleEnum.GROOMING, ConstantsUtil.GROOMING_DESCRIPTION,
+                RoleEnum.VETERINARIAN, ConstantsUtil.VETERINARIAN_DESCRIPTION,
+                RoleEnum.EMPLOYEE, ConstantsUtil.EMPLOYEE_DESCRIPTION
         );
 
         Arrays.stream(roleNames).forEach((roleName) -> {

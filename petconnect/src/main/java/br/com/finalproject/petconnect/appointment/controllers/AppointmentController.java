@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@CrossOrigin(maxAge = 36000, allowCredentials = "true",
-        value = "http://localhost:4200",
-        allowedHeaders = {"Authorization", "Content-Type"},
-        methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE})
 @Slf4j
 @RestController
 @RequestMapping("/appointments")
@@ -26,67 +22,58 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
-    @PostMapping("/schedule")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AppointmentResponse> scheduleAppointment(@RequestBody @Valid AppointmentRequest request,
-                                                                   @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recebida solicitação de agendamento para o pet ID: {}", request.getPetId());
+    @PostMapping(value = "/schedule", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AppointmentResponse> createAppointment(@RequestBody @Valid AppointmentRequest request,
+                                                                 @RequestHeader(name = HttpHeaders
+                                                                         .AUTHORIZATION) String authorizationHeader) {
         AppointmentResponse response = appointmentService.scheduleAppointment(request, authorizationHeader);
-        log.info("Agendamento criado com sucesso. Agendamento ID: {}", response.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{appointmentId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
+    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable Long id,
                                                                  @RequestBody @Valid AppointmentRequest request,
-                                                                 @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recebida solicitação de atualização para o agendamento ID: {}", appointmentId);
-        AppointmentResponse response = appointmentService.updateAppointment(appointmentId, request, authorizationHeader);
-        log.info("Agendamento atualizado com sucesso. Agendamento ID: {}", response.getId());
-        return ResponseEntity.ok(response);
+                                                                 @RequestHeader(name = HttpHeaders
+                                                                         .AUTHORIZATION) String authorizationHeader) {
+        AppointmentResponse response = appointmentService.updateAppointment(id, request, authorizationHeader);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/cancel/{appointmentId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> cancelAppointment(@PathVariable(name = "appointmentId") Long appointmentId,
-                                                    @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recebida solicitação de cancelamento para o agendamento ID: {}", appointmentId);
-        appointmentService.cancelAppointment(appointmentId, authorizationHeader);
-        log.info("Agendamento cancelado com sucesso. Agendamento ID: {}", appointmentId);
+    @DeleteMapping(value = "/{id}", consumes = "application/json", produces = "text/plain")
+    public ResponseEntity<String> cancelAppointment(@PathVariable Long id,
+                                                    @RequestHeader(name = HttpHeaders
+                                                            .AUTHORIZATION) String authorizationHeader) {
+        appointmentService.cancelAppointment(id, authorizationHeader);
         return ResponseEntity.ok("Agendamento cancelado com sucesso.");
     }
 
-    @GetMapping("/all")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<AppointmentResponse>> getAllAppointments(
-            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recebida solicitação para listar todos os agendamentos do usuário");
-        List<AppointmentResponse> appointments = appointmentService.getAllAppointmentsByUser(authorizationHeader);
-        log.info("Lista de agendamentos obtida com sucesso");
-        return ResponseEntity.ok(appointments);
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<AppointmentResponse> getAppointment(@PathVariable Long id,
+                                                              @RequestHeader(name = HttpHeaders
+                                                                      .AUTHORIZATION) String authorizationHeader) {
+        AppointmentResponse response = appointmentService.getAppointmentById(id, authorizationHeader);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/pets/{petId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<AppointmentResponse>> getAppointmentsByPet(
-            @PathVariable(name = "petId") Long petId,
-            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recebida solicitação para listar agendamentos do pet ID: {}", petId);
-        List<AppointmentResponse> appointments = appointmentService.getAppointmentsByPet(petId, authorizationHeader);
-        log.info("Lista de agendamentos do pet ID {} obtida com sucesso", petId);
-        return ResponseEntity.ok(appointments);
+    @GetMapping(value = "/pet/{petId}", produces = "application/json")
+    public ResponseEntity<List<AppointmentResponse>> listAppointmentsByPet(@PathVariable Long petId,
+                                                                           @RequestHeader(name = HttpHeaders
+                                                                                   .AUTHORIZATION) String authorizationHeader) {
+        List<AppointmentResponse> responses = appointmentService.getAppointmentsByPet(petId, authorizationHeader);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @GetMapping("/{appointmentId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AppointmentResponse> getAppointmentById(
-            @PathVariable(name = "appointmentId") Long appointmentId,
-            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recebida solicitação para obter detalhes do agendamento ID: {}", appointmentId);
-        AppointmentResponse appointment = appointmentService.getAppointmentById(appointmentId, authorizationHeader);
-        log.info("Detalhes do agendamento ID {} obtidos com sucesso", appointmentId);
-        return ResponseEntity.ok(appointment);
+    @GetMapping(value = "/all", produces = "application/json")
+    public ResponseEntity<List<AppointmentResponse>> listAllAppointments(@RequestHeader(name = HttpHeaders
+            .AUTHORIZATION) String authorizationHeader) {
+        List<AppointmentResponse> responses = appointmentService.getAllAppointmentsByUser(authorizationHeader);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
 }

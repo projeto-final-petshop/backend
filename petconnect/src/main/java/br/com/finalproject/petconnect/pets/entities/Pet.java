@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.pets.entities;
 
+import br.com.finalproject.petconnect.appointment.entities.PetType;
 import br.com.finalproject.petconnect.user.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,7 +9,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,21 +34,19 @@ public class Pet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 3, max = 50, message = "name.size.message")
+    @Size(min = 3, max = 50, message = "O nome deve ter entre {min} e {max} caracteres.")
     private String name;
-
-    @PositiveOrZero(message = "age.message")
-    private int age;
 
     private String color;
 
     private String breed;
 
-    private String animalType;
+    @Enumerated(EnumType.STRING)
+    private PetType petType;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @Past(message = "birthdate.message")
+    @Past(message = "A data de nascimento deve estar no passado.")
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
@@ -65,19 +63,4 @@ public class Pet implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime updatedAt;
 
-    @Override
-    public String toString() {
-        return "Pet{" +
-                "petId=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", color='" + color + '\'' +
-                ", breed='" + breed + '\'' +
-                ", animalType='" + animalType + '\'' +
-                ", birthdate=" + birthdate +
-                ", user=" + user +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

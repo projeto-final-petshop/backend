@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/addresses")
 @RestController
 @AllArgsConstructor
-@CrossOrigin(
-        maxAge = 36000,
-        allowCredentials = "true",
-        value = {"http://localhost:4200", "https://viacep.com.br/ws"},
-        allowedHeaders = {"Authorization", "Content-Type"},
-        methods = {RequestMethod.POST, RequestMethod.GET})
+//@CrossOrigin(
+//        maxAge = 36000,
+//        allowCredentials = "true",
+//        value = {
+//                "http://localhost:4200",
+//                "http://localhost:9090",
+//                "https://viacep.com.br/ws"
+//        },
+//        allowedHeaders = {"Authorization", "Content-Type"},
+//        methods = {RequestMethod.POST, RequestMethod.GET})
 public class CepController {
 
     private final CepServiceClient serviceClient;

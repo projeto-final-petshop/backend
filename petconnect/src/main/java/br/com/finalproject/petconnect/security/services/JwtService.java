@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.security.services;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
+import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -23,16 +24,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String EXTRACT_EMAIL_ERROR = "Falha ao extrair email do token.";
-    private static final String EXTRACT_CLAIM_ERROR = "Falha ao extrair claim do token.";
-    private static final String BUILD_TOKEN_ERROR = "Falha na construção do token.";
-    private static final String VALIDATE_TOKEN_ERROR = "Falha na validação do token.";
-    private static final String EXTRACT_EXPIRATION_ERROR = "Falha ao extrair data de expiração do token.";
-    private static final String EXTRACT_ALL_CLAIMS_ERROR = "Falha ao extrair todas as claims do token.";
-    private static final String CHECK_TOKEN_EXPIRATION_ERROR = "Erro interno no servidor durante a verificação da expiração do token.";
-    private static final String GENERATE_TOKEN_ERROR = "Erro interno no servidor durante a geração do token.";
-    private static final String GENERATE_TOKEN_WITH_CLAIMS_ERROR = "Falha ao gerar token com claims extras.";
-
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
@@ -43,8 +34,8 @@ public class JwtService {
         try {
             return extractClaim(token, Claims::getSubject);
         } catch (JwtException | IllegalArgumentException e) {
-            log.error(EXTRACT_EMAIL_ERROR, e);
-            throw new DataModificationException(EXTRACT_EMAIL_ERROR, e);
+            log.error(ConstantsUtil.EXTRACT_EMAIL_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.EXTRACT_EMAIL_ERROR, e);
         }
     }
 
@@ -53,8 +44,8 @@ public class JwtService {
             final Claims claims = extractAllClaims(token);
             return claimsResolver.apply(claims);
         } catch (JwtException | IllegalArgumentException e) {
-            log.error(EXTRACT_CLAIM_ERROR, e);
-            throw new DataModificationException(EXTRACT_CLAIM_ERROR, e);
+            log.error(ConstantsUtil.EXTRACT_CLAIM_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.EXTRACT_CLAIM_ERROR, e);
         }
     }
 
@@ -67,8 +58,8 @@ public class JwtService {
                     .map(GrantedAuthority::getAuthority).toList());
             return generateToken(claims, userDetails);
         } catch (Exception e) {
-            log.error(GENERATE_TOKEN_ERROR, e);
-            throw new DataModificationException(GENERATE_TOKEN_ERROR, e);
+            log.error(ConstantsUtil.GENERATE_TOKEN_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.GENERATE_TOKEN_ERROR, e);
         }
     }
 
@@ -76,8 +67,8 @@ public class JwtService {
         try {
             return buildToken(extraClaims, userDetails, jwtExpiration);
         } catch (Exception e) {
-            log.error(GENERATE_TOKEN_WITH_CLAIMS_ERROR, e);
-            throw new DataModificationException(GENERATE_TOKEN_WITH_CLAIMS_ERROR, e);
+            log.error(ConstantsUtil.GENERATE_TOKEN_WITH_CLAIMS_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.GENERATE_TOKEN_WITH_CLAIMS_ERROR, e);
         }
     }
 
@@ -95,8 +86,8 @@ public class JwtService {
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                     .compact();
         } catch (Exception e) {
-            log.error(BUILD_TOKEN_ERROR, e);
-            throw new DataModificationException(BUILD_TOKEN_ERROR, e);
+            log.error(ConstantsUtil.BUILD_TOKEN_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.BUILD_TOKEN_ERROR, e);
         }
     }
 
@@ -105,8 +96,8 @@ public class JwtService {
             final String username = extractEmail(token);
             return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
         } catch (Exception e) {
-            log.error(VALIDATE_TOKEN_ERROR, e);
-            throw new DataModificationException(VALIDATE_TOKEN_ERROR, e);
+            log.error(ConstantsUtil.VALIDATE_TOKEN_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.VALIDATE_TOKEN_ERROR, e);
         }
     }
 
@@ -114,8 +105,8 @@ public class JwtService {
         try {
             return extractExpiration(token).before(new Date());
         } catch (Exception e) {
-            log.error(CHECK_TOKEN_EXPIRATION_ERROR, e);
-            throw new DataModificationException(CHECK_TOKEN_EXPIRATION_ERROR, e);
+            log.error(ConstantsUtil.CHECK_TOKEN_EXPIRATION_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.CHECK_TOKEN_EXPIRATION_ERROR, e);
         }
     }
 
@@ -123,8 +114,8 @@ public class JwtService {
         try {
             return extractClaim(token, Claims::getExpiration);
         } catch (Exception e) {
-            log.error(EXTRACT_EXPIRATION_ERROR, e);
-            throw new DataModificationException(EXTRACT_EXPIRATION_ERROR, e);
+            log.error(ConstantsUtil.EXTRACT_EXPIRATION_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.EXTRACT_EXPIRATION_ERROR, e);
         }
     }
 
@@ -136,8 +127,8 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (JwtException | IllegalArgumentException e) {
-            log.error(EXTRACT_ALL_CLAIMS_ERROR, e);
-            throw new DataModificationException(EXTRACT_ALL_CLAIMS_ERROR, e);
+            log.error(ConstantsUtil.EXTRACT_ALL_CLAIMS_ERROR, e);
+            throw new DataModificationException(ConstantsUtil.EXTRACT_ALL_CLAIMS_ERROR, e);
         }
     }
 

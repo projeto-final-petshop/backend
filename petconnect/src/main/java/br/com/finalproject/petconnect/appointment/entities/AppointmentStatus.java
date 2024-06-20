@@ -10,7 +10,7 @@ public enum AppointmentStatus {
     SCHEDULED(1),
     CANCELLED(2),
     COMPLETED(3),
-    PEDING(4),
+    PENDING(4),
     CONFIRMED(5);
 
     private final int code;

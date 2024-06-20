@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.utils;
 
-import br.com.finalproject.petconnect.exceptions.dto.ExceptionMessageEnum;
 import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordMismatchException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
 import br.com.finalproject.petconnect.security.services.JwtService;

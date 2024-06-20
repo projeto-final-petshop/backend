@@ -15,7 +15,7 @@ POST http://localhost:8888/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "petshop.petconnect@gmail.com",
+  "email": "julianemaran@gmail.com",
   "password": "P4$$w0rD"
 }
 

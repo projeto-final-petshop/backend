@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.pets.mapping;
 
-import br.com.finalproject.petconnect.pets.dto.PetRequest;
-import br.com.finalproject.petconnect.pets.dto.PetResponse;
+import br.com.finalproject.petconnect.pets.dto.request.PetRequest;
+import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,17 +21,19 @@ public interface PetMapper {
         return INSTANCE;
     }
 
+    @Mapping(target = "petType", source = "petType")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "birthdate", dateFormat = "yyyy-MM-dd")
     Pet toEntity(PetRequest petRequest);
 
     @Mapping(source = "id", target = "id")
+    @Mapping(target = "petType", source = "petType")
     @Mapping(source = "user.id", target = "userId")
     @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd HH:mm")
-    @Mapping(target = "birthdate", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "birthdate", dateFormat = "yyyy-MM-dd")
     PetResponse toResponse(Pet pet);
 
     List<PetResponse> toResponseList(List<Pet> pets);

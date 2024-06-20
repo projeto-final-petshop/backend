@@ -35,19 +35,19 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("userId")
     private Long id;
 
     @Size(min = 3, max = 250, message = "O nome deve ter entre {min} e {max} caracteres.")
     private String name;
 
-    @Email(message = "Por favor, insira um endereço de e-mail válido.")
     @Column(unique = true, nullable = false)
+    @Email(message = "Insira um email válido.", regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$")
     private String email;
 
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
             message = "A senha deve ter pelo menos 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
@@ -55,7 +55,7 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String cpf;
 
-        @Pattern(regexp = "^\\+?\\d{9,14}$",
+    @Pattern(regexp = "^\\+?\\d{9,14}$",
             message = "Por favor, insira um número de telefone que tenha entre 9 e 14 dígitos numéricos. O sinal de + é opcional.")
     private String phoneNumber;
 

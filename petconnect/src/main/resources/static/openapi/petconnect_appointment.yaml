@@ -1,0 +1,228 @@
+openapi: 3.0.0
+info:
+  title: Appointment API
+  description: API para gerenciamento de agendamentos de serviços para pets.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8888/api/v1
+    description: Servidor local
+paths:
+  /appointments/schedule:
+    post:
+      summary: Criar um agendamento
+      tags:
+        - Appointments
+      operationId: createAppointment
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+      responses:
+        '201':
+          description: Agendamento criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          description: Requisição inválida
+      security:
+        - bearerAuth: [ ]
+  /appointments/{id}:
+    put:
+      summary: Atualizar um agendamento
+      tags:
+        - Appointments
+      operationId: getAppointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+      responses:
+        '200':
+          description: Agendamento atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Agendamento não encontrado
+      security:
+        - bearerAuth: [ ]
+    delete:
+      summary: Cancelar um agendamento
+      tags:
+        - Appointments
+      operationId: "cancelAppointment"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: Agendamento cancelado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Agendamento não encontrado
+      security:
+        - bearerAuth: [ ]
+    get:
+      summary: Buscar um agendamento por ID
+      tags:
+        - Appointments
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: Agendamento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Agendamento não encontrado
+      security:
+        - bearerAuth: [ ]
+
+  /appointments/pet/{petId}:
+    get:
+      summary: Listar agendamentos de um pet
+      tags:
+        - Appointments
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: Lista de agendamentos do pet
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Pet não encontrado
+      security:
+        - bearerAuth: [ ]
+
+components:
+  schemas:
+    AppointmentRequest:
+      type: object
+      properties:
+        petId:
+          type: integer
+        serviceType:
+          $ref: '#/components/schemas/ServiceType'
+        petType:
+          $ref: '#/components/schemas/PetType'
+        appointmentDate:
+          type: string
+          format: date
+        appointmentTime:
+          type: string
+          format: time
+    AppointmentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        petId:
+          type: integer
+        serviceType:
+          $ref: '#/components/schemas/ServiceType'
+        petType:
+          $ref: '#/components/schemas/PetType'
+        appointmentDate:
+          type: string
+          format: date
+        appointmentTime:
+          type: string
+          format: time
+        appointmentStatus:
+          $ref: '#/components/schemas/AppointmentStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PetType:
+      type: string
+      description: Tipo de animal
+      enum:
+        - DOG
+        - CAT
+        - OTHER
+    AppointmentStatus:
+      type: string
+      enum:
+        - SCHEDULED
+        - CANCELLED
+        - COMPLETED
+        - PENDING
+        - CONFIRMED
+    ServiceType:
+      type: string
+      description: Tipo de animal
+      enum:
+        - BATH
+        - GROOMING
+        - BATH_AND_GROOMING
+        - VETERINARY_CONSULTATION
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

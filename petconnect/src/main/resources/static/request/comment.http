@@ -1,0 +1,13 @@
+### Obter todos os comentários de uma foto
+GET http://localhost:8888/api/v1/photos/{photoId}/comments
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.
+accept: application/json
+
+### Criar um novo comentário para uma foto
+POST http://localhost:8888/api/v1/photos/{photoId}/comments
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.
+Content-Type: application/json
+
+{
+  "text": "This is a comment"
+}

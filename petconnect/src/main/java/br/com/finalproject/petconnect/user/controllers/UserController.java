@@ -1,22 +1,19 @@
 package br.com.finalproject.petconnect.user.controllers;
 
-import br.com.finalproject.petconnect.user.dto.request.UserRequest;
+import br.com.finalproject.petconnect.user.dto.request.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(maxAge = 36000, allowCredentials = "true",
-        value = "http://localhost:4200",
-        allowedHeaders = {"Authorization", "Content-Type"},
-        methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE})
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -25,7 +22,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/me")
+    @GetMapping(value = "/me", produces = "application/json")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -33,9 +30,9 @@ public class UserController {
         return ResponseEntity.ok(currentUser);
     }
 
-    @PutMapping("/update")
+    @PutMapping(value = "/update", consumes = "application/json", produces = "text/plain")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> updateUser(@RequestBody @Valid UserRequest request) {
+    public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         userService.updateUser(currentPrincipalName, request);
@@ -43,7 +40,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Usuário atualizado com sucesso!");
     }
 
-    @DeleteMapping("/deactivate")
+    @DeleteMapping(value = "/deactivate", produces = "text/plain")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> deactivateUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,7 +50,7 @@ public class UserController {
         return ResponseEntity.ok("Usuário desativado com sucesso!");
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping(value = "/delete", produces = "text/plain")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> deleteUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

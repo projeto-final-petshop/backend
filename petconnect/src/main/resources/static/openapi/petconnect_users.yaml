@@ -1,0 +1,157 @@
+openapi: 3.0.1
+info:
+  title: User Management API
+  description: API para gerenciamento de usuários
+  version: 1.0.0
+servers:
+  - url: http://localhost:8888/api/v1
+tags:
+  - name: user
+    description: Operações de usuário  
+paths:
+  /users/me:
+    get:
+      summary: Obtém informações do usuário autenticado
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Usuário autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /users/update:
+    put:
+      summary: Atualiza informações do usuário autenticado
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Usuário atualizado com sucesso!
+  /users/delete:
+    delete:
+      summary: Deleta o usuário autenticado
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Usuário deletado com sucesso
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Usuário deletado com sucesso!
+components:
+  schemas:
+    UpdateUserRequest:
+      type: object
+      description: Requisição para atualização de informações de usuário
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 250
+          description: Nome do usuário
+          example: João da Silva
+        phoneNumber:
+          type: string
+          pattern: "^\\+?\\d{9,14}$"
+          description: Número de telefone do usuário, opcionalmente com prefixo internacional
+          example: "+55123456789"
+        address:
+          type: string
+          minLength: 10
+          maxLength: 250
+          description: Endereço do usuário
+          example: Rua das Flores, 123
+    UserResponse:
+      type: object
+      description: Resposta contendo informações detalhadas do usuário
+      properties:
+        id:
+          type: integer
+          description: ID único do usuário
+          example: 1
+        name:
+          type: string
+          description: Nome do usuário
+          example: João da Silva
+        email:
+          type: string
+          format: email
+          description: Endereço de email do usuário
+          example: joao.silva@email.com
+        cpf:
+          type: string
+          description: CPF do usuário
+          example: 123.456.789-00
+        phoneNumber:
+          type: string
+          description: Número de telefone do usuário
+          example: "+55123456789"
+        active:
+          type: boolean
+          description: Indica se o usuário está ativo
+          example: true
+        role:
+          $ref: '#/components/schemas/RoleResponse'
+        createdAt:
+          type: string
+          format: date-time
+          description: Data e hora de criação do usuário
+          example: "2023-06-18 12:00:00"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data e hora da última atualização do usuário
+          example: "2023-06-18 12:30:00"
+    RoleResponse:
+      type: object
+      description: Resposta contendo informações sobre o papel (role) do usuário
+      properties:
+        roleId:
+          type: integer
+          description: ID único do papel
+          example: 1
+        name:
+          type: string
+          description: Nome do papel
+          example: ROLE_USER
+        description:
+          type: string
+          description: Descrição do papel
+          example: Papel padrão para usuários comuns
+        createdAt:
+          type: string
+          format: date-time
+          description: Data e hora de criação do papel
+          example: "2023-06-18 12:00:00"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data e hora da última atualização do papel
+          example: "2023-06-18 12:30:00"
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

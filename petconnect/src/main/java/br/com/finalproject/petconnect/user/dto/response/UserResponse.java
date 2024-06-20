@@ -14,7 +14,6 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class UserResponse {
 
-    @JsonProperty("userId")
     private Long id;
     private String name;
     private String email;

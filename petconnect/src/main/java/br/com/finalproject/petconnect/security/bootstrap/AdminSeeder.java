@@ -6,6 +6,7 @@ import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
+import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,37 +34,30 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     private void createSuperAdministrator() {
 
-        // Verifica se já existe algum usuário com a função de administrador
         if (userRepository.existsByRoleName(RoleEnum.ADMIN)) {
             log.info("Já existe pelo menos um administrador cadastrado.");
             return;
         }
 
-        // Verifica se já existe algum usuário com o e-mail ou CPF fornecidos
-        String email = "petshop.petconnect@gmail.com";
-        String cpf = "396.810.991-09";
-
-        if (userRepository.existsByEmailOrCpf(email, cpf)) {
+        if (userRepository.existsByEmailOrCpf(ConstantsUtil.ADMIN_EMAIL, ConstantsUtil.ADMIN_CPF)) {
             log.info("Já existe um usuário cadastrado com o mesmo e-mail ou CPF. Pulando a criação do administrador.");
             return;
         }
 
-        // Carrega a role de ADMIN do banco de dados
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.ADMIN);
         if (optionalRole.isEmpty()) {
             log.error("Role de ADMIN não encontrada. Não é possível criar o administrador.");
             return;
         }
 
-        // Cria o administrador
         UserRequest request = UserRequest.builder()
-                .name("PetConnect")
-                .email(email)
-                .password(passwordEncoder.encode("P4$$w0rD"))
+                .name(ConstantsUtil.ADMIN_NAME)
+                .email(ConstantsUtil.ADMIN_EMAIL)
+                .password(passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD))
                 .active(true)
-                .cpf(cpf)
-                .phoneNumber("+5521986548329")
-                .address("Avenida Brasil")
+                .cpf(ConstantsUtil.ADMIN_CPF)
+                .phoneNumber(ConstantsUtil.ADMIN_PHONE_NUMBER)
+                .address(ConstantsUtil.ADMIN_ADDRESS)
                 .build();
 
         User user = User.builder()

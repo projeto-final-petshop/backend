@@ -17,12 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByCpf(String cpf);
 
-    List<User> findByName(String name);
-
-    List<User> findByActiveTrue();
-
-    List<User> findByActiveFalse();
-
     Page<User> findByActive(Boolean active, Pageable pageable);
 
     boolean existsByCpf(String cpf);

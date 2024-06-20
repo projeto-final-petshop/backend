@@ -1,0 +1,23 @@
+### Obter todas as fotos
+GET http://localhost:8888/api/v1/photos
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.
+accept: application/json
+
+### Obter uma foto por ID
+GET http://localhost:8888/api/v1/photos/{id}
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.
+accept: application/json
+
+### Criar uma nova foto
+POST http://localhost:8888/api/v1/photos
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.
+Content-Type: application/json
+
+{
+  "url": "http://example.com/photo.jpg"
+}
+
+### Deletar uma foto por ID
+DELETE http://localhost:8888/api/v1/photos/{id}
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.
+accept: application/json
