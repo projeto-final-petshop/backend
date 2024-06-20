@@ -165,8 +165,6 @@ components:
           type: integer
         serviceType:
           $ref: '#/components/schemas/ServiceType'
-        petType:
-          $ref: '#/components/schemas/PetType'
         appointmentDate:
           type: string
           format: date
@@ -182,8 +180,6 @@ components:
           type: integer
         serviceType:
           $ref: '#/components/schemas/ServiceType'
-        petType:
-          $ref: '#/components/schemas/PetType'
         appointmentDate:
           type: string
           format: date
@@ -198,13 +194,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-    PetType:
-      type: string
-      description: Tipo de animal
-      enum:
-        - DOG
-        - CAT
-        - OTHER
     AppointmentStatus:
       type: string
       enum:

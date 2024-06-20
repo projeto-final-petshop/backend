@@ -92,7 +92,6 @@ public class AppointmentServiceUtil {
         appointment.setAppointmentDate(request.getAppointmentDate());
         appointment.setAppointmentTime(request.getAppointmentTime());
         appointment.setServiceType(request.getServiceType());
-        appointment.setPetType(request.getPetType());
     }
 
     public void cancelAppointmentStatus(Appointment appointment) {
