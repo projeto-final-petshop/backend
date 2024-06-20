@@ -28,8 +28,6 @@ public class AppointmentResponse {
 
     private ServiceType serviceType;
 
-    private PetType petType;
-
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
 

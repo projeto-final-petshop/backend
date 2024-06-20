@@ -35,9 +35,6 @@ public class Appointment implements Serializable {
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
 
-    @Enumerated(EnumType.STRING)
-    private PetType petType;
-
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
 

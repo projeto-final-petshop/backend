@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: "Authentication API"
+  description: "API para autenticação de usuários com JWT e CSRF."
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8888/api/v1"
+    description: "Servidor local"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "João Silva"
+        email:
+          type: string
+          example: "joao.silva@example.com"
+        password:
+          type: string
+          example: "senh@123"
+        cpf:
+          type: string
+          example: "123.456.789-00"
+        phoneNumber:
+          type: string
+          example: "+5511912345678"
+        address:
+          type: string
+          example: "Rua Exemplo, 123, São Paulo, SP, 12345-678"
+      required:
+        - name
+        - email
+        - password
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "joao.silva@example.com"
+        password:
+          type: string
+          example: "senh@123"
+      required:
+        - email
+        - password
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        tokenType:
+          type: string
+          example: Bearer
+        expiresAt:
+          type: integer
+          example: 1627316499000
+        username:
+          type: string
+          example: "joao.silva@example.com"
+        email:
+          type: string
+          example: "joao.silva@example.com"
+        roles:
+          type: array
+          items:
+            type: string
+            example: "ROLE_USER"
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "João Silva"
+        email:
+          type: string
+          example: "joao.silva@example.com"
+        cpf:
+          type: string
+          example: "123.456.789-00"
+        phoneNumber:
+          type: string
+          example: "+5511912345678"
+        address:
+          type: string
+          example: "Rua Exemplo, 123, São Paulo, SP, 12345-678"
+        active:
+          type: boolean
+          example: true
+        role:
+          $ref: '#/components/schemas/RoleResponse'
+    RoleResponse:
+      type: object
+      properties:
+        roleId:
+          type: integer
+          example: 1
+        name:
+          $ref: '#/components/schemas/RoleEnum'
+        description:
+          type: string
+          example: "Administrador com full acesso"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-06-18 12:00:00"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-06-18 12:00:00"
+    RoleEnum:
+      type: string
+      enum:
+        - USER
+        - ADMIN
+        - GROOMING
+        - VETERINARIAN
+        - EMPLOYEE
+      example: USER      
+paths:
+  /auth/signup:
+    post:
+      summary: Registro de novo usuário
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: "Usuário registrado com sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /auth/login:
+    post:
+      summary: "Autenticação de usuário"
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: "Usuário autenticado com sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+      security:
+        - BearerAuth: []

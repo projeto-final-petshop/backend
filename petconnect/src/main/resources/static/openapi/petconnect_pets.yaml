@@ -1,0 +1,212 @@
+openapi: 3.0.1
+info:
+  title: API Pet
+  description: API para gerenciamento de animais de estimação
+  version: 1.0.0
+servers:
+  - url: http://localhost:8888/api/v1
+paths:
+  /pets/register:
+    post:
+      summary: Cadastra um novo animal de estimação
+      tags:
+        - pet
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetRequest'
+      responses:
+        '201':
+          description: Animal de estimação cadastrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+  /pets:
+    get:
+      summary: Lista todos os animais de estimação do usuário autenticado
+      tags:
+        - pet
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de animais de estimação
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+  /pets/{id}:
+    get:
+      summary: Obtém detalhes de um animal de estimação pelo ID
+      tags:
+        - pet
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Detalhes do animal de estimação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+    put:
+      summary: Atualiza os detalhes de um animal de estimação pelo ID
+      tags:
+        - pet
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetRequest'
+      responses:
+        '200':
+          description: Animal de estimação atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+    delete:
+      summary: Deleta um animal de estimação pelo ID
+      tags:
+        - pet
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Animal de estimação deletado com sucesso
+  /pets/all:
+    get:
+      summary: Lista todos os animais de estimação (Admin)
+      tags:
+        - pet
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      responses:
+        '200':
+          description: Lista de todos os animais de estimação
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetResponse'
+components:
+  schemas:
+    PetRequest:
+      type: object
+      description: Esquema para criar ou atualizar um animal de estimação.
+      properties:
+        name:
+          type: string
+          description: Nome do animal de estimação.
+          minLength: 3
+          maxLength: 50
+          example: "Buddy"
+        color:
+          type: string
+          description: Cor do pelo do animal de estimação.
+          example: "Marrom"
+        breed:
+          type: string
+          description: Raça do animal de estimação.
+          example: "Labrador Retriever"
+        petType:
+          $ref: '#/components/schemas/PetType'
+        birthdate:
+          type: string
+          format: date
+          description: Data de nascimento do animal de estimação (yyyy-MM-dd).
+          example: "2018-05-20"
+    PetResponse:
+      type: object
+      description: Esquema para a resposta contendo os detalhes do animal de estimação.
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identificador único do animal de estimação.
+          example: 1
+        name:
+          type: string
+          description: Nome do animal de estimação.
+          example: "Buddy"
+        color:
+          type: string
+          description: Cor do pelo do animal de estimação.
+          example: "Marrom"
+        breed:
+          type: string
+          description: Raça do animal de estimação.
+          example: "Labrador Retriever"
+        petType:
+          $ref: '#/components/schemas/PetType'
+        birthdate:
+          type: string
+          format: date
+          description: Data de nascimento do animal de estimação (yyyy-MM-dd).
+          example: "2018-05-20"
+        userId:
+          type: integer
+          format: int64
+          description: ID do usuário que possui o animal de estimação.
+          example: 42
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp de criação do animal de estimação (yyyy-MM-dd HH:mm).
+          example: "2023-06-18 12:00"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp de última atualização do animal de estimação (yyyy-MM-dd HH:mm).
+          example: "2023-06-18 12:00"
+    PetType:
+      type: string
+      description: Tipo de animal
+      enum:
+        - DOG
+        - CAT
+        - OTHER
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    BasicAuth:
+      type: http
+      scheme: basic
+tags:
+  - name: pet
+    description: Operações de animais de estimação

@@ -1,13 +1,10 @@
 package br.com.finalproject.petconnect.admin;
 
-import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
-import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
-import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
 import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
 import br.com.finalproject.petconnect.exceptions.runtimes.role.RoleNotFoundException;
-import br.com.finalproject.petconnect.pets.dto.PetResponse;
+import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.mapping.PetMapper;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.roles.entities.Role;
@@ -32,12 +29,10 @@ public class AdminService {
 
     private final PetMapper petMapper;
     private final UserMapper userMapper;
-    private final AppointmentMapper appointmentMapper;
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final AppointmentRepository appointmentRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -109,15 +104,15 @@ public class AdminService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public Page<AppointmentResponse> listAllAppointments(Pageable pageable) {
-        try {
-            return appointmentRepository.findAll(pageable).map(appointmentMapper::toAppointmentResponse);
-        } catch (Exception e) {
-            log.error("Falha ao listar Agendamentos: {}", e.getMessage());
-            throw new DataModificationException("Falha ao listar Agendamentos. Por favor, tente mais tarde.", e);
-        }
-    }
+//    @Transactional(readOnly = true)
+//    public Page<AppointmentResponse> listAllAppointments(Pageable pageable) {
+//        try {
+//            return appointmentRepository.findAll(pageable).map(appointmentMapper::toAppointmentResponse);
+//        } catch (Exception e) {
+//            log.error("Falha ao listar Agendamentos: {}", e.getMessage());
+//            throw new DataModificationException("Falha ao listar Agendamentos. Por favor, tente mais tarde.", e);
+//        }
+//    }
 
     @Transactional(readOnly = true)
     public Page<PetResponse> listAllPets(Pageable pageable) {

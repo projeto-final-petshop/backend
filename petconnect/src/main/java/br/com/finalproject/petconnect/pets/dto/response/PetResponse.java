@@ -1,5 +1,6 @@
-package br.com.finalproject.petconnect.pets.dto;
+package br.com.finalproject.petconnect.pets.dto.response;
 
+import br.com.finalproject.petconnect.appointment.entities.PetType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,17 +23,15 @@ public class PetResponse {
 
     private String name;
 
-    private int age;
-
     private String color;
 
     private String breed;
 
-    private String animalType;
+    private PetType petType;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @Past(message = "birthdate.message")
+    @Past(message = "A data de nascimento deve estar no passado.")
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
@@ -42,19 +41,4 @@ public class PetResponse {
 
     private OffsetDateTime updatedAt;
 
-    @Override
-    public String toString() {
-        return "PetResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", color='" + color + '\'' +
-                ", breed='" + breed + '\'' +
-                ", animalType='" + animalType + '\'' +
-                ", birthdate=" + birthdate +
-                ", userId=" + userId +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

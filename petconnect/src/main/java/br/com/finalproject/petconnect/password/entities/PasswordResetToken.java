@@ -19,13 +19,11 @@ public class PasswordResetToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("resetId")
     private Long id;
 
     @Column(nullable = false)
     private String token;
 
-    @JsonProperty("userId")
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_password_user"))
     private User user;

@@ -1,14 +1,14 @@
 package br.com.finalproject.petconnect.user.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordMismatchException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.user.UserServiceException;
-import br.com.finalproject.petconnect.user.dto.request.UserRequest;
+import br.com.finalproject.petconnect.pets.repositories.PetRepository;
+import br.com.finalproject.petconnect.user.dto.request.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
+import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,40 +17,34 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class UserService {
 
+    private final PetRepository petRepository;
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     /**
      * Atualizar Usuário
      */
     @Transactional
-    public void updateUser(String email, UserRequest userRequest) {
+    public void updateUser(String email, UpdateUserRequest updateUserRequest) {
         try {
             final var user = getUser(email);
-            validateField(userRequest, user);
+            validateAndUpdateFields(updateUserRequest, user);
             User savedUser = userRepository.save(user);
             log.info("Usuário atualizado com sucesso: {}", savedUser.getId());
         } catch (Exception e) {
             log.error("Falha ao atualizar usuário: {}", e.getMessage());
-            throw new UserServiceException("Falha ao atualizar usuário");
+            throw new UserServiceException(ConstantsUtil.FAILED_TO_UPDATE_USER);
         }
     }
 
-    private void validateField(UserRequest userRequest, User user) {
-        if (userRequest.getName() != null) {
-            user.setName(userRequest.getName());
+    private void validateAndUpdateFields(UpdateUserRequest updateUserRequest, User user) {
+        if (updateUserRequest.getName() != null) {
+            user.setName(updateUserRequest.getName());
         }
-        if (userRequest.getPhoneNumber() != null) {
-            user.setPhoneNumber(userRequest.getPhoneNumber());
+        if (updateUserRequest.getPhoneNumber() != null) {
+            user.setPhoneNumber(updateUserRequest.getPhoneNumber());
         }
-        if (userRequest.getAddress() != null) {
-            user.setAddress(userRequest.getAddress());
-        }
-        if (userRequest.getPassword() != null && userRequest.getConfirmPassword() != null) {
-            if (userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
-                user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-            }
-            throw new PasswordMismatchException("As senhas não coincidem");
+        if (updateUserRequest.getAddress() != null) {
+            user.setAddress(updateUserRequest.getAddress());
         }
     }
 
@@ -63,7 +57,7 @@ public class UserService {
             log.info("Usuário desativado com sucesso: {}", email);
         } catch (Exception e) {
             log.error("Falha ao desativar usuário: {}", e.getMessage());
-            throw new UserServiceException("Falha ao desativar usuário");
+            throw new UserServiceException(ConstantsUtil.FAILED_TO_DEACTIVE_USER);
         }
     }
 
@@ -71,17 +65,22 @@ public class UserService {
     public void deleteUser(String email) {
         try {
             final var user = getUser(email);
+            deletePetsByUser(user);
             userRepository.delete(user);
             log.info("Usuário deletado com sucesso: {}", email);
         } catch (Exception e) {
             log.error("Falha ao deletar usuário: {}", e.getMessage());
-            throw new UserServiceException("Falha ao deletar usuário");
+            throw new UserServiceException(ConstantsUtil.FAILED_TO_DELETE_USER);
         }
     }
 
     private User getUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new UserNotFoundException(ConstantsUtil.USER_NOT_FOUND));
+    }
+
+    private void deletePetsByUser(User user) {
+        petRepository.deleteByUserId(user.getId());
     }
 
 }

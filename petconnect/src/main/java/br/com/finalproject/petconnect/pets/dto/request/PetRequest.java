@@ -1,12 +1,12 @@
-package br.com.finalproject.petconnect.pets.dto;
+package br.com.finalproject.petconnect.pets.dto.request;
 
+import br.com.finalproject.petconnect.appointment.entities.PetType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -19,33 +19,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PetRequest {
 
-    @Size(min = 3, max = 50, message = "name.size.message")
+    @Size(min = 3, max = 50, message = "O nome deve ter entre {min} e {max} caracteres.")
     private String name;
-
-    @PositiveOrZero(message = "age.message")
-    private int age;
 
     private String color;
 
     private String breed;
 
-    private String animalType;
+    private PetType petType;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @Past(message = "birthdate.message")
+    @Past(message = "A data de nascimento deve estar no passado.")
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate birthdate;
 
-    @Override
-    public String toString() {
-        return "PetRequest{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                ", color='" + color + '\'' +
-                ", breed='" + breed + '\'' +
-                ", animalType='" + animalType + '\'' +
-                ", birthdate=" + birthdate +
-                '}';
-    }
 }

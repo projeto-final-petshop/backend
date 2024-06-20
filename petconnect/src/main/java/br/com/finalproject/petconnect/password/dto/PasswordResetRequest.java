@@ -11,16 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 public class PasswordResetRequest {
 
-    @Schema(
-            description = "Endereço de email do usuário.",
-            example = "usario@dominio.com",
-            pattern = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
-            accessMode = Schema.AccessMode.READ_WRITE,
-            type = "string",
-            format = "email",
-            requiredMode = Schema.RequiredMode.REQUIRED
-    )
-    @Email(message = "email.message",
+    @Email(message = "Por favor, insira um endereço de e-mail válido.",
             regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$")
     private String email;
 

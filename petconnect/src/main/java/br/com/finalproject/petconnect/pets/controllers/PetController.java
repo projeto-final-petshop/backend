@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.pets.controllers;
 
-import br.com.finalproject.petconnect.pets.dto.PetRequest;
-import br.com.finalproject.petconnect.pets.dto.PetResponse;
+import br.com.finalproject.petconnect.pets.dto.request.PetRequest;
+import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.services.PetService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,10 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/pets")
 @AllArgsConstructor
-@CrossOrigin(maxAge = 36000, allowCredentials = "true",
-        value = "http://localhost:4200",
-        allowedHeaders = {"Authorization", "Content-Type"},
-        methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE})
 public class PetController {
 
     private final PetService petService;

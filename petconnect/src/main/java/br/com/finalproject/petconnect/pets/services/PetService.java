@@ -2,13 +2,14 @@ package br.com.finalproject.petconnect.pets.services;
 
 import br.com.finalproject.petconnect.exceptions.appointment.PetNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
-import br.com.finalproject.petconnect.pets.dto.PetRequest;
-import br.com.finalproject.petconnect.pets.dto.PetResponse;
+import br.com.finalproject.petconnect.pets.dto.request.PetRequest;
+import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.mapping.PetMapper;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.utils.AuthUtils;
+import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class PetService {
             return PetMapper.petMapper().toResponse(savedPet);
         } catch (Exception e) {
             log.error("Falha ao cadastrar Pet: {}", e.getMessage());
-            throw new DataModificationException("Falha ao cadastrar Pet. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException(ConstantsUtil.FAILED_TO_REGISTER_PET);
         }
     }
 
@@ -50,7 +51,7 @@ public class PetService {
             return PetMapper.petMapper().toResponseList(pets);
         } catch (Exception e) {
             log.error("Falha ao listar Pets: {}", e.getMessage());
-            throw new DataModificationException("Falha ao listar Pets. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException(ConstantsUtil.FAILED_TO_LIST_PET);
         }
     }
 
@@ -59,8 +60,8 @@ public class PetService {
         authUtils.getUserFromAuthorizationHeader(authorizationHeader);
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Pet não encontrado para o ID: {}", id);
-                    return new PetNotFoundException("Pet não encontrado.");
+                    log.error(ConstantsUtil.PET_NOT_FOUND_FOR_ID, id);
+                    return new PetNotFoundException(ConstantsUtil.PET_NOT_FOUND);
                 });
         return PetMapper.INSTANCE.toResponse(pet);
     }
@@ -72,8 +73,8 @@ public class PetService {
 
         Pet existingPet = petRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Pet não encontrado para o ID: {}", id);
-                    return new PetNotFoundException("Pet não encontrado.");
+                    log.error(ConstantsUtil.PET_NOT_FOUND_FOR_ID, id);
+                    return new PetNotFoundException(ConstantsUtil.PET_NOT_FOUND);
                 });
         petServiceUtils.updatePetDetails(existingPet, petRequest);
         try {
@@ -82,7 +83,7 @@ public class PetService {
             return PetMapper.INSTANCE.toResponse(existingPet);
         } catch (Exception e) {
             log.error("Falha ao atualizar do Pet: {}", e.getMessage());
-            throw new DataModificationException("Falha ao atualizar do Pet. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException(ConstantsUtil.FAILED_TO_UPDATE_PET);
         }
     }
 
@@ -91,8 +92,8 @@ public class PetService {
         authUtils.getUserFromAuthorizationHeader(authorizationHeader);
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Pet não encontrado para o ID: {}", id);
-                    return new PetNotFoundException("Pet não encontrado.");
+                    log.error(ConstantsUtil.PET_NOT_FOUND_FOR_ID, id);
+                    return new PetNotFoundException(ConstantsUtil.PET_NOT_FOUND);
                 });
         petRepository.delete(pet);
         log.info("Pet com ID {} excluído com sucesso!", id);
@@ -105,7 +106,7 @@ public class PetService {
             return PetMapper.petMapper().toResponseList(pets);
         } catch (Exception e) {
             log.error("Falha ao listar todos os Pets: {}", e.getMessage());
-            throw new DataModificationException("Falha ao listar todos os Pets. Por favor, tente novamente mais tarde.");
+            throw new DataModificationException(ConstantsUtil.FAILED_TO_LIST_ALL_PET);
         }
     }
 

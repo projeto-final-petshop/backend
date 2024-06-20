@@ -14,15 +14,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(maxAge = 36000, allowCredentials = "true",
-        value = "http://localhost:4200",
-        allowedHeaders = {"Authorization", "Content-Type"},
-        methods = {RequestMethod.POST})
 @Slf4j
 @RequestMapping("/auth")
 @RestController
@@ -42,12 +41,11 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
+                        loginRequest.getPassword()));
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
         final String jwt = jwtService.generateToken(userDetails);
@@ -59,7 +57,7 @@ public class AuthenticationController {
             roles.add(grantedAuthorityAuthority);
         }
 
-        LoginResponse response = new LoginResponse(jwt, "Bearer", expiresAt, username, loginRequest.getEmail(), roles);
+        var response = new LoginResponse(jwt, "Bearer", expiresAt, username, loginRequest.getEmail(), roles);
         return ResponseEntity.ok(response);
     }
 
