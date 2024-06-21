@@ -23,7 +23,6 @@ import java.util.List;
 public class PetService {
 
     private final AuthUtils authUtils;
-    private final PetServiceUtils petServiceUtils;
     private final PetRepository petRepository;
 
     @Transactional
@@ -76,7 +75,7 @@ public class PetService {
                     log.error(ConstantsUtil.PET_NOT_FOUND_FOR_ID, id);
                     return new PetNotFoundException(ConstantsUtil.PET_NOT_FOUND);
                 });
-        petServiceUtils.updatePetDetails(existingPet, petRequest);
+        updatePetDetails(existingPet, petRequest);
         try {
             petRepository.save(existingPet);
             log.info("Pet com ID {} atualizado com sucesso!", existingPet.getId());
@@ -108,6 +107,14 @@ public class PetService {
             log.error("Falha ao listar todos os Pets: {}", e.getMessage());
             throw new DataModificationException(ConstantsUtil.FAILED_TO_LIST_ALL_PET);
         }
+    }
+
+    private void updatePetDetails(Pet existingPet, PetRequest petRequest) {
+        existingPet.setName(petRequest.getName());
+        existingPet.setColor(petRequest.getColor());
+        existingPet.setBreed(petRequest.getBreed());
+        existingPet.setPetType(petRequest.getPetType());
+        existingPet.setBirthdate(petRequest.getBirthdate());
     }
 
 }

@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class ExceptionResponse {
 
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime timestamp;
 
     private int status;
