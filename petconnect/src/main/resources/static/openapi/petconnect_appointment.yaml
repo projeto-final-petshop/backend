@@ -1,11 +1,20 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: 'API Agendamento'
+  title: 'API Appointment'
   description: 'API para gerenciamento de agendamentos de serviços e consultas veterinárias para pets.'
   version: 1.0.3
+  contact:
+    name: 'Suporte PetConnect'
+    url: 'https://github.com/projeto-final-petshop'
+    email: 'petshop.petconnect@gmail.com'
+  license:
+    name: 'Apache 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: 'http://localhost:8888/api/v1'
-    description: 'Servidor local'
+  - url: "http://localhost:8888/api/v1"
+    description: "Servidor local"
+  - url: "http://localhost:8888/petconnect"
+    description: "Produção"
 tags:
   - name: Appointments
     description: 'Agendamentos de Consultas Veterinárias e Serviços'
@@ -88,7 +97,7 @@ paths:
                     error: "Internal Server Error"
                     message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
 
   /appointments/{id}:
     put:
@@ -148,7 +157,7 @@ paths:
                     error: "Unauthorized"
                     message: "Usuário não autenticado."
         '403':
-          description: 'Usuário não possui permissão para cancelar o agendamento.'
+          description: 'Usuário não possui permissão para atualizar o agendamento.'
           content:
             application/json:
               schema:
@@ -187,7 +196,7 @@ paths:
                     error: "Internal Server Error"
                     message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
 
     delete:
       summary: 'Cancelar um agendamento'
@@ -283,7 +292,7 @@ paths:
                     error: "Internal Server Error"
                     message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
 
     get:
       summary: 'Buscar um agendamento por ID.'
@@ -361,7 +370,7 @@ paths:
                     error: "Internal Server Error"
                     message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
 
   /appointments/pet/{petId}:
     get:
@@ -454,7 +463,7 @@ paths:
                     error: "Internal Server Error"
                     message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
 
 components:
   schemas:
