@@ -1,15 +1,18 @@
 openapi: 3.0.0
 info:
-  title: Appointment API
-  description: API para gerenciamento de agendamentos de serviços para pets.
-  version: 1.0.0
+  title: 'API Agendamento'
+  description: 'API para gerenciamento de agendamentos de serviços e consultas veterinárias para pets.'
+  version: 1.0.3
 servers:
-  - url: http://localhost:8888/api/v1
-    description: Servidor local
+  - url: 'http://localhost:8888/api/v1'
+    description: 'Servidor local'
+tags:
+  - name: Appointments
+    description: 'Agendamentos de Consultas Veterinárias e Serviços'
 paths:
   /appointments/schedule:
     post:
-      summary: Criar um agendamento
+      summary: 'Criar um agendamento'
       tags:
         - Appointments
       operationId: createAppointment
@@ -27,21 +30,72 @@ paths:
               $ref: '#/components/schemas/AppointmentRequest'
       responses:
         '201':
-          description: Agendamento criado com sucesso
+          description: 'Agendamento criado com sucesso.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppointmentResponse'
         '400':
-          description: Requisição inválida
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
+        '403':
+          description: 'Usuário não possui permissão para cancelar o agendamento.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 403
+                    error: "Forbidden"
+                    message: "Usuário não tem possui permissão para cadastrar o agendamento."
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
+
   /appointments/{id}:
     put:
-      summary: Atualizar um agendamento
+      summary: 'Atualizar um agendamento'
       tags:
         - Appointments
-      operationId: getAppointment
+      operationId: updateAppointment
       parameters:
         - name: id
           in: path
@@ -55,80 +109,263 @@ paths:
           schema:
             type: string
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AppointmentRequest'
       responses:
         '200':
-          description: Agendamento atualizado com sucesso
+          description: 'Agendamento atualizado com sucesso.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
+        '403':
+          description: 'Usuário não possui permissão para cancelar o agendamento.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 403
+                    error: "Forbidden"
+                    message: "Usuário não tem possui permissão para atualizar o agendamento."
         '404':
-          description: Agendamento não encontrado
+          description: 'Agendamento não encontrado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 404
+                    error: "Not Found"
+                    message: "Agendamento não encontrado!"
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
+
     delete:
-      summary: Cancelar um agendamento
+      summary: 'Cancelar um agendamento'
       tags:
         - Appointments
-      operationId: "cancelAppointment"
+      operationId: cancelAppointment
       parameters:
-        - name: "id"
-          in: "path"
+        - name: id
+          in: path
           required: true
           schema:
-            type: "integer"
-            format: "int64"
-        - name: "Authorization"
-          in: "header"
+            type: integer
+            format: int64
+        - name: Authorization
+          in: header
           required: true
           schema:
-            type: "string"
+            type: string
       responses:
-        '200':
-          description: Agendamento cancelado com sucesso
+        '204':
+          description: 'Agendamento cancelado com sucesso.'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppointmentResponse'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Agendamento cancelado com sucesso!"
+        '400':
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
+        '403':
+          description: 'Usuário não possui permissão para cancelar o agendamento.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 403
+                    error: "Forbidden"
+                    message: "Usuário não tem possui permissão para cancelar o agendamento."
         '404':
-          description: Agendamento não encontrado
+          description: 'Agendamento não encontrado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 404
+                    error: "Not Found"
+                    message: "Agendamento não encontrado!"
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
+
     get:
-      summary: Buscar um agendamento por ID
+      summary: 'Buscar um agendamento por ID.'
       tags:
         - Appointments
       parameters:
-        - name: "id"
-          in: "path"
+        - name: id
+          in: path
           required: true
           schema:
-            type: "integer"
-            format: "int64"
-        - name: "Authorization"
-          in: "header"
+            type: integer
+            format: int64
+        - name: Authorization
+          in: header
           required: true
           schema:
-            type: "string"
+            type: string
       responses:
         '200':
-          description: Agendamento encontrado
+          description: 'Agendamento encontrado.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
         '404':
-          description: Agendamento não encontrado
+          description: 'Agendamento não encontrado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 404
+                    error: "Not Found"
+                    message: "Agendamento não encontrado!"
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
 
   /appointments/pet/{petId}:
     get:
-      summary: Listar agendamentos de um pet
+      summary: 'Listar agendamentos de um pet.'
       tags:
         - Appointments
       parameters:
@@ -137,65 +374,171 @@ paths:
           required: true
           schema:
             type: integer
-        - name: "Authorization"
-          in: "header"
+        - name: Authorization
+          in: header
           required: true
           schema:
-            type: "string"
+            type: string
       responses:
         '200':
-          description: Lista de agendamentos do pet
+          description: 'Lista de agendamentos do pet.'
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
+        '403':
+          description: 'Usuário não possui permissão para cancelar o agendamento.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 403
+                    error: "Forbidden"
+                    message: "Usuário não tem possui permissão para listar todos os agendamentos."
         '404':
-          description: Pet não encontrado
+          description: 'Agendamento não encontrado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 404
+                    error: "Not Found"
+                    message: "Agendamento não encontrado!"
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
 
 components:
   schemas:
     AppointmentRequest:
       type: object
+      description: 'Requisição para criação ou atualização de um agendamento.'
       properties:
         petId:
           type: integer
+          description: 'ID do pet.'
+          example: 1
         serviceType:
           $ref: '#/components/schemas/ServiceType'
+          description: 'Tipo de serviço a ser realizado.'
+        petType:
+          $ref: '#/components/schemas/PetType'
+          description: 'Tipo do pet.'
         appointmentDate:
           type: string
           format: date
+          description: 'Data do agendamento no formato yyyy-MM-dd.'
+          example: 2023-12-01
         appointmentTime:
           type: string
           format: time
+          description: 'Hora do agendamento no formato HH:mm.'
+          example: 14:00
+      required:
+        - petId
+        - serviceType
+        - petType
+        - appointmentDate
+        - appointmentTime
     AppointmentResponse:
       type: object
+      description: 'Resposta contendo os dados de um agendamento.'
       properties:
         id:
           type: integer
+          description: 'ID do agendamento.'
+          example: 1
         petId:
           type: integer
+          description: 'ID do pet.'
+          example: 1
         serviceType:
           $ref: '#/components/schemas/ServiceType'
+          description: 'Tipo de serviço realizado.'
+        petType:
+          $ref: '#/components/schemas/PetType'
+          description: 'Tipo do pet.'
         appointmentDate:
           type: string
           format: date
+          description: 'Data do agendamento no formato yyyy-MM-dd.'
+          example: 2023-12-01
         appointmentTime:
           type: string
           format: time
+          description: 'Hora do agendamento no formato HH:mm.'
+          example: 14:00
         appointmentStatus:
           $ref: '#/components/schemas/AppointmentStatus'
+          description: 'Status do agendamento.'
         createdAt:
           type: string
           format: date-time
+          description: 'Data e hora de criação do agendamento no formato yyyy-MM-dd HH:mm.'
+          example: "2023-11-20 10:00"
         updatedAt:
           type: string
           format: date-time
+          description: 'Data e hora da última atualização do agendamento no formato yyyy-MM-dd HH:mm.'
+          example: "2023-11-20 10:00"
+    PetType:
+      type: string
+      description: 'Tipo de animal.'
+      enum:
+        - DOG
+        - CAT
+        - OTHER
     AppointmentStatus:
       type: string
+      description: 'Status do agendamento.'
       enum:
         - SCHEDULED
         - CANCELLED
@@ -204,12 +547,32 @@ components:
         - CONFIRMED
     ServiceType:
       type: string
-      description: Tipo de animal
+      description: 'Tipo de serviço.'
       enum:
         - BATH
         - GROOMING
         - BATH_AND_GROOMING
         - VETERINARY_CONSULTATION
+    ExceptionResponse:
+      type: object
+      description: 'Resposta de erro contendo detalhes sobre a exceção.'
+      properties:
+        timestamp:
+          type: string
+          description: 'Data e hora do erro no formato yyyy-MM-dd HH:mm:ss.'
+          example: "yyyy-MM-dd HH:mm:ss"
+        status:
+          type: integer
+          description: 'Código de status HTTP.'
+          example: 400
+        error:
+          type: string
+          description: 'Tipo de erro.'
+          example: "Bad Request"
+        message:
+          type: string
+          description: 'Mensagem detalhada sobre o erro.'
+          example: "Requisição inválida."
   securitySchemes:
     bearerAuth:
       type: http
