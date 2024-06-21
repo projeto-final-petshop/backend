@@ -1,17 +1,27 @@
-openapi: 3.0.1
+openapi: 3.0.3
 info:
-  title: User Management API
-  description: API para gerenciamento de usuários
-  version: 1.0.0
+  title: 'User Management API'
+  description: 'API para gerenciamento de usuários'
+  version: 1.0.3
+  contact:
+    name: 'Suporte PetConnect'
+    url: 'https://github.com/projeto-final-petshop'
+    email: 'petshop.petconnect@gmail.com'
+  license:
+    name: 'Apache 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: http://localhost:8888/api/v1
+  - url: "http://localhost:8888/api/v1"
+    description: "Servidor local"
+  - url: "http://localhost:8888/petconnect"
+    description: "Produção"
 tags:
   - name: user
-    description: Operações de usuário  
+    description: 'Operações de usuário'
 paths:
   /users/me:
     get:
-      summary: Obtém informações do usuário autenticado
+      summary: 'Obtém informações do usuário autenticado'
       tags:
         - user
       security:
@@ -23,6 +33,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
   /users/update:
     put:
       summary: Atualiza informações do usuário autenticado
@@ -44,6 +67,19 @@ paths:
               schema:
                 type: string
               example: Usuário atualizado com sucesso!
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
   /users/delete:
     delete:
       summary: Deleta o usuário autenticado
@@ -59,6 +95,19 @@ paths:
               schema:
                 type: string
               example: Usuário deletado com sucesso!
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
 components:
   schemas:
     UpdateUserRequest:
@@ -149,8 +198,28 @@ components:
           format: date-time
           description: Data e hora da última atualização do papel
           example: "2023-06-18 12:30:00"
+    ExceptionResponse:
+      type: object
+      description: 'Resposta de erro contendo detalhes sobre a exceção.'
+      properties:
+        timestamp:
+          type: string
+          description: 'Data e hora do erro no formato yyyy-MM-dd HH:mm:ss.'
+          example: "yyyy-MM-dd HH:mm:ss"
+        status:
+          type: integer
+          description: 'Código de status HTTP.'
+          example: 400
+        error:
+          type: string
+          description: 'Tipo de erro.'
+          example: "Bad Request"
+        message:
+          type: string
+          description: 'Mensagem detalhada sobre o erro.'
+          example: "Requisição inválida."
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT

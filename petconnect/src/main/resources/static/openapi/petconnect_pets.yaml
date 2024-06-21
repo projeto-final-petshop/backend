@@ -1,18 +1,35 @@
-openapi: 3.0.1
+openapi: 3.0.3
 info:
-  title: API Pet
-  description: API para gerenciamento de animais de estimação
-  version: 1.0.0
+  title: 'API Pet'
+  description: 'API para gerenciamento de animais de estimação'
+  version: 1.0.3
+  contact:
+    name: 'Suporte PetConnect'
+    url: 'https://github.com/projeto-final-petshop'
+    email: 'petshop.petconnect@gmail.com'
+  license:
+    name: 'Apache 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: http://localhost:8888/api/v1
+  - url: "http://localhost:8888/api/v1"
+    description: "Servidor local"
+  - url: "http://localhost:8888/petconnect"
+    description: "Produção"
+tags:
+  - name: Pet
+    description: 'Operações de animais de estimação'
 paths:
   /pets/register:
     post:
-      summary: Cadastra um novo animal de estimação
+      summary: 'Cadastra um novo animal de estimação'
       tags:
-        - pet
-      security:
-        - BearerAuth: []
+        - Pet
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -21,61 +38,129 @@ paths:
               $ref: '#/components/schemas/PetRequest'
       responses:
         '201':
-          description: Animal de estimação cadastrado com sucesso
+          description: 'Animal de estimação cadastrado com sucesso'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetResponse'
+        '400':
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
+        '403':
+          description: 'Usuário não possui permissão para cadastrar Pet.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 403
+                    error: "Forbidden"
+                    message: "Usuário não tem possui permissão para cadastrar o Pet."
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
+      security:
+        - bearerAuth: []
   /pets:
     get:
-      summary: Lista todos os animais de estimação do usuário autenticado
+      summary: 'Lista todos os animais de estimação do usuário autenticado'
       tags:
-        - pet
-      security:
-        - BearerAuth: []
+        - Pet
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
-          description: Lista de animais de estimação
+          description: 'Lista de animais de estimação'
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/PetResponse'
+      security:
+        - bearerAuth: []
   /pets/{id}:
     get:
-      summary: Obtém detalhes de um animal de estimação pelo ID
+      summary: 'Obtém detalhes de um animal de estimação pelo ID'
       tags:
-        - pet
-      security:
-        - BearerAuth: []
+        - Pet
       parameters:
-        - in: path
-          name: id
+        - name: id
+          in: path
           required: true
           schema:
             type: integer
             format: int64
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
-          description: Detalhes do animal de estimação
+          description: 'Detalhes do animal de estimação'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetResponse'
-    put:
-      summary: Atualiza os detalhes de um animal de estimação pelo ID
-      tags:
-        - pet
       security:
-        - BearerAuth: []
+        - bearerAuth: []
+    put:
+      summary: 'Atualiza os detalhes de um animal de estimação pelo ID'
+      tags:
+        - Pet
       parameters:
-        - in: path
-          name: id
+        - name: id
+          in: path
           required: true
           schema:
             type: integer
             format: int64
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -84,129 +169,302 @@ paths:
               $ref: '#/components/schemas/PetRequest'
       responses:
         '200':
-          description: Animal de estimação atualizado com sucesso
+          description: 'Animal de estimação atualizado com sucesso'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetResponse'
-    delete:
-      summary: Deleta um animal de estimação pelo ID
-      tags:
-        - pet
+        '400':
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
+        '403':
+          description: 'Usuário não possui permissão para atualizar o Pet.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 403
+                    error: "Forbidden"
+                    message: "Usuário não tem possui permissão para atualizar o Pet."
+        '404':
+          description: 'Agendamento não encontrado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 404
+                    error: "Not Found"
+                    message: "Agendamento não encontrado!"
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
       security:
-        - BearerAuth: []
+        - bearerAuth: []
+    delete:
+      summary: 'Deleta um animal de estimação pelo ID'
+      tags:
+        - Pet
       parameters:
-        - in: path
-          name: id
+        - name: id
+          in: path
           required: true
           schema:
             type: integer
             format: int64
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '204':
-          description: Animal de estimação deletado com sucesso
+          description: 'Pet excluido com sucesso!'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Pet excluido o com sucesso!"
+        '400':
+          description: 'Requisição inválida.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 400
+                    error: "Bad Request"
+                    message: "Requisição inválida."
+        '401':
+          description: 'Usuário não autenticado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 401
+                    error: "Unauthorized"
+                    message: "Usuário não autenticado."
+        '403':
+          description: 'Usuário não possui permissão para excluir Pet.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 403
+                    error: "Forbidden"
+                    message: "Usuário não tem possui permissão para excluir Pet."
+        '404':
+          description: 'Agendamento não encontrado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 404
+                    error: "Not Found"
+                    message: "Agendamento não encontrado!"
+        '500':
+          description: 'Erro no servidor ao tentar processar a requisição.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+              examples:
+                errorResponse:
+                  value:
+                    timestamp: "2024-06-21 08:30:47"
+                    status: 500
+                    error: "Internal Server Error"
+                    message: "Erro no servidor ao tentar processar a requisição."
+      security:
+        - bearerAuth: []
   /pets/all:
     get:
-      summary: Lista todos os animais de estimação (Admin)
+      summary: 'Lista todos os animais de estimação (Admin)'
       tags:
-        - pet
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
+        - Pet
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
-          description: Lista de todos os animais de estimação
+          description: 'Lista de todos os animais de estimação'
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/PetResponse'
+      security:
+        - bearerAuth: []
 components:
   schemas:
     PetRequest:
       type: object
-      description: Esquema para criar ou atualizar um animal de estimação.
+      description: 'Esquema para criar ou atualizar um animal de estimação.'
       properties:
         name:
           type: string
-          description: Nome do animal de estimação.
+          description: 'Nome do animal de estimação.'
           minLength: 3
           maxLength: 50
           example: "Buddy"
         color:
           type: string
-          description: Cor do pelo do animal de estimação.
+          description: 'Cor do pelo do animal de estimação.'
           example: "Marrom"
+          minLength: 3
+          maxLength: 50
         breed:
           type: string
           description: Raça do animal de estimação.
           example: "Labrador Retriever"
+          minLength: 3
+          maxLength: 50
         petType:
           $ref: '#/components/schemas/PetType'
         birthdate:
           type: string
           format: date
-          description: Data de nascimento do animal de estimação (yyyy-MM-dd).
+          description: 'Data de nascimento do animal de estimação (yyyy-MM-dd).'
           example: "2018-05-20"
     PetResponse:
       type: object
-      description: Esquema para a resposta contendo os detalhes do animal de estimação.
+      description: 'Esquema para a resposta contendo os detalhes do animal de estimação.'
       properties:
         id:
           type: integer
           format: int64
-          description: Identificador único do animal de estimação.
+          description: 'Identificador único do animal de estimação.'
           example: 1
         name:
           type: string
-          description: Nome do animal de estimação.
+          description: 'Nome do animal de estimação.'
           example: "Buddy"
         color:
           type: string
-          description: Cor do pelo do animal de estimação.
+          description: 'Cor do pelo do animal de estimação.'
           example: "Marrom"
         breed:
           type: string
-          description: Raça do animal de estimação.
+          description: 'Raça do animal de estimação.'
           example: "Labrador Retriever"
         petType:
           $ref: '#/components/schemas/PetType'
         birthdate:
           type: string
           format: date
-          description: Data de nascimento do animal de estimação (yyyy-MM-dd).
+          description: 'Data de nascimento do animal de estimação (yyyy-MM-dd).'
           example: "2018-05-20"
+        age:
+          type: integer
+          format: int32
+          example: 6
+          description: 'A idade do animal, será calculada a partir da data de nascimento'
         userId:
           type: integer
           format: int64
-          description: ID do usuário que possui o animal de estimação.
+          description: 'ID do usuário que possui o animal de estimação.'
           example: 42
         createdAt:
           type: string
           format: date-time
-          description: Timestamp de criação do animal de estimação (yyyy-MM-dd HH:mm).
+          description: 'Timestamp de criação do animal de estimação (yyyy-MM-dd HH:mm).'
           example: "2023-06-18 12:00"
         updatedAt:
           type: string
           format: date-time
-          description: Timestamp de última atualização do animal de estimação (yyyy-MM-dd HH:mm).
+          description: 'Timestamp de última atualização do animal de estimação (yyyy-MM-dd HH:mm).'
           example: "2023-06-18 12:00"
     PetType:
       type: string
-      description: Tipo de animal
+      description: 'Tipo de animal'
       enum:
         - DOG
         - CAT
         - OTHER
+    ExceptionResponse:
+      type: object
+      description: 'Resposta de erro contendo detalhes sobre a exceção.'
+      properties:
+        timestamp:
+          type: string
+          description: 'Data e hora do erro no formato yyyy-MM-dd HH:mm:ss.'
+          example: "yyyy-MM-dd HH:mm:ss"
+        status:
+          type: integer
+          description: 'Código de status HTTP.'
+          example: 400
+        error:
+          type: string
+          description: 'Tipo de erro.'
+          example: "Bad Request"
+        message:
+          type: string
+          description: 'Mensagem detalhada sobre o erro.'
+          example: "Requisição inválida."
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-    BasicAuth:
-      type: http
-      scheme: basic
-tags:
-  - name: pet
-    description: Operações de animais de estimação
