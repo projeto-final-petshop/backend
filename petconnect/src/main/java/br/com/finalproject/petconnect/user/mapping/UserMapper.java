@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -28,5 +27,5 @@ public interface UserMapper {
     UserResponse toUserResponse(User user);
 
     List<UserResponse> toUserResponseList(List<User> users);
-    
+
 }

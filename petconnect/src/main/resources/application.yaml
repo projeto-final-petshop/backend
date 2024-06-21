@@ -7,7 +7,7 @@ spring:
   application:
     name: petconnect
   devtools:
-    add-properties: false # para desabilitar
+    add-properties: false
   banner:
     location: classpath:banner.txt
     charset: UTF-8
@@ -64,17 +64,12 @@ spring:
   data:
     web:
       pageable:
-        # Define o tamanho padrão da página se não for especificado na solicitação.
-        default-page-size: 20 # número padrão de itens por página
-        # Define o tamanho máximo permitido para uma página.
-        max-page-size: 100 # número máximo de itens por página
-        # Define se a numeração das páginas começa em 1 ao invés de 0.
-        one-indexed-parameters: false # se verdadeiro, páginas começam em 1 ao invés de 0
-        # Define o número padrão da página inicial.
-        default-page-number: 0 # número padrão de página inicial (geralmente 0)
+        default-page-size: 20
+        max-page-size: 100
+        one-indexed-parameters: false
+        default-page-number: 0
         sort:
-          # Define o nome do parâmetro na URL usado para ordenação.
-          sort-parameter: sort # parâmetro de ordenação na URL
+          sort-parameter: sort
   cloud:
     openfeign:
       autoconfiguration:
@@ -82,34 +77,16 @@ spring:
           enabled: false
       client:
         default-config:
-          connect-timeout: 5000 # 5 segundos
-#  cors:
-#    allowed-origins:
-#      - "http://localhost:4200"
-#      - "http://localhost:9090"
-#      - "https://viacep.com.br/ws"
-#    allowed-methods:
-#      - GET
-#      - POST
-#      - PUT
-#      - DELETE
-#      - OPTIONS
-#    allowed-headers:
-#      - "Authorization"
-#      - "Content-Type"
-#    exposed-headers:
-#      - "Authorization"
-#    allow-credentials: true
-#    max-age: 3600
+          connect-timeout: 5000
 
 springdoc:
-#  default-consumes-media-type: [ 'text/plain', '*/*', 'application/json', 'application/*+json' ]
-#  default-produces-media-type: [ 'text/plain', '*/*', 'application/json', 'application/*+json' ]
+  default-consumes-media-type: 'application/json'
+  default-produces-media-type: 'application/json'
   show-actuator: true
   use-management-port: true
-  override-with-generic-response: true # adiciona @RestControllerAdvice
+  override-with-generic-response: true
   cache:
-    disabled: false # desabilita o chace springdoc-openapi
+    disabled: false
   api-docs:
     path: /api-docs
     version: OPENAPI_3_0
@@ -118,14 +95,12 @@ springdoc:
     path: /swagger-ui.html
     operations-sorter: method
     tags-sorter: alpha
-    # "get", "put", "post", "delete", "options", "head", "patch", "trace"
-    #    supported-submit-methods: "get", "put", "post", "delete"
     csrf:
-      enabled: false # evitar o suporte CSRF
-      use-local-storage: false # obter o token CSRF do armazenamento local
-      use-session-storage: false # obter o token CSRF do Session Storage
-      cookie-name: 'XSRF-TOKEN' # opcional - define o nome do Cookie CSRF
-      header-name: 'X-XSRF-TOKEN' # opcional - define o nome do cabeçalho CSRF
+      enabled: false
+      use-local-storage: false
+      use-session-storage: false
+      cookie-name: 'XSRF-TOKEN'
+      header-name: 'X-XSRF-TOKEN'
 
 mail:
   from:

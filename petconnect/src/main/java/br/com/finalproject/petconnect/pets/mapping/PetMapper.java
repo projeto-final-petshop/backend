@@ -9,6 +9,8 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
@@ -34,8 +36,13 @@ public interface PetMapper {
     @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "birthdate", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "age", expression = "java(calculateAge(pet.getBirthdate()))")
     PetResponse toResponse(Pet pet);
 
     List<PetResponse> toResponseList(List<Pet> pets);
+
+    default int calculateAge(LocalDate birthdate) {
+        return birthdate != null ? Period.between(birthdate, LocalDate.now()).getYears() : 0;
+    }
 
 }

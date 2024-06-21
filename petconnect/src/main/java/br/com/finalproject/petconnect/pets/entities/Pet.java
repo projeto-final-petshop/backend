@@ -37,8 +37,13 @@ public class Pet implements Serializable {
     @Size(min = 3, max = 50, message = "O nome deve ter entre {min} e {max} caracteres.")
     private String name;
 
+    @Size(min = 3, max = 20, message = "A cor deve ter entre {min} e {max} caracteres.")
     private String color;
 
+    @Transient
+    private int age;
+
+    @Size(min = 3, max = 50, message = "O nome da raça deve ter entre {min} e {max} caracteres.")
     private String breed;
 
     @Enumerated(EnumType.STRING)
