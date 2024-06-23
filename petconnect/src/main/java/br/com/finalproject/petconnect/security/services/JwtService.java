@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.security.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.JWTServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.JWTServiceException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

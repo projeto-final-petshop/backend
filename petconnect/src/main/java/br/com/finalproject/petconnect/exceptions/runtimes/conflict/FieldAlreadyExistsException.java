@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.exceptions.runtimes;
+package br.com.finalproject.petconnect.exceptions.runtimes.conflict;
 
 public class FieldAlreadyExistsException extends RuntimeException {
 

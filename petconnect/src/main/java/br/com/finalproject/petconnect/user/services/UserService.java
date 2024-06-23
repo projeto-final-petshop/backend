@@ -1,7 +1,6 @@
 package br.com.finalproject.petconnect.user.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.ResourceNotFoundException;
-import br.com.finalproject.petconnect.pets.repositories.PetRepository;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
 import br.com.finalproject.petconnect.user.dto.request.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;

@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.exceptions.runtimes;
+package br.com.finalproject.petconnect.exceptions.runtimes.service;
 
 public class ServiceException extends RuntimeException {
 
@@ -13,7 +13,4 @@ public class ServiceException extends RuntimeException {
         super(message, cause);
     }
 
-    public ServiceException(Throwable cause) {
-        super(cause);
-    }
 }

@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.admin;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.CpfAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.ResourceNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.ServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.CpfAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.mapping.PetMapper;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;

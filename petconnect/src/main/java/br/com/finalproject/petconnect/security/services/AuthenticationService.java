@@ -1,6 +1,10 @@
 package br.com.finalproject.petconnect.security.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.*;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.PasswordMismatchException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.FieldAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
@@ -13,7 +17,6 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -60,7 +63,7 @@ public class AuthenticationService {
 
     private void validateInput(UserRequest input) {
         if (!input.getPassword().equals(input.getConfirmPassword())) {
-            throw new PasswordsDoNotMatchException();
+            throw new PasswordMismatchException();
         }
     }
 

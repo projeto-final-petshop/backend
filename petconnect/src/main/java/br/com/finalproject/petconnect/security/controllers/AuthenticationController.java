@@ -1,8 +1,8 @@
 package br.com.finalproject.petconnect.security.controllers;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.InvalidCredentialsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.UserInactiveException;
-import br.com.finalproject.petconnect.exceptions.runtimes.UserNotRegisteredException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
 import br.com.finalproject.petconnect.security.dto.LoginRequest;
 import br.com.finalproject.petconnect.security.dto.LoginResponse;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;

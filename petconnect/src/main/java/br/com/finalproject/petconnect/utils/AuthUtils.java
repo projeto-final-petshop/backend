@@ -1,8 +1,8 @@
 package br.com.finalproject.petconnect.utils;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.FieldNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.InvalidAuthenticationTokenException;
-import br.com.finalproject.petconnect.exceptions.runtimes.JWTServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.InvalidAuthenticationTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.JWTServiceException;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;

@@ -1,8 +1,8 @@
 package br.com.finalproject.petconnect.user.controllers;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.InvalidRequestException;
-import br.com.finalproject.petconnect.exceptions.runtimes.ResourceNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.ServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.user.dto.request.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.services.UserService;

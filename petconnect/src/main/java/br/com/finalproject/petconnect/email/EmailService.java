@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.email;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.ServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;

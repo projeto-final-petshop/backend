@@ -1,15 +1,16 @@
 package br.com.finalproject.petconnect.pets.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.EmailAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.ResourceNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.ServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.PetPermissionDeniedException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.pets.dto.request.PetRequest;
 import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.mapping.PetMapper;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.entities.User;
-import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.AuthUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +31,7 @@ public class PetService {
     public PetResponse createPet(PetRequest petRequest, String authorizationHeader) {
 
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
-
-        if (Boolean.FALSE.equals(user.getActive())) {
-            throw new ResourceNotFoundException("Você não pode cadastrar pets porque sua conta está desativada.");
-        }
+        userInactive(user);
 
         if (petRepository.existsByNameAndUser(petRequest.getName(), user)) {
             throw new EmailAlreadyExistsException();
@@ -46,9 +44,9 @@ public class PetService {
             Pet savedPet = petRepository.save(pet);
             log.info("Pet cadastrado com sucesso: {}", savedPet.getId());
             return PetMapper.petMapper().toResponse(savedPet);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             log.error("Falha ao cadastrar Pet: {}", e.getMessage());
-            throw new ResourceNotFoundException("Erro ao cadastrar pet.");
+            throw new ServiceException("Erro ao cadastrar pet.");
         }
 
     }
@@ -58,9 +56,7 @@ public class PetService {
 
         User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
 
-        if (Boolean.FALSE.equals(user.getActive())) {
-            throw new ResourceNotFoundException("Você não pode cadastrar pets porque sua conta está desativada.");
-        }
+        userInactive(user);
 
         try {
             List<Pet> pets = petRepository.findByUser(user);
@@ -69,9 +65,9 @@ public class PetService {
             }
             log.info("Lista de pets cadastrados para o usuário {}: {}", user.getUsername(), pets);
             return PetMapper.petMapper().toResponseList(pets);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             log.error("Falha ao listar Pets: {}", e.getMessage());
-            throw new ResourceNotFoundException("Erro ao listar pets.");
+            throw new ServiceException("Erro ao listar pets.");
         }
 
     }
@@ -84,23 +80,13 @@ public class PetService {
         final var pet = petNotFound(id);
 
         if (!pet.getUser().equals(user)) {
-            throw new ResourceNotFoundException("Você não tem permissão para acessar este pet.");
+            throw new PetPermissionDeniedException("visualizar");
         }
 
-        if (Boolean.FALSE.equals(user.getActive())) {
-            throw new ResourceNotFoundException("Você não pode acessar detalhes deste pet porque sua conta está desativada.");
-        }
+        userInactive(user);
 
         return PetMapper.INSTANCE.toResponse(pet);
 
-    }
-
-    private Pet petNotFound(Long id) {
-        return petRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Pet não encontrado para o ID: {}", id);
-                    return new ResourceNotFoundException("Pet não encontrado.");
-                });
     }
 
     @Transactional
@@ -111,12 +97,10 @@ public class PetService {
         final var existingPet = petNotFound(id);
 
         if (!existingPet.getUser().equals(user)) {
-            throw new ResourceNotFoundException("Você não tem permissão para atualizar este pet.");
+            throw new PetPermissionDeniedException("atualizar");
         }
 
-        if (Boolean.FALSE.equals(user.getActive())) {
-            throw new ResourceNotFoundException("Você não pode atualizar este pet porque sua conta está desativada.");
-        }
+        userInactive(user);
 
         updatePetDetails(existingPet, petRequest);
 
@@ -124,9 +108,9 @@ public class PetService {
             petRepository.save(existingPet);
             log.info("Pet com ID {} atualizado com sucesso!", existingPet.getId());
             return PetMapper.INSTANCE.toResponse(existingPet);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             log.error("Falha ao atualizar o Pet: {}", e.getMessage());
-            throw new ResourceNotFoundException("Erro ao atualizar pet.");
+            throw new ServiceException("Erro ao atualizar pet.");
         }
 
     }
@@ -139,12 +123,10 @@ public class PetService {
         final var pet = petNotFound(id);
 
         if (!pet.getUser().equals(user)) {
-            throw new ResourceNotFoundException("Você não tem permissão para excluir este pet.");
+            throw new PetPermissionDeniedException("excluir");
         }
 
-        if (Boolean.FALSE.equals(user.getActive())) {
-            throw new ResourceNotFoundException("Você não pode excluir este pet porque sua conta está desativada.");
-        }
+        userInactive(user);
 
         petRepository.delete(pet);
         log.info("Pet com ID {} excluído com sucesso!", id);
@@ -160,21 +142,33 @@ public class PetService {
                 throw new ResourceNotFoundException("Nenhum pet cadastrado.");
             }
             return PetMapper.petMapper().toResponseList(pets);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             log.error("Falha ao listar todos os Pets: {}", e.getMessage());
             throw new ServiceException("Erro ao listar pets.");
         }
 
     }
 
-    private void updatePetDetails(Pet existingPet, PetRequest petRequest) {
+    private Pet petNotFound(Long id) {
+        return petRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Pet não encontrado para o ID: {}", id);
+                    return new ResourceNotFoundException("Pet não encontrado.");
+                });
+    }
 
+    private void updatePetDetails(Pet existingPet, PetRequest petRequest) {
         existingPet.setName(petRequest.getName());
         existingPet.setColor(petRequest.getColor());
         existingPet.setBreed(petRequest.getBreed());
         existingPet.setPetType(petRequest.getPetType());
         existingPet.setBirthdate(petRequest.getBirthdate());
+    }
 
+    private static void userInactive(User user) {
+        if (Boolean.FALSE.equals(user.getActive())) {
+            throw new UserInactiveException();
+        }
     }
 
 }

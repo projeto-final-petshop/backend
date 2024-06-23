@@ -5,7 +5,7 @@ import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.entities.AppointmentStatus;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.ServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.entities.User;
