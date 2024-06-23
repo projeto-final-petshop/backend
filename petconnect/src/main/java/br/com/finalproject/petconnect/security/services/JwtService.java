@@ -1,7 +1,6 @@
 package br.com.finalproject.petconnect.security.services;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
-import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
+import br.com.finalproject.petconnect.exceptions.runtimes.JWTServiceException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -34,8 +33,8 @@ public class JwtService {
         try {
             return extractClaim(token, Claims::getSubject);
         } catch (JwtException | IllegalArgumentException e) {
-            log.error(ConstantsUtil.EXTRACT_EMAIL_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.EXTRACT_EMAIL_ERROR, e);
+            log.error("Erro ao extrair e-mail do token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao extrair e-mail do token JWT", e);
         }
     }
 
@@ -44,8 +43,8 @@ public class JwtService {
             final Claims claims = extractAllClaims(token);
             return claimsResolver.apply(claims);
         } catch (JwtException | IllegalArgumentException e) {
-            log.error(ConstantsUtil.EXTRACT_CLAIM_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.EXTRACT_CLAIM_ERROR, e);
+            log.error("Erro ao extrair claim do token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao extrair claim do token JWT", e);
         }
     }
 
@@ -58,8 +57,8 @@ public class JwtService {
                     .map(GrantedAuthority::getAuthority).toList());
             return generateToken(claims, userDetails);
         } catch (Exception e) {
-            log.error(ConstantsUtil.GENERATE_TOKEN_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.GENERATE_TOKEN_ERROR, e);
+            log.error("Erro ao gerar token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao gerar token JWT", e);
         }
     }
 
@@ -67,8 +66,8 @@ public class JwtService {
         try {
             return buildToken(extraClaims, userDetails, jwtExpiration);
         } catch (Exception e) {
-            log.error(ConstantsUtil.GENERATE_TOKEN_WITH_CLAIMS_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.GENERATE_TOKEN_WITH_CLAIMS_ERROR, e);
+            log.error("Erro ao gerar token JWT com claims: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao gerar token JWT com claims", e);
         }
     }
 
@@ -86,8 +85,8 @@ public class JwtService {
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                     .compact();
         } catch (Exception e) {
-            log.error(ConstantsUtil.BUILD_TOKEN_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.BUILD_TOKEN_ERROR, e);
+            log.error("Erro ao construir token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao construir token JWT", e);
         }
     }
 
@@ -96,8 +95,8 @@ public class JwtService {
             final String username = extractEmail(token);
             return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
         } catch (Exception e) {
-            log.error(ConstantsUtil.VALIDATE_TOKEN_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.VALIDATE_TOKEN_ERROR, e);
+            log.error("Erro ao validar token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao validar token JWT", e);
         }
     }
 
@@ -105,8 +104,8 @@ public class JwtService {
         try {
             return extractExpiration(token).before(new Date());
         } catch (Exception e) {
-            log.error(ConstantsUtil.CHECK_TOKEN_EXPIRATION_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.CHECK_TOKEN_EXPIRATION_ERROR, e);
+            log.error("Erro ao verificar expiração do token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao verificar expiração do token JWT", e);
         }
     }
 
@@ -114,8 +113,8 @@ public class JwtService {
         try {
             return extractClaim(token, Claims::getExpiration);
         } catch (Exception e) {
-            log.error(ConstantsUtil.EXTRACT_EXPIRATION_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.EXTRACT_EXPIRATION_ERROR, e);
+            log.error("Erro ao extrair expiração do token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao extrair expiração do token JWT", e);
         }
     }
 
@@ -127,8 +126,8 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (JwtException | IllegalArgumentException e) {
-            log.error(ConstantsUtil.EXTRACT_ALL_CLAIMS_ERROR, e);
-            throw new DataModificationException(ConstantsUtil.EXTRACT_ALL_CLAIMS_ERROR, e);
+            log.error("Erro ao extrair todos os claims do token JWT: {}", e.getMessage());
+            throw new JWTServiceException("Erro ao extrair todos os claims do token JWT", e);
         }
     }
 

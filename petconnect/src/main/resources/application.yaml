@@ -12,7 +12,7 @@ spring:
     location: classpath:banner.txt
     charset: UTF-8
   datasource:
-    url: jdbc:mysql://localhost:3306/petconnect?serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&requireSSL=true&serverTimezone=UTC
     username: root
     password: root
   jpa:
@@ -112,8 +112,8 @@ security:
     expiration-time: 86400000
 
 feign:
-  name: viacep-api
-  url: https://viacep.com.br/ws
+  name: 'viacep-api'
+  url: 'https://viacep.com.br/ws'
 
 management:
   server:

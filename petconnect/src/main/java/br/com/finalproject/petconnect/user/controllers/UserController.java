@@ -1,5 +1,8 @@
 package br.com.finalproject.petconnect.user.controllers;
 
+import br.com.finalproject.petconnect.exceptions.runtimes.InvalidRequestException;
+import br.com.finalproject.petconnect.exceptions.runtimes.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.ServiceException;
 import br.com.finalproject.petconnect.user.dto.request.UpdateUserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.services.UserService;
@@ -7,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -30,34 +32,43 @@ public class UserController {
         return ResponseEntity.ok(currentUser);
     }
 
-    @PutMapping(value = "/update", consumes = "application/json", produces = "text/plain")
+    @PutMapping(value = "/update", consumes = "application/json", produces = "application/json")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest request) {
+    public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest request)
+            throws InvalidRequestException, ResourceNotFoundException, ServiceException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        userService.updateUser(currentPrincipalName, request);
-        log.info("Usuário atualizado com sucesso: {}", currentPrincipalName);
-        return ResponseEntity.status(HttpStatus.OK).body("Usuário atualizado com sucesso!");
+
+        try {
+            userService.updateUser(currentPrincipalName, request);
+            log.info("Usuário atualizado com sucesso: {}", currentPrincipalName);
+            return ResponseEntity.ok("Usuário atualizado com sucesso!");
+        } catch (InvalidRequestException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (ServiceException e) {
+            log.error("Erro ao atualizar usuário", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
-    @DeleteMapping(value = "/deactivate", produces = "text/plain")
+    @DeleteMapping(value = "/deactivate", produces = "application/json")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> deactivateUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        userService.deactivateUser(currentPrincipalName);
-        log.info("Usuário desativado com sucesso: {}", currentPrincipalName);
-        return ResponseEntity.ok("Usuário desativado com sucesso!");
-    }
 
-    @DeleteMapping(value = "/delete", produces = "text/plain")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> deleteUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        userService.deleteUser(currentPrincipalName);
-        log.info("Usuário deletado com sucesso: {}", currentPrincipalName);
-        return ResponseEntity.ok("Usuário deletado com sucesso!");
+        try {
+            userService.deactivateUser(currentPrincipalName);
+            log.info("Usuário desativado com sucesso: {}", currentPrincipalName);
+            return ResponseEntity.ok("Usuário desativado com sucesso!");
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (ServiceException e) {
+            log.error("Erro ao desativar usuário", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 }

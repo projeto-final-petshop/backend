@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.email;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailSendException;
+import br.com.finalproject.petconnect.exceptions.runtimes.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,7 +26,7 @@ public class EmailService {
             log.info("E-mail enviado para: {}", to);
         } catch (Exception e) {
             log.error("Erro ao enviar e-mail para: {}", to, e);
-            throw new EmailSendException();
+            throw new ServiceException();
         }
     }
 

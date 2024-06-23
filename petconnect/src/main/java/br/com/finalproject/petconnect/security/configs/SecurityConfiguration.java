@@ -32,6 +32,8 @@ import java.util.List;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
 
+    // WebSecurityConfigurerAdapter - deprecated
+
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -41,26 +43,30 @@ public class SecurityConfiguration {
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(requests -> requests.requestMatchers(
-                                "/api/v1", "/api/v1/**", "/error",
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(
+                                "/api/v1", "/api/v1/**", "/error", "/index.html", "/",
                                 "/actuator", "/actuator/**", "/webjars/**",
                                 "/auth/**", "/auth/login", "/auth/signup",
                                 "/auth/reset-password-by-cpf", "/auth/reset-password-by-email",
                                 "/auth/reset-password", "/reset-password/confirm",
                                 "/users/update-password", "/auth/authenticate",
                                 "/api-docs", "/swagger-ui.html", "/swagger-ui/api-docs.html",
-                                "/swagger-ui*/*swagger-initializer.js", "/swagger-ui*/**",
-                                "/addresses/**", "/addresses").permitAll()
-                        .anyRequest().authenticated())
+                                "/swagger-ui*/*swagger-initializer.js", "/swagger-ui*/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
                 .authenticationProvider(authenticationProvider)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(Customizer.withDefaults());
+
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         var configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:4200",
@@ -71,11 +77,14 @@ public class SecurityConfiguration {
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList(
                 ConstantsUtil.AUTHORIZATION,
-                ConstantsUtil.CONTENT_TYPE));
+                ConstantsUtil.CONTENT_TYPE
+        ));
         configuration.setExposedHeaders(List.of(
-                ConstantsUtil.AUTHORIZATION));
+                ConstantsUtil.AUTHORIZATION
+        ));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
+
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
