@@ -1,20 +1,26 @@
-package br.com.finalproject.petconnect.address;
+package br.com.finalproject.petconnect.domain.entities;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "addresses")
+@Entity
 public class Address {
 
-    private String cep;
-    private String logradouro;
-    private String complemento;
-    private String bairro;
-    private String localidade;
-    private String uf;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String number;
+    private String street;
+    private String city;
+    private String state;
+    private String postalCode;
+    private String country;
 
 }

@@ -1,8 +1,8 @@
 package br.com.finalproject.petconnect.exceptions.runtimes;
 
-public class PastDateException extends RuntimeException {
+public class PastAppointmentDateException extends RuntimeException {
 
-    public PastDateException() {
+    public PastAppointmentDateException() {
         super("A data de agendamento não pode estar no passado.");
     }
 }

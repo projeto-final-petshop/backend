@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.domain.enums;
 
-public enum ServiceEnum {
+public enum ServiceType {
 
     BATH,
     BATH_AND_GROOMING,

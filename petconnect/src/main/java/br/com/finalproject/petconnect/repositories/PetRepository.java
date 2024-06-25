@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.pets.repositories;
+package br.com.finalproject.petconnect.repositories;
 
 import br.com.finalproject.petconnect.domain.entities.Pet;
 import br.com.finalproject.petconnect.domain.entities.User;

@@ -1,34 +1,20 @@
-package br.com.finalproject.petconnect.domain.entities;
+package br.com.finalproject.petconnect.domain.dto.request;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "reset_token")
-@Entity
-public class ResetToken {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ResetTokenRequest {
 
     private String token;
     private LocalDateTime expiryDate;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private User user;
-
-    public ResetToken(String token, User user) {
-        this.token = token;
-        this.user = user;
-        this.expiryDate = LocalDateTime.now().plusHours(1);
-    }
+    private Long userId; // reference to user id
 
 }

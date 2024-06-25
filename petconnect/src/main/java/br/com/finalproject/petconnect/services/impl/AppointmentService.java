@@ -1,7 +1,7 @@
-package br.com.finalproject.petconnect.services;
+package br.com.finalproject.petconnect.services.impl;
 
-import br.com.finalproject.petconnect.domain.dto.AppointmentRequest;
-import br.com.finalproject.petconnect.domain.dto.AppointmentResponse;
+import br.com.finalproject.petconnect.domain.dto.request.AppointmentRequest;
+import br.com.finalproject.petconnect.domain.dto.response.AppointmentResponse;
 import br.com.finalproject.petconnect.domain.entities.Appointment;
 import br.com.finalproject.petconnect.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.repositories.AppointmentRepository;
@@ -13,6 +13,7 @@ import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFo
 import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.domain.entities.Pet;
 import br.com.finalproject.petconnect.domain.entities.User;
+import br.com.finalproject.petconnect.services.utils.AppointmentServiceUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

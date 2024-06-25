@@ -1,8 +1,9 @@
-package br.com.finalproject.petconnect.admin;
+package br.com.finalproject.petconnect.controllers;
 
-import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
-import br.com.finalproject.petconnect.user.dto.request.UserRequest;
-import br.com.finalproject.petconnect.user.dto.response.UserResponse;
+import br.com.finalproject.petconnect.domain.dto.response.PetResponse;
+import br.com.finalproject.petconnect.services.impl.AdminService;
+import br.com.finalproject.petconnect.domain.dto.request.UserRequest;
+import br.com.finalproject.petconnect.domain.dto.response.UserResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

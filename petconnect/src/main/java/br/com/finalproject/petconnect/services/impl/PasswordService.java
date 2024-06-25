@@ -1,16 +1,15 @@
-package br.com.finalproject.petconnect.password.service;
+package br.com.finalproject.petconnect.services.impl;
 
-import br.com.finalproject.petconnect.services.impl.EmailService;
 import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.PasswordMismatchException;
 import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.security.JwtTokenException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.EmailSendException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.PasswordUpdateException;
 import br.com.finalproject.petconnect.domain.dto.request.UpdatePasswordRequest;
-import br.com.finalproject.petconnect.password.entities.PasswordResetToken;
-import br.com.finalproject.petconnect.password.repositories.PasswordResetTokenRepository;
+import br.com.finalproject.petconnect.domain.entities.ResetToken;
+import br.com.finalproject.petconnect.repositories.PasswordResetTokenRepository;
 import br.com.finalproject.petconnect.domain.entities.User;
-import br.com.finalproject.petconnect.user.repositories.UserRepository;
+import br.com.finalproject.petconnect.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,7 +49,7 @@ public class PasswordService {
                 .orElseThrow(() -> new FieldNotFoundException("Email")); // Email não encontrado.
 
         String token = UUID.randomUUID().toString();
-        var passwordResetToken = new PasswordResetToken(token, user);
+        var passwordResetToken = new ResetToken(token, user);
         tokenRepository.save(passwordResetToken);
 
         String resetLink = "http://localhost:8888/api/v1/reset-password/confirm?token=" + token;
@@ -66,7 +65,7 @@ public class PasswordService {
 
     @Transactional
     public void updatePasswordWithToken(String token, String newPassword) {
-        PasswordResetToken resetToken = tokenRepository.findByToken(token)
+        ResetToken resetToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new FieldNotFoundException("Token de redefinição de senha"));
 
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
@@ -97,7 +96,7 @@ public class PasswordService {
 
     private void sendPasswordResetEmail(User user) {
         String token = UUID.randomUUID().toString();
-        var passwordResetToken = new PasswordResetToken(token, user);
+        var passwordResetToken = new ResetToken(token, user);
         tokenRepository.save(passwordResetToken);
 
         String resetLink = "http://localhost:8888/api/v1/auth/reset-password/confirm?token=" + token;

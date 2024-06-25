@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.domain.dto.request;
+package br.com.finalproject.petconnect.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressRequest {
+public class AddressResponse {
 
+    private Long id;
     private String number;
+    private String street;
+    private String city;
+    private String state;
     private String postalCode;
+    private String country;
 
 }

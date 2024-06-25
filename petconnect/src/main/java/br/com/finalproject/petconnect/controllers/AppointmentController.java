@@ -1,8 +1,8 @@
-package br.com.finalproject.petconnect.appointment.controllers;
+package br.com.finalproject.petconnect.controllers;
 
-import br.com.finalproject.petconnect.appointment.dto.AppointmentRequest;
-import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
-import br.com.finalproject.petconnect.appointment.services.AppointmentService;
+import br.com.finalproject.petconnect.domain.dto.request.AppointmentRequest;
+import br.com.finalproject.petconnect.domain.dto.response.AppointmentResponse;
+import br.com.finalproject.petconnect.services.impl.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

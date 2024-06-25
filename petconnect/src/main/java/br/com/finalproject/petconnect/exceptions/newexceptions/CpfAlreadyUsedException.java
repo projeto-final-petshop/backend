@@ -1,8 +1,8 @@
 package br.com.finalproject.petconnect.exceptions.newexceptions;
 
-public class EmailAlreadyUsedException extends RuntimeException {
+public class CpfAlreadyUsedException extends RuntimeException {
 
-    public EmailAlreadyUsedException(String message) {
+    public CpfAlreadyUsedException(String message) {
         super(message);
     }
 }

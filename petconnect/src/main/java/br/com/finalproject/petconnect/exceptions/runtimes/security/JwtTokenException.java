@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.exceptions.runtimes.security;
 
-public class InvalidTokenException extends RuntimeException {
+public class JwtTokenException extends RuntimeException {
 
-    public InvalidTokenException() {
-        super("Token JWT inválido.");
+    public JwtTokenException() {
+        super("O token de redefinição de senha expirou.");
     }
 
 }

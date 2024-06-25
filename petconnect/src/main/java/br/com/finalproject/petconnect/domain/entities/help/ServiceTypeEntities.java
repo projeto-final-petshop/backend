@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.domain.entities;
+package br.com.finalproject.petconnect.domain.entities.help;
 
 import br.com.finalproject.petconnect.domain.enums.ServiceType;
 import jakarta.persistence.*;
@@ -19,6 +19,6 @@ public class ServiceTypeEntities {
 
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private ServiceType name;
+    private ServiceType type;
 
 }

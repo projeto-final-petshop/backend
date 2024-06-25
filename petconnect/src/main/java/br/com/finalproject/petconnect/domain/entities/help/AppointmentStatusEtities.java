@@ -1,7 +1,6 @@
 package br.com.finalproject.petconnect.domain.entities.help;
 
 import br.com.finalproject.petconnect.domain.enums.AppointmentStatus;
-import br.com.finalproject.petconnect.domain.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "appointment_status")
-public class AppointmentStatusntities {
+public class AppointmentStatusEtities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

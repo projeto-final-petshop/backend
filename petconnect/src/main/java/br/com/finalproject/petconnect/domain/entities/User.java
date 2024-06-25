@@ -1,15 +1,12 @@
-package br.com.finalproject.petconnect.user.entities;
+package br.com.finalproject.petconnect.domain.entities;
 
-import br.com.finalproject.petconnect.pets.entities.Pet;
-import br.com.finalproject.petconnect.domain.entities.Role;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import br.com.finalproject.petconnect.annotations.NotContainSequences;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,18 +16,12 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Representa o usuário do sistema
- */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_email", columnNames = "email"),
-        @UniqueConstraint(name = "uk_cpf", columnNames = "cpf")
-})
+@Table(name = "users")
 @Entity
 public class User implements UserDetails {
 
@@ -38,51 +29,41 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @Size(min = 3, max = 250, message = "Nome deve ter entre {min} e {max} caracteres.")
+    @Size(min = 3, max = 250, message = "O nome deve ter entre 3 e 250 caracteres.")
     private String name;
 
-    @Column(unique = true, nullable = false)
-    @Email(message = "Insira um e-mail válido.", regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$")
-    private String email;
-
-    @Column(nullable = false)
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
-            message = "A senha deve ter pelo menos 8 caracteres, incluindo pelo menos uma letra maiúscula, " +
-                    "uma letra minúscula, um número e um caractere especial.")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
-
-    @Column(unique = true, nullable = false)
-    @CPF(message = "Insira um CPF válido.")
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
-            message = "Insira um CPF com formato válido.")
+    @Column(unique = true)
+    @CPF(message = "CPF inválido.")
+    @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$",
+            message = "CPF inválido. Use o formato XXX.XXX.XXX-XX.")
     private String cpf;
 
-    @Pattern(regexp = "^\\+?\\d{9,14}$",
-            message = "Insira um número de telefone que tenha entre 9 e 14 dígitos numéricos. O sinal de + é opcional.")
+    @Column(unique = true)
+    @Email(message = "Email inválido.")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            message = "Email inválido. Use um formato válido.")
+    private String email;
+
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um dígito e um caractere especial.")
+    @NotContainSequences(message = "A senha não pode conter sequências simples como 'abc', 'ABC', '123', etc.")
+    private String password;
+
+    @Pattern(regexp = "^\\+?\\d{9,14}$", message = "Número de telefone inválido.")
     private String phoneNumber;
 
-    @Size(min = 10, max = 250, message = "Endereço deve ter entre {min} e {max} caracteres.")
+    private Boolean active = true;
+
     private String address;
 
-    @Column(nullable = false)
-    private Boolean active;
-
-    @Transient
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Pet> pets;
-
     @ManyToOne
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_user_role"))
-    private Role role;
+    @JoinColumn(nullable = false)
+    private Role role; // assumindo que Role já está definida
 
-    @CreationTimestamp
-    @Column(updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime updatedAt;
 
     @Override

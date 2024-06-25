@@ -1,25 +1,17 @@
-package br.com.finalproject.petconnect.domain.entities;
+package br.com.finalproject.petconnect.domain.dto.request;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "addresses")
-@Entity
-public class Address {
+public class AddressRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String street;
-    private String city;
-    private String state;
+    private String number;
     private String postalCode;
-    private String country;
 
 }

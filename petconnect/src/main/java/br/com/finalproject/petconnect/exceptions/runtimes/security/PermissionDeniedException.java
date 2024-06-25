@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.exceptions.runtimes.security;
 
-public class PetPermissionDeniedException extends RuntimeException {
+public class PermissionDeniedException extends RuntimeException {
 
-    public PetPermissionDeniedException(String operation) {
-        super("Usuário não possui permissão para " + operation + " um animal de estimação.");
+    public PermissionDeniedException(String operation, String fieldName) {
+        super("Usuário não possui permissão para " + operation + " " + fieldName + ".");
     }
 
 }

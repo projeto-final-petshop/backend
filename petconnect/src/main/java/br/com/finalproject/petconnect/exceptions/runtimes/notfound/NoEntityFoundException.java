@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.exceptions.runtimes.notfound;
 
-public class FieldNotFoundException extends RuntimeException {
+public class NoEntityFoundException extends RuntimeException {
 
-    public FieldNotFoundException(String field) {
-        super(field + " não encontrado.");
+    public NoEntityFoundException(String fieldName) {
+        super("Nenhum " + fieldName + " cadastrado.");
     }
 
 }

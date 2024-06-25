@@ -4,7 +4,7 @@ import br.com.finalproject.petconnect.domain.entities.Pet;
 
 import java.util.List;
 
-public interface PetServiceInt {
+public interface PetService {
 
     List<Pet> findAll();
 

@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.utils;
+package br.com.finalproject.petconnect.config;
 
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;

@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.repositories;
 
-import br.com.finalproject.petconnect.domain.entities.help.RoleTypeEntities;
+import br.com.finalproject.petconnect.domain.entities.help.AppointmentStatusEtities;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PetTypeRepository extends JpaRepository<RoleTypeEntities, Long> {
+public interface AppointmentStatusRepository extends JpaRepository<AppointmentStatusEtities, Long> {
 }

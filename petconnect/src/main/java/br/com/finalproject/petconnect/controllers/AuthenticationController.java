@@ -1,20 +1,19 @@
-package br.com.finalproject.petconnect.security.controllers;
+package br.com.finalproject.petconnect.controllers;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;
 import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
 import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
-import br.com.finalproject.petconnect.security.dto.LoginRequest;
-import br.com.finalproject.petconnect.security.dto.LoginResponse;
-import br.com.finalproject.petconnect.security.services.AuthenticationService;
-import br.com.finalproject.petconnect.security.services.JwtService;
-import br.com.finalproject.petconnect.user.dto.request.UserRequest;
-import br.com.finalproject.petconnect.user.dto.response.UserResponse;
+import br.com.finalproject.petconnect.domain.dto.request.LoginRequest;
+import br.com.finalproject.petconnect.domain.dto.response.LoginResponse;
+import br.com.finalproject.petconnect.services.impl.AuthenticationService;
+import br.com.finalproject.petconnect.security.services.JwtTokenProvider;
+import br.com.finalproject.petconnect.domain.dto.request.UserRequest;
+import br.com.finalproject.petconnect.domain.dto.response.UserResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,7 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthenticationController {
 
-    private final JwtService jwtService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationService authenticationService;
     private final UserDetailsService userDetailsService;
 
@@ -46,8 +45,8 @@ public class AuthenticationController {
         try {
             authenticationService.authenticate(loginRequest);
             final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
-            final String jwt = jwtService.generateToken(userDetails);
-            final long expiresAt = jwtService.extractExpiration(jwt).getTime();
+            final String jwt = jwtTokenProvider.generateToken(userDetails);
+            final long expiresAt = jwtTokenProvider.extractExpiration(jwt).getTime();
             final String username = userDetails.getUsername();
             final List<String> roles = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)

@@ -1,6 +1,7 @@
-package br.com.finalproject.petconnect.roles.mapping;
+package br.com.finalproject.petconnect.mapping;
 
-import br.com.finalproject.petconnect.domain.dto.RoleResponse;
+import br.com.finalproject.petconnect.domain.dto.request.RoleRequest;
+import br.com.finalproject.petconnect.domain.dto.response.RoleResponse;
 import br.com.finalproject.petconnect.domain.entities.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,12 +15,13 @@ public interface RoleMapper {
 
     RoleMapper INSTANCE = Mappers.getMapper(RoleMapper.class);
 
-    static RoleMapper petMapper() {
-        return INSTANCE;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "name", source = "name")
+    Role toEntity(RoleRequest request);
 
-    @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
-    @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd HH:mm")
+    @Mapping(target = "name", source = "name")
     RoleResponse toRoleResponse(Role role);
 
 }

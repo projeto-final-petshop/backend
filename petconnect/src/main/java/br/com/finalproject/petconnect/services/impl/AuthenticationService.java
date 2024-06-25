@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.security.services;
+package br.com.finalproject.petconnect.services.impl;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;

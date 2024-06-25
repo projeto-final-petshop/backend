@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.security.configs;
 
-import br.com.finalproject.petconnect.user.repositories.UserRepository;
+import br.com.finalproject.petconnect.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

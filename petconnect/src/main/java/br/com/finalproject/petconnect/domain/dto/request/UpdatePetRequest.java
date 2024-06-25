@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.pets.dto.request;
+package br.com.finalproject.petconnect.domain.dto.request;
 
 import br.com.finalproject.petconnect.domain.enums.PetType;
 import com.fasterxml.jackson.annotation.JsonFormat;

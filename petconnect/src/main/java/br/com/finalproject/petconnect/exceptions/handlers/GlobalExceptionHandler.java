@@ -1,25 +1,23 @@
 package br.com.finalproject.petconnect.exceptions.handlers;
 
+import br.com.finalproject.petconnect.exceptions.AppointmentNotAvailableException;
+import br.com.finalproject.petconnect.exceptions.InvalidAppointmentRequestException;
 import br.com.finalproject.petconnect.exceptions.dto.ExceptionResponse;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.PasswordMismatchException;
-import br.com.finalproject.petconnect.exceptions.runtimes.conflict.UserAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
+import br.com.finalproject.petconnect.exceptions.runtimes.PastAppointmentDateException;
+import br.com.finalproject.petconnect.exceptions.runtimes.PastAppointmentTimeException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.*;
 import br.com.finalproject.petconnect.exceptions.runtimes.conflict.CpfAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.conflict.FieldAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.NoEntityFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.security.InvalidAuthenticationTokenException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.JWTFieldExtractionFailureException;
-import br.com.finalproject.petconnect.exceptions.runtimes.security.PetPermissionDeniedException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.EmailSendException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.JWTServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.InvalidTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.JwtTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.PermissionDeniedException;
 import br.com.finalproject.petconnect.exceptions.runtimes.security.UserNotAuthenticatedException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.PasswordUpdateException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -72,12 +70,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            DataIntegrityViolationException.class,
-            InvalidCredentialsException.class,
-            InvalidRequestException.class,
-            JWTFieldExtractionFailureException.class,
-            PasswordMismatchException.class,
-            UserInactiveException.class
+            DataIntegrityViolationException.class, InvalidAppointmentRequestException.class,
+            InvalidCredentialsException.class, InvalidRequestException.class,
+            JWTFieldExtractionFailureException.class, PasswordMismatchException.class,
+            PastAppointmentDateException.class, PastAppointmentTimeException.class,
+            UserInactiveException.class, JwtTokenException.class
     })
     public ResponseEntity<ExceptionResponse> handleCustomExceptions(RuntimeException ex) {
         log.error("Erro de requisição: {}", ex.getMessage());
@@ -93,8 +90,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserNotAuthenticatedException.class,
-            InvalidAuthenticationTokenException.class
+            UserNotAuthenticatedException.class, InvalidTokenException.class
     })
     public final ResponseEntity<ExceptionResponse> handleAuthenticatedException(RuntimeException ex) {
         log.error("Erro de autenticação: {}", ex.getMessage());
@@ -110,7 +106,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            PetPermissionDeniedException.class
+            PermissionDeniedException.class
     })
     public final ResponseEntity<ExceptionResponse> handlePermissionDeniedException(RuntimeException ex) {
         log.error("Erro de permissão: {}", ex.getMessage());
@@ -126,9 +122,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            FieldNotFoundException.class,
-            ResourceNotFoundException.class,
-            UserNotRegisteredException.class
+            FieldNotFoundException.class, ResourceNotFoundException.class,
+            UserNotRegisteredException.class, NoEntityFoundException.class
     })
     public final ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex) {
         log.error("Recurso não encontrado: {}", ex.getMessage());
@@ -144,10 +139,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            CpfAlreadyExistsException.class,
-            EmailAlreadyExistsException.class,
-            FieldAlreadyExistsException.class,
-            UserAlreadyExistsException.class
+            CpfAlreadyExistsException.class, EmailAlreadyExistsException.class,
+            FieldAlreadyExistsException.class, AppointmentNotAvailableException.class
     })
     public final ResponseEntity<ExceptionResponse> handleAlreadyExistsException(RuntimeException ex) {
         log.error("Conflito de dados: {}", ex.getMessage());
@@ -163,10 +156,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            ServiceException.class,
-            JWTServiceException.class,
-            PasswordUpdateException.class,
-            EmailSendException.class
+            ServiceException.class, JWTServiceException.class, PasswordUpdateException.class,
+            EmailSendException.class, OperationFailedException.class
     })
     public final ResponseEntity<ExceptionResponse> handleServiceException(RuntimeException ex) {
         log.error("Erro de serviço: {}", ex.getMessage());

@@ -153,7 +153,7 @@ Rollback da migração: `flyway undo -configFiles=flyway.properties`
 
 ---
 
-* UserAlreadyExistsException: "Usuário já possui um pet com este nome." 
+* UserAlreadyExistsException: "Usuário já possui um pet com este nome."
 * EmailAlreadyExistsException: "E-mail já cadastrado."
 * CPFAlreadyExistsException: "CPF já cadastrado."
 * UserNotFoundException: "Usuário não encontrado."
@@ -163,4 +163,73 @@ Rollback da migração: `flyway undo -configFiles=flyway.properties`
 * PetNotFoundException: "Pet não encontrado."
 * PetNotOwnedException: "Você não tem permissão para {acessar/atualizar/excluir} este pet."
 * NoPetsFoundException:  "Você não tem nenhum pet cadastrado."
+
+---
+
+* **Entidades (entity)**: representam objetos persistidos no banco de dados usando anotações JPA.
+* **DTOs (Request)**: utilizados para receber dados de entrada do usuário ou da API.
+* **DTOs (Response)**: utilizados para enviar dados de saída do usuário ou da API.
+* **@NotBlank**: Mensagens definidas para indicar que os campos não podem estar em branco.
+* **@Size**: Mensagens indicando os limites de tamanho dos campos `name` e `phoneNumber`.
+* **@CPF**: Mensagem de validação para CPF inválido.
+* **@Email**: Mensagem de validação para email inválido.
+* **@Pattern**: Mensagem personalizada para garantir que a senha atenda aos critérios mínimos de complexidade.
+* **@Column(unique = true)**: Mensagens personalizadas para indicar que CPF e email devem ser únicos.
+* **@NotContainSequences**: Mensagem indicando que a senha não pode conter sequências simples como "abc", "ABC", "123",
+  etc.
+
+---
+
+## Exemplos Válidos
+
+### Email válido
+
+* `usuario@email.com`
+* `primeiro.nome@email.com `
+* `primeiro_nome123@email.com`
+* `primeiro.nome+tag@email.com`
+* `usuario1234@email.co.uk`
+
+### CPF válido
+
+* `123.456.789-09`
+* `987.654.321-00`
+
+### Senha válida
+
+* `P4$$w0rD`
+* `S3nh@F0rT3`
+
+### Número de Telefone válido
+
+* `123456789` (9 dígitos sem sinal "+")
+* `+55123456789` (prefixo "+55" e 9 dígitos)
+* `+12345678901`  (prefixo "+" e 11 dígitos)
+* `+5511998765432`  (prefixo "+" e 13 dígitos)
+
+## Exemplos Inválidos
+
+### Email inválido
+
+* `usuario@` (falta o provedor)
+* `@provedor.com` (falta o nome de usuário)
+* `usuariodomain.com` (falta `@`)
+
+### CPF inválido
+
+* `111.222.333-44` (sequência numérica)
+* `000.000.000-00` (não válido)
+
+### Senha inválida
+
+* `senha` (menos de 8 caracteres e sequencial)
+* `ABCDE123` (sem caractere especial e sequencial)
+* `abcdefgh` (sem letra maiúscula e sequencial)
+* `12345678` (sem caractere especial, sem letras e sequencial)
+
+### Número de telefone inválido
+
+* `+55` (número muito curto)
+* `+55123456789123456789` (número muito longo)
+
 

@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.domain.enums;
 
-public enum PetEnum {
+public enum PetType {
 
     CAT,
     DOG,

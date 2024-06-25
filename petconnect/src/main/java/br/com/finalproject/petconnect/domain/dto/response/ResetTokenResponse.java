@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.domain.dto.request;
+package br.com.finalproject.petconnect.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResetTokenRequest {
+public class ResetTokenResponse {
 
+    private Long id;
     private String token;
     private LocalDateTime expiryDate;
     private Long userId; // reference to user id

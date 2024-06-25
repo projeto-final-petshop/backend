@@ -1,9 +1,9 @@
-package br.com.finalproject.petconnect.pets.controllers;
+package br.com.finalproject.petconnect.controllers;
 
-import br.com.finalproject.petconnect.pets.dto.request.PetRequest;
-import br.com.finalproject.petconnect.pets.dto.request.UpdatePetRequest;
-import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
-import br.com.finalproject.petconnect.pets.services.PetService;
+import br.com.finalproject.petconnect.domain.dto.request.PetRequest;
+import br.com.finalproject.petconnect.domain.dto.request.UpdatePetRequest;
+import br.com.finalproject.petconnect.domain.dto.response.PetResponse;
+import br.com.finalproject.petconnect.services.impl.PetServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +21,14 @@ import java.util.List;
 @AllArgsConstructor
 public class PetController {
 
-    private final PetService petService;
+    private final PetServiceImpl petServiceImpl;
 
     @PostMapping("/register")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> createPet(@RequestBody @Valid PetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("Criando um novo animal de estimação.");
-        PetResponse response = petService.createPet(request, authorizationHeader);
+        PetResponse response = petServiceImpl.createPet(request, authorizationHeader);
         log.info("Novo animal de estimação criado com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -38,7 +38,7 @@ public class PetController {
     public ResponseEntity<List<PetResponse>> listPets(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("Recuperando a lista de animais de estimação.");
-        List<PetResponse> response = petService.listPets(authorizationHeader);
+        List<PetResponse> response = petServiceImpl.listPets(authorizationHeader);
         log.info("Lista de animais de estimação recuperada com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -48,7 +48,7 @@ public class PetController {
     public ResponseEntity<PetResponse> getPetDetails(@PathVariable(name = "id") Long id,
                                                      @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("Recuperando detalhes do animal de estimação com ID: {}", id);
-        PetResponse response = petService.getPetDetails(id, authorizationHeader);
+        PetResponse response = petServiceImpl.getPetDetails(id, authorizationHeader);
         log.info("Detalhes do animal de estimação recuperados com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -59,7 +59,7 @@ public class PetController {
                                                  @RequestBody @Valid UpdatePetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("Atualizando detalhes do animal de estimação com ID: {}", id);
-        PetResponse response = petService.updatePet(id, request, authorizationHeader);
+        PetResponse response = petServiceImpl.updatePet(id, request, authorizationHeader);
         log.info("Detalhes do animal de estimação atualizados com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -69,7 +69,7 @@ public class PetController {
     public ResponseEntity<Void> deletePet(@PathVariable(name = "id") Long id,
                                           @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         log.info("Excluindo animal de estimação com ID: {}", id);
-        petService.deletePet(id, authorizationHeader);
+        petServiceImpl.deletePet(id, authorizationHeader);
         log.info("Animal de estimação excluído com sucesso.");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,6 +1,6 @@
-package br.com.finalproject.petconnect.services.impl;
+package br.com.finalproject.petconnect.services.utils;
 
-import br.com.finalproject.petconnect.domain.dto.AppointmentRequest;
+import br.com.finalproject.petconnect.domain.dto.request.AppointmentRequest;
 import br.com.finalproject.petconnect.domain.entities.Appointment;
 import br.com.finalproject.petconnect.domain.enums.AppointmentStatus;
 import br.com.finalproject.petconnect.mapping.AppointmentMapper;
@@ -11,7 +11,7 @@ import br.com.finalproject.petconnect.exceptions.runtimes.PastAppointmentDateExc
 import br.com.finalproject.petconnect.exceptions.runtimes.PastAppointmentTimeException;
 import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
 import br.com.finalproject.petconnect.domain.entities.Pet;
-import br.com.finalproject.petconnect.pets.repositories.PetRepository;
+import br.com.finalproject.petconnect.repositories.PetRepository;
 import br.com.finalproject.petconnect.domain.entities.User;
 import br.com.finalproject.petconnect.utils.AuthUtils;
 import lombok.AllArgsConstructor;

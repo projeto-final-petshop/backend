@@ -1,18 +1,16 @@
 package br.com.finalproject.petconnect.domain.dto.request;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordResetRequest {
+public class ForgotPasswordRequest {
 
-    @Email(message = "Por favor, insira um endereço de e-mail válido.",
-            regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$")
     private String email;
 
 }

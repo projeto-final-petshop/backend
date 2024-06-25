@@ -1,19 +1,21 @@
 package br.com.finalproject.petconnect.services.impl;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
-import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.notfound.NoEntityFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.security.PermissionDeniedException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.OperationFailedException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.domain.dto.request.PetRequest;
 import br.com.finalproject.petconnect.domain.dto.request.UpdatePetRequest;
 import br.com.finalproject.petconnect.domain.dto.response.PetResponse;
 import br.com.finalproject.petconnect.domain.entities.Pet;
+import br.com.finalproject.petconnect.domain.entities.User;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.NoEntityFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.PermissionDeniedException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.OperationFailedException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.mapping.PetMapper;
 import br.com.finalproject.petconnect.repositories.PetRepository;
-import br.com.finalproject.petconnect.domain.entities.User;
+import br.com.finalproject.petconnect.services.PetService;
 import br.com.finalproject.petconnect.utils.AuthUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,7 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PetService {
+public class PetServiceImpl implements PetService {
 
     private final AuthUtils authUtils;
     private final PetRepository petRepository;
@@ -174,4 +176,23 @@ public class PetService {
         }
     }
 
+    @Override
+    public List<Pet> findAll() {
+        return petRepository.findAll();
+    }
+
+    @Override
+    public Pet findById(Long id) {
+        return petRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pet not found"));
+    }
+
+    @Override
+    public Pet save(Pet pet) {
+        return petRepository.save(pet);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        petRepository.deleteById(id);
+    }
 }

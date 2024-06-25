@@ -1,9 +1,9 @@
-package br.com.finalproject.petconnect.password.controller;
+package br.com.finalproject.petconnect.controllers;
 
-import br.com.finalproject.petconnect.password.dto.PasswordResetRequest;
-import br.com.finalproject.petconnect.password.dto.ResetPasswordRequest;
-import br.com.finalproject.petconnect.password.dto.UpdatePasswordRequest;
-import br.com.finalproject.petconnect.password.service.PasswordService;
+import br.com.finalproject.petconnect.domain.dto.request.ForgotPasswordRequest;
+import br.com.finalproject.petconnect.domain.dto.request.ResetPasswordRequest;
+import br.com.finalproject.petconnect.domain.dto.request.UpdatePasswordRequest;
+import br.com.finalproject.petconnect.services.impl.PasswordService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class PasswordController {
     }
 
     @PostMapping("/auth/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody @Valid PasswordResetRequest request) {
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ForgotPasswordRequest request) {
         log.info("Recebida solicitação para redefinir senha do usuário com email: {}", request.getEmail());
         passwordService.resetPassword(request.getEmail());
         log.info("Link de redefinição de senha enviado com sucesso para o email: {}", request.getEmail());

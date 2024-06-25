@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.domain.entities;
+package br.com.finalproject.petconnect.domain.entities.help;
 
 import br.com.finalproject.petconnect.domain.enums.PetType;
 import jakarta.persistence.*;
@@ -19,6 +19,6 @@ public class PetTypeEntities {
 
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private PetType name;
+    private PetType type;
 
 }

@@ -1,11 +1,11 @@
-package br.com.finalproject.petconnect.security.bootstrap;
+package br.com.finalproject.petconnect.bootstrap;
 
 import br.com.finalproject.petconnect.domain.entities.Role;
 import br.com.finalproject.petconnect.domain.enums.RoleType;
-import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
-import br.com.finalproject.petconnect.user.dto.request.UserRequest;
+import br.com.finalproject.petconnect.repositories.RoleRepository;
+import br.com.finalproject.petconnect.domain.dto.request.UserRequest;
 import br.com.finalproject.petconnect.domain.entities.User;
-import br.com.finalproject.petconnect.user.repositories.UserRepository;
+import br.com.finalproject.petconnect.repositories.UserRepository;
 import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;

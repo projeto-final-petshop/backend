@@ -1,6 +1,6 @@
-package br.com.finalproject.petconnect.appointment.repositories;
+package br.com.finalproject.petconnect.repositories;
 
-import br.com.finalproject.petconnect.appointment.entities.Appointment;
+import br.com.finalproject.petconnect.domain.entities.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

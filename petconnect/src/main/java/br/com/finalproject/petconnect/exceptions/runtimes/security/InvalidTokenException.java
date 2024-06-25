@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.exceptions.runtimes.security;
 
-public class InvalidAuthenticationTokenException extends RuntimeException {
+public class InvalidTokenException extends RuntimeException {
 
-    public InvalidAuthenticationTokenException(String operation) {
-        super("Token JWT " + operation);
+    public InvalidTokenException() {
+        super("Token JWT inválido.");
     }
 
 }

@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.domain.dto;
+package br.com.finalproject.petconnect.domain.dto.request;
 
 import br.com.finalproject.petconnect.domain.enums.ServiceType;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,14 +14,10 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class AppointmentRequest {
 
-    private Long petId;
-
-    private ServiceType serviceType;
-
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
-
-    @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalTime appointmentTime;
+    private Long petId; // id do pet associado ao agendamento
+    private Long userId; // id do usuário que fez o agendamento
+    private ServiceType serviceType;
 
 }

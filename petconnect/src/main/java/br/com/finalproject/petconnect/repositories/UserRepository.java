@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.user.repositories;
+package br.com.finalproject.petconnect.repositories;
 
 import br.com.finalproject.petconnect.domain.enums.RoleType;
 import br.com.finalproject.petconnect.domain.entities.User;

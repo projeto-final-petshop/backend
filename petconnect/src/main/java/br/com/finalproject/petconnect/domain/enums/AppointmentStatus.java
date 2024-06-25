@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.domain.enums;
 
-public enum AppointmentEnum {
+public enum AppointmentStatus {
 
     CANCELLED,
     COMPLETED,

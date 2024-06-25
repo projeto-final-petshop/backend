@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.email;
+package br.com.finalproject.petconnect.services.impl;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import lombok.RequiredArgsConstructor;

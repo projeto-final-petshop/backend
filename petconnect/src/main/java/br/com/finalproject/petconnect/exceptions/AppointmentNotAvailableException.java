@@ -1,11 +1,8 @@
 package br.com.finalproject.petconnect.exceptions;
 
-public class InvalidAppointmentRequestException extends RuntimeException {
+public class AppointmentNotAvailableException extends RuntimeException {
 
-    public InvalidAppointmentRequestException() {
-    }
-
-    public InvalidAppointmentRequestException(String message) {
+    public AppointmentNotAvailableException(String message) {
         super(message);
     }
 }

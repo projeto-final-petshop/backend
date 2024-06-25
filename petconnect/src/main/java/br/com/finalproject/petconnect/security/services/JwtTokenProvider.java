@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
-public class JwtService {
+public class JwtTokenProvider {
 
     @Value("${security.jwt.secret-key}")
     private String secretKey;

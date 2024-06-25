@@ -1,12 +1,8 @@
-package br.com.finalproject.petconnect.roles.entities;
+package br.com.finalproject.petconnect.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import br.com.finalproject.petconnect.domain.entities.help.RoleTypeEntities;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -24,19 +20,12 @@ public class Role implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private RoleEnum name;
-
-    @Size(min = 3, max = 50, message = "Descrição da permissão deve ter entre {min} e {max} caracteres.")
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
     private String description;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private OffsetDateTime createdAt;
-
-    @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private OffsetDateTime updatedAt;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private RoleTypeEntities name;
 
 }

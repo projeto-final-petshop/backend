@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.domain.entities;
+package br.com.finalproject.petconnect.domain.entities.help;
 
 import br.com.finalproject.petconnect.domain.enums.RoleType;
 import jakarta.persistence.*;

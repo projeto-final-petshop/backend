@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.config;
+package br.com.finalproject.petconnect.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -9,7 +9,7 @@ import java.util.Locale;
 
 @Component
 @RequiredArgsConstructor
-public class MessageSourceComponent {
+public class MessageSourceUtils {
 
     private final MessageSource messageSource;
 

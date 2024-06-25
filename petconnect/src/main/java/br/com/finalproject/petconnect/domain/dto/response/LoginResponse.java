@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.security.dto;
+package br.com.finalproject.petconnect.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

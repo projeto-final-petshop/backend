@@ -1,8 +1,8 @@
-package br.com.finalproject.petconnect.roles.bootstrap;
+package br.com.finalproject.petconnect.bootstrap;
 
 import br.com.finalproject.petconnect.domain.entities.Role;
 import br.com.finalproject.petconnect.domain.enums.RoleType;
-import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
+import br.com.finalproject.petconnect.repositories.RoleRepository;
 import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;
@@ -51,7 +51,7 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
                     () -> {
                         log.info("Role '{}' não encontrada. Criando nova role.", roleName);
                         var roleToCreate = new Role();
-                        roleToCreate.setName(roleName);
+                        // roleToCreate.setName(roleName);
                         roleToCreate.setDescription(roleDescriptionMap.get(roleName));
                         Role savedRole = roleRepository.save(roleToCreate);
                         log.info("Role '{}' criada com sucesso: {}", roleName, savedRole);

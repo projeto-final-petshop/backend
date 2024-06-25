@@ -6,12 +6,4 @@ public class InvalidRequestException extends RuntimeException {
         super(message);
     }
 
-    public InvalidRequestException(String fieldName, String message) {
-        super("Valor inválido para campo '" + fieldName + "': " + message);
-    }
-
-    public InvalidRequestException(String fieldName, String message, Throwable cause) {
-        super("Valor inválido para campo '" + fieldName + "': " + message, cause);
-    }
-
 }

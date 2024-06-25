@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.security.dto;
+package br.com.finalproject.petconnect.domain.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

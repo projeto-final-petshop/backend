@@ -1,5 +1,7 @@
-package br.com.finalproject.petconnect.address;
+package br.com.finalproject.petconnect.controllers;
 
+import br.com.finalproject.petconnect.http.CepServiceClient;
+import br.com.finalproject.petconnect.domain.entities.Address;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
