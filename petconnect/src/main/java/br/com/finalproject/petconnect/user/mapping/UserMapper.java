@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.user.mapping;
 
+import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.dto.response.UserResponse;
 import br.com.finalproject.petconnect.user.entities.User;
 import org.mapstruct.Mapper;
@@ -8,13 +9,17 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "role", target = "role.id")
+    User toUser(UserRequest userRequest);
 
     @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd HH:mm")
@@ -25,7 +30,5 @@ public interface UserMapper {
     @Mapping(source = "role.createdAt", target = "role.createdAt")
     @Mapping(source = "role.updatedAt", target = "role.updatedAt")
     UserResponse toUserResponse(User user);
-
-    List<UserResponse> toUserResponseList(List<User> users);
 
 }

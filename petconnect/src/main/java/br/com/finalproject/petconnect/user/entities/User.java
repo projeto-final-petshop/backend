@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,31 +38,37 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 3, max = 250, message = "O nome deve ter entre {min} e {max} caracteres.")
+    @Column(nullable = false)
+    @Size(min = 3, max = 250,
+            message = "Por favor, informe o seu nome completo. O nome deve ter entre {min} e {max} caracteres.")
     private String name;
 
     @Column(unique = true, nullable = false)
-    @Email(message = "Insira um email válido.", regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$")
+    @Email(regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,6}$",
+            message = "Por favor, informe um e-mail válido. Exemplo: seuemail@dominio.com.")
     private String email;
 
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
-            message = "A senha deve ter pelo menos 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
     @Column(nullable = false)
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()-+]).{8,}$",
+            message = "Por favor, informe uma senha. A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
-            message = "Por favor, insira um CPF válido.")
     @Column(unique = true, nullable = false)
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
+            message = "Por favor, informe um CPF válido. Exemplo: 123.456.789-00.")
+    @CPF(message = "Por favor, informe um CPF válido.")
     private String cpf;
 
     @Pattern(regexp = "^\\+?\\d{9,14}$",
-            message = "Por favor, insira um número de telefone que tenha entre 9 e 14 dígitos numéricos. O sinal de + é opcional.")
+            message = "Insira um número de telefone que tenha entre 9 e 14 dígitos numéricos. O sinal de + é opcional.")
     private String phoneNumber;
 
-    @Size(min = 10, max = 250, message = "O endereço deve ter entre {min} e {max} caracteres.")
+    @Size(min = 10, max = 250,
+            message = "O endereço deve ter entre {min} e {max} caracteres.")
     private String address;
 
+    @Column(nullable = false)
     private Boolean active;
 
     @Transient

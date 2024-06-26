@@ -5,8 +5,8 @@ import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
 import br.com.finalproject.petconnect.appointment.entities.Appointment;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.appointment.PetNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.InvalidServiceBookingException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.user.entities.User;
 import lombok.AllArgsConstructor;
@@ -40,10 +40,10 @@ public class AppointmentService {
             log.info("Agendamento salvo com sucesso. Agendamento ID: {}", savedAppointment.getId());
 
             return AppointmentMapper.petMapper().toAppointmentResponse(savedAppointment);
-        } catch (PetNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             log.error("Erro ao criar agendamento: pet não encontrado. Pet ID: {}", request.getPetId(), e);
             throw e;
-        } catch (InvalidServiceBookingException e) {
+        } catch (InvalidRequestException e) {
             log.error("Erro ao criar agendamento: dados inválidos. Mensagem: {}", e.getMessage(), e);
             throw e;
         } catch (Exception e) {
@@ -67,10 +67,10 @@ public class AppointmentService {
             log.info("Agendamento atualizado com sucesso. Agendamento ID: {}", updatedAppointment.getId());
 
             return AppointmentMapper.petMapper().toAppointmentResponse(updatedAppointment);
-        } catch (PetNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             log.error("Erro ao atualizar agendamento: pet não encontrado. Pet ID: {}", request.getPetId(), e);
             throw e;
-        } catch (InvalidServiceBookingException e) {
+        } catch (InvalidRequestException e) {
             log.error("Erro ao atualizar agendamento: dados inválidos. Mensagem: {}", e.getMessage(), e);
             throw e;
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class AppointmentService {
             Pet pet = appointmentServiceUtil.getPetByIdAndUser(petId, user);
             List<Appointment> appointments = appointmentRepository.findAllByPet_Id(pet.getId());
             return AppointmentMapper.petMapper().toResponseList(appointments);
-        } catch (PetNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             log.error("Erro ao listar agendamentos: pet não encontrado. Pet ID: {}", petId, e);
             throw e;
         } catch (Exception e) {

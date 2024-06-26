@@ -152,3 +152,15 @@ Rollback da migração: `flyway undo -configFiles=flyway.properties`
 * [Sentry](https://estudante-k0.sentry.io/settings/)
 
 ---
+
+* UserAlreadyExistsException: "Usuário já possui um pet com este nome." 
+* EmailAlreadyExistsException: "E-mail já cadastrado."
+* CPFAlreadyExistsException: "CPF já cadastrado."
+* UserNotFoundException: "Usuário não encontrado."
+* AuthenticationException: "Usuário não autenticado."
+* AuthorizationException: "Usuário não tem permissão."
+* DataModificationException: "Erro ao {cadastrar/atualizar/excluir} {pet/dados}."
+* PetNotFoundException: "Pet não encontrado."
+* PetNotOwnedException: "Você não tem permissão para {acessar/atualizar/excluir} este pet."
+* NoPetsFoundException:  "Você não tem nenhum pet cadastrado."
+

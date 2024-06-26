@@ -19,4 +19,6 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
     @Query("DELETE FROM Pet p WHERE p.user.id = :userId")
     void deleteByUserId(Long userId);
 
+    boolean existsByNameAndUser(String name, User user);
+
 }

@@ -1,7 +1,8 @@
 package br.com.finalproject.petconnect.utils;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.password.PasswordMismatchException;
-import br.com.finalproject.petconnect.exceptions.runtimes.user.UserNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.InvalidAuthenticationTokenException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.JWTServiceException;
 import br.com.finalproject.petconnect.security.services.JwtService;
 import br.com.finalproject.petconnect.user.entities.User;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
@@ -24,10 +25,10 @@ public class AuthUtils {
     public User getUserFromAuthorizationHeader(String authorizationHeader) {
         try {
             String userEmail = jwtService.extractEmail(extractToken(authorizationHeader));
-            return userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+            return userRepository.findByEmail(userEmail).orElseThrow(() -> new FieldNotFoundException("Usuário"));
         } catch (Exception e) {
             log.error("Falha ao obter usuário do cabeçalho de autorização: {}", e.getMessage());
-            throw new PasswordMismatchException("Token de autenticação inválido.");
+            throw new InvalidAuthenticationTokenException();
         }
     }
 
@@ -36,11 +37,12 @@ public class AuthUtils {
             return Optional.ofNullable(authorizationHeader)
                     .filter(header -> header.startsWith(BEARER_PREFIX))
                     .map(header -> header.substring(7)) // Remove "Bearer " do token
-                    .orElseThrow(() -> new PasswordMismatchException("Token de autenticação inválido."));
+                    .orElseThrow(InvalidAuthenticationTokenException::new);
         } catch (Exception e) {
             log.error("Falha ao extrair token: {}", e.getMessage());
-            throw new PasswordMismatchException("Falha ao extrair Token");
+            throw new JWTServiceException("Falha ao extrair Token JWT.");
         }
     }
+
 
 }

@@ -33,7 +33,7 @@ public class ConstantsUtil {
 
     // FAILED - User Service
     public static final String FAILED_TO_UPDATE_USER = "Falha ao atualizar usuário.";
-    public static final String FAILED_TO_DEACTIVE_USER = "Falha ao desativar usuário.";
+    public static final String FAILED_TO_DEACTIVATE_USER = "Falha ao desativar usuário.";
     public static final String FAILED_TO_DELETE_USER = "Falha ao deletar usuário.";
     // FAILED - Pet Service
     public static final String FAILED_TO_REGISTER_PET = "Falha ao cadastrar Pet. Por favor, tente novamente mais tarde.";

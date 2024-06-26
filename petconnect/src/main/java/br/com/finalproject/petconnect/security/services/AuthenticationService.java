@@ -1,13 +1,19 @@
 package br.com.finalproject.petconnect.security.services;
 
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.PasswordMismatchException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.FieldAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
 import br.com.finalproject.petconnect.roles.entities.Role;
 import br.com.finalproject.petconnect.roles.entities.RoleEnum;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
 import br.com.finalproject.petconnect.security.dto.LoginRequest;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
+import br.com.finalproject.petconnect.user.dto.response.UserResponse;
 import br.com.finalproject.petconnect.user.entities.User;
+import br.com.finalproject.petconnect.user.mapping.UserMapper;
 import br.com.finalproject.petconnect.user.repositories.UserRepository;
-import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,34 +36,55 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Transactional
-    public User signup(UserRequest input) {
+    public UserResponse signup(UserRequest input) {
+
+        validateInput(input);
+
+        if (userRepository.existsByEmail(input.getEmail())) {
+            throw new FieldAlreadyExistsException("Email");
+        }
+
+        if (userRepository.existsByCpf(input.getCpf())) {
+            throw new FieldAlreadyExistsException("CPF");
+        }
 
         Role role = roleRepository.findByName(RoleEnum.USER)
-                .orElseThrow(() -> new IllegalStateException(ConstantsUtil.ROLE_NOT_FOUND));
+                .orElseThrow(() -> new FieldNotFoundException("Role"));
 
-        User user = User.builder()
-                .name(input.getName())
-                .email(input.getEmail())
-                .password(passwordEncoder.encode(input.getPassword()))
-                .cpf(input.getCpf())
-                .phoneNumber(input.getPhoneNumber())
-                .active(true)
-                .role(role)
-                .address(input.getAddress())
-                .build();
+        User user = UserMapper.INSTANCE.toUser(input);
+        user.setPassword(passwordEncoder.encode(input.getPassword()));
+        user.setRole(role);
+        user.setActive(true);
 
-        return userRepository.save(user);
+        user = userRepository.save(user);
+
+        return UserMapper.INSTANCE.toUserResponse(user);
+    }
+
+    private void validateInput(UserRequest input) {
+        if (!input.getPassword().equals(input.getConfirmPassword())) {
+            throw new PasswordMismatchException();
+        }
     }
 
     @Transactional
     public User authenticate(LoginRequest input) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
-                )
-        );
-        return userRepository.findByEmail(input.getEmail()).orElseThrow();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            input.getEmail(),
+                            input.getPassword()
+                    )
+            );
+        } catch (InvalidCredentialsException e) {
+            log.error("Erro ao autenticar usuário: {}", input.getEmail());
+            throw new InvalidCredentialsException();
+        }
+
+        return userRepository.findByEmail(input.getEmail()).orElseThrow(() -> {
+            log.error("Usuário não encontrado: {}", input.getEmail());
+            return new UserNotRegisteredException();
+        });
     }
 
 }

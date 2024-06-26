@@ -180,6 +180,10 @@ components:
           type: string
           format: password
           example: "senh@123"
+        confirmPassword:
+          type: string
+          format: password
+          example: "senh@123"
         cpf:
           type: string
           example: "396.810.991-09"

@@ -1,9 +1,9 @@
 package br.com.finalproject.petconnect.admin;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.cpf.CpfAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.email.EmailAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.generic.DataModificationException;
-import br.com.finalproject.petconnect.exceptions.runtimes.role.RoleNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.CpfAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.mapping.PetMapper;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
@@ -51,7 +51,7 @@ public class AdminService {
             }
 
             Role role = roleRepository.findById(input.getRole())
-                    .orElseThrow(() -> new RoleNotFoundException("Permissão não encontrada."));
+                    .orElseThrow(() -> new ServiceException("Permissão não encontrada."));
 
             User user = User.builder()
                     .name(input.getName())
@@ -69,12 +69,12 @@ public class AdminService {
 
             return UserMapper.INSTANCE.toUserResponse(savedUser);
 
-        } catch (RoleNotFoundException | EmailAlreadyExistsException e) {
+        } catch (ResourceNotFoundException | EmailAlreadyExistsException e) {
             log.error("Erro ao registrar usuário: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
             log.error("Erro inesperado ao registrar usuário: {}", e.getMessage());
-            throw new DataModificationException("Falha ao cadastrar o usuário. Dados inválidos ou erro na requisição.", e);
+            throw new ServiceException("Falha ao cadastrar o usuário. Dados inválidos ou erro na requisição.", e);
         }
 
     }
@@ -89,7 +89,7 @@ public class AdminService {
             return usersPage.map(userMapper::toUserResponse);
         } catch (Exception e) {
             log.error("Falha ao listar Usuários: {}", e.getMessage());
-            throw new DataModificationException("Falha ao listar Usuários. Por favor, tente mais tarde.", e);
+            throw new ServiceException("Falha ao listar Usuários. Por favor, tente mais tarde.", e);
         }
     }
 
@@ -100,7 +100,7 @@ public class AdminService {
             return usersPage.map(userMapper::toUserResponse);
         } catch (Exception e) {
             log.error("Falha ao buscar Usuários: {}", e.getMessage());
-            throw new DataModificationException("Falha ao buscar Usuários. Por favor, tente mais tarde.", e);
+            throw new ServiceException("Falha ao buscar Usuários. Por favor, tente mais tarde.", e);
         }
     }
 
@@ -120,7 +120,7 @@ public class AdminService {
             return petRepository.findAll(pageable).map(petMapper::toResponse);
         } catch (Exception e) {
             log.error("Falha ao listar Pets: {}", e.getMessage());
-            throw new DataModificationException("Falha ao listar Pets. Por favor, tente mais tarde.", e);
+            throw new ServiceException("Falha ao listar Pets. Por favor, tente mais tarde.", e);
         }
     }
 
