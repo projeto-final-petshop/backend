@@ -26,6 +26,12 @@ paths:
         - user
       security:
         - BearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Usuário autenticado
@@ -53,6 +59,12 @@ paths:
         - user
       security:
         - BearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -87,6 +99,12 @@ paths:
         - user
       security:
         - BearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Usuário deletado com sucesso
