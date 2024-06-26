@@ -1,7 +1,9 @@
 package br.com.finalproject.petconnect.user.entities;
 
+import br.com.finalproject.petconnect.address.domain.entities.Address;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.roles.entities.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -16,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -68,6 +71,11 @@ public class User implements UserDetails {
             message = "O endereço deve ter entre {min} e {max} caracteres.")
     private String address;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference // informa que a entidade usuário está gerenciando a referência que nesse caso será endereço
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_address_user"))
+    private List<Address> addressList = new ArrayList<>();
+
     @Column(nullable = false)
     private Boolean active;
 
@@ -116,6 +124,14 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addAddress(Address address) {
+        addressList.add(address);
+    }
+
+    public void removeAddress(Address address) {
+        addressList.remove(address);
     }
 
 }
