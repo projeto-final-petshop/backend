@@ -35,8 +35,6 @@ spring:
     locale:
       default-locale: pt
     format:
-      date: 'dd/MM/yyyy'
-      time: 'HH:mm'
       date-time: 'yyyy-MM-dd HH:mm'
   mail:
     host: smtp.gmail.com
@@ -80,8 +78,8 @@ spring:
           connect-timeout: 5000
 
 springdoc:
-  default-consumes-media-type: 'application/json'
-  default-produces-media-type: 'application/json'
+  default-consumes-media-type: '*/*'
+  default-produces-media-type: '*/*'
   show-actuator: true
   use-management-port: true
   override-with-generic-response: true
