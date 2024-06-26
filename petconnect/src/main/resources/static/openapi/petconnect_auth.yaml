@@ -194,6 +194,7 @@ components:
         - name
         - email
         - password
+        - confirmPassword
         - cpf
         - phoneNumber
     UserResponse:
