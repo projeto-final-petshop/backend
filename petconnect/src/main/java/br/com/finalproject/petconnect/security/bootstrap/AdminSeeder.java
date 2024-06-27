@@ -1,7 +1,7 @@
 package br.com.finalproject.petconnect.security.bootstrap;
 
 import br.com.finalproject.petconnect.roles.entities.Role;
-import br.com.finalproject.petconnect.roles.entities.RoleEnum;
+import br.com.finalproject.petconnect.roles.entities.enums.RoleType;
 import br.com.finalproject.petconnect.roles.repositories.RoleRepository;
 import br.com.finalproject.petconnect.user.dto.request.UserRequest;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -15,6 +15,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Slf4j
@@ -34,7 +36,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     private void createSuperAdministrator() {
 
-        if (userRepository.existsByRoleName(RoleEnum.ADMIN)) {
+        if (userRepository.existsByRoleName(RoleType.ADMIN)) {
             log.info("Já existe pelo menos um administrador cadastrado.");
             return;
         }
@@ -43,8 +45,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
             log.info("Já existe um usuário cadastrado com o mesmo e-mail ou CPF. Pulando a criação do administrador.");
             return;
         }
-
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.ADMIN);
+        Optional<Role> optionalRole = roleRepository.findByName(RoleType.ADMIN);
         if (optionalRole.isEmpty()) {
             log.error("Role de ADMIN não encontrada. Não é possível criar o administrador.");
             return;
@@ -56,7 +57,6 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 .password(passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD))
                 .cpf(ConstantsUtil.ADMIN_CPF)
                 .phoneNumber(ConstantsUtil.ADMIN_PHONE_NUMBER)
-                .address(ConstantsUtil.ADMIN_ADDRESS)
                 .build();
 
         User user = User.builder()
@@ -66,7 +66,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 .active(true)
                 .cpf(request.getCpf())
                 .phoneNumber(request.getPhoneNumber())
-                .role(optionalRole.get())
+                .roles(new HashSet<>(Collections.singletonList(optionalRole.get())))
                 .build();
 
         userRepository.save(user);

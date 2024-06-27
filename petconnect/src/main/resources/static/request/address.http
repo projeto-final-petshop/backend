@@ -1,0 +1,67 @@
+### Cria um novo endereço
+# curl -X POST http://localhost:8080/addresses
+#-H "Content-Type: application/json"
+#-d '{
+#  "zipCode": "12345-678",
+#  "number": "123"
+#}'
+POST http://localhost:8080/addresses
+Content-Type: application/json
+
+{
+  "zipCode": "12345-678",
+  "number": "123"
+}
+
+### Recupera um endereço específico pelo seu ID
+# curl -X GET http://localhost:8080/addresses/1
+GET http://localhost:8080/addresses/1
+
+### Lista todos os endereços cadastrados.
+# curl -X GET http://localhost:8080/addresses
+GET http://localhost:8080/addresses
+
+### Atualiza um endereço existente com base no ID.
+# curl -X PUT http://localhost:8080/addresses/1
+#-H "Content-Type: application/json"
+#-d '{
+#  "zipCode": "54321-876",
+#  "number": "456"
+#}'
+PUT http://localhost:8080/addresses/1
+Content-Type: application/json
+
+{
+  "zipCode": "54321-876",
+  "number": "456"
+}
+
+### Exclui um endereço pelo seu ID.
+# curl -X DELETE http://localhost:8080/addresses/1
+DELETE http://localhost:8080/addresses/1
+
+### Realiza uma busca por endereços com base em parâmetros opcionais (state, city, neighborhood, zipCode).
+
+### Exemplo com todos os parâmetros
+# curl -X GET 'http://localhost:8080/addresses/search?state=RS&city=Porto%20Alegre&neighborhood=Domingos&zipCode=12345-678'
+GET http://localhost:8080/addresses/search?state=RS&city=Porto%20Alegre&neighborhood=Domingos&zipCode=12345-678
+Content-Type: application/json
+
+### Exemplo com apenas state e city
+# curl -X GET 'http://localhost:8080/addresses/search?state=RS&city=Porto%20Alegre'
+GET http://localhost:8080/addresses/search?state=RS&city=Porto%20Alegre
+Content-Type: application/json
+
+### Exemplo com apenas state
+# curl -X GET 'http://localhost:8080/addresses/search?state=RS'
+GET http://localhost:8080/addresses/search?state=RS
+Content-Type: application/json
+
+### Exemplo com apenas zipCode
+# curl -X GET 'http://localhost:8080/addresses/search?zipCode=12345-678'
+GET http://localhost:8080/addresses/search?zipCode=12345-678
+Content-Type: application/json
+
+
+
+

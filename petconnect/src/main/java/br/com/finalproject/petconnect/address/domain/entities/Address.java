@@ -1,37 +1,47 @@
 package br.com.finalproject.petconnect.address.domain.entities;
 
-import br.com.finalproject.petconnect.user.entities.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.finalproject.petconnect.validator.cep.ValidCep;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "addresses")
-public class Address {
+public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Pattern(regexp = "\\d{5}-\\d{3}", message = "O CEP deve estar no formato 00000-000.")
-    private String cep;
-    private String logradouro;
-    private String complemento;
-    private String bairro;
-    private String cidade;
-    private String uf;
-    private Long numero;
+    @Column(nullable = false)
+    @ValidCep
+    private String zipCode;
 
-    @JsonBackReference // fica escondida quando formos salvar pelo endereço
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_address_user"))
-    private User user;
+    @Column(nullable = false)
+    private String street;
 
+    private String complement;
+
+    @Column(nullable = false)
+    private String neighborhood;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String state;
+
+    @Column(nullable = false)
+    private String number;
+
+//    @JsonBackReference
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "FK_address_user"))
+//    private User user;
 }

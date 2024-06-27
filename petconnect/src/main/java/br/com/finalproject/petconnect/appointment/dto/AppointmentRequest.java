@@ -1,9 +1,7 @@
 package br.com.finalproject.petconnect.appointment.dto;
 
-import br.com.finalproject.petconnect.appointment.entities.PetType;
-import br.com.finalproject.petconnect.appointment.entities.ServiceType;
+import br.com.finalproject.petconnect.appointment.entities.enums.ServiceType;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDate;

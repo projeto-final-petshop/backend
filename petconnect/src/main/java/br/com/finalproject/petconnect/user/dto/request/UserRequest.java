@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.user.dto.request;
 
+import br.com.finalproject.petconnect.roles.entities.enums.RoleType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -61,9 +62,9 @@ public class UserRequest {
 
     // NotBlank: O endereço não pode estar em branco. Por favor, informe o seu endereço.
     // NotNull: Por favor, informe o seu endereço
-    @Size(min = 10, max = 250,
-            message = "O endereço deve ter entre {min} e {max} caracteres.")
-    private String address;
+//    @Size(min = 10, max = 250,
+//            message = "O endereço deve ter entre {min} e {max} caracteres.")
+//    private String address;
 
     // NotBlank: O endereço não pode estar em branco. Por favor, informe o seu endereço.
     // NotNull: Por favor, informe o seu papel do usuário

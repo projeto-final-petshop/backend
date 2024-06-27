@@ -2,10 +2,13 @@ package br.com.finalproject.petconnect.appointment.services;
 
 import br.com.finalproject.petconnect.appointment.dto.AppointmentRequest;
 import br.com.finalproject.petconnect.appointment.entities.Appointment;
-import br.com.finalproject.petconnect.appointment.entities.AppointmentStatus;
+import br.com.finalproject.petconnect.appointment.entities.enums.AppointmentStatus;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generics.BadRequestException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generics.ConflictException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generics.ResourceNotFoundException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.pets.repositories.PetRepository;
 import br.com.finalproject.petconnect.user.entities.User;
@@ -34,19 +37,18 @@ public class AppointmentServiceUtil {
 
     public Pet getPetByIdAndUser(Long petId, User user) {
         return petRepository.findByIdAndUserId(petId, user.getId())
-                .orElseThrow(() -> new ServiceException("Pet não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Pet não encontrado."));
     }
 
     public Appointment getAppointmentByIdAndUser(Long appointmentId, User user) {
         return appointmentRepository.findByIdAndUserId(appointmentId, user.getId())
-                .orElseThrow(() -> new ServiceException("Agendamento não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado."));
     }
 
     public void validateWeekday(LocalDate appointmentDate) {
         DayOfWeek dayOfWeek = appointmentDate.getDayOfWeek();
         if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
-            log.error("Não é possível realizar agendamento aos finais de semana: {}", appointmentDate);
-            throw new ServiceException("Não é possível realizar agendamento aos finais de semana. Dias de atendimento: 2ª feira a 6ª feira.");
+            throw new InvalidRequestException("Não é possível realizar agendamento aos finais de semana. Dias de atendimento: 2ª feira a 6ª feira.");
         }
     }
 
@@ -54,24 +56,23 @@ public class AppointmentServiceUtil {
         LocalTime startTime = LocalTime.of(8, 0);
         LocalTime endTime = LocalTime.of(19, 0);
         if (appointmentTime.isBefore(startTime) || appointmentTime.isAfter(endTime)) {
-            log.error("Não é possível realizar agendamento fora do horário: {}", appointmentTime);
-            throw new ServiceException("Não é possível realizar agendamento fora do horário. Horário de atendimento: 8h às 19h");
+            throw new InvalidRequestException("Não é possível realizar agendamento fora do horário. Horário de atendimento: 8h às 19h");
         }
 
-        log.info("Validando a disponibilidade de horário para a consulta: {}", appointmentTime);
+        log.info("[AppointmentServiceUtil - validateAvailableTimeSlot] Validando a disponibilidade de horário para a consulta: {}", appointmentTime);
 
         Optional<Appointment> consultaOptional = appointmentRepository
                 .findAppointmentByAppointmentDateAndAppointmentTime(appointmentDate, appointmentTime);
         consultaOptional.ifPresent(appointment -> {
-            log.error("Já existe um agendamento para a data {} e hora {}", appointmentDate, appointmentTime);
-            throw new ServiceException("Já existe um agendamento para a data e hora informadas.");
+            log.error("Erro: Já existe um agendamento para a data {} e hora {}", appointmentDate, appointmentTime);
+            throw new ConflictException("Já existe um agendamento para a data e hora informadas.");
         });
     }
 
     public void validateAppointmentRequest(AppointmentRequest request) {
         if (request.getAppointmentDate() == null) {
-            log.error("Data inválida.");
-            throw new ServiceException("Campo obrigatório. Preencha o campo com uma data válida.");
+            log.error("Erro: Data inválida.");
+            throw new BadRequestException("Campo obrigatório. Preencha o campo com uma data válida.");
         }
         validateWeekday(request.getAppointmentDate());
         validateAvailableTimeSlot(request.getAppointmentDate(), request.getAppointmentTime());
@@ -79,7 +80,6 @@ public class AppointmentServiceUtil {
 
     public Appointment createAppointmentFromRequest(AppointmentRequest request, User user, Pet pet) {
         Appointment appointment = AppointmentMapper.petMapper().toEntity(request);
-        log.debug("Consulta mapeada para a entidade: {}", appointment);
         appointment.setUser(user);
         appointment.setPet(pet);
         appointment.setStatus(AppointmentStatus.SCHEDULED);

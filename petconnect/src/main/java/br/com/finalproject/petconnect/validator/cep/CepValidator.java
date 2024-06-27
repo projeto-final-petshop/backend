@@ -1,4 +1,4 @@
-package br.com.finalproject.petconnect.validator;
+package br.com.finalproject.petconnect.validator.cep;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

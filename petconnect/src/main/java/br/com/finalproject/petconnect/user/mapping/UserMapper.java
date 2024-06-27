@@ -18,17 +18,11 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "id", ignore = true)
-    @Mapping(source = "role", target = "role.id")
     User toUser(UserRequest userRequest);
 
     @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "role.id", target = "role.id")
-    @Mapping(source = "role.name", target = "role.name")
-    @Mapping(source = "role.description", target = "role.description")
-    @Mapping(source = "role.createdAt", target = "role.createdAt")
-    @Mapping(source = "role.updatedAt", target = "role.updatedAt")
     UserResponse toUserResponse(User user);
 
 }

@@ -11,11 +11,11 @@ import lombok.*;
 public class AddressResponse {
 
     private String zipCode; // CEP
-    private String number;
-    private String publicPlace; // Logradouro
-    private String complement;
-    private String neighborhood;
-    private String city;
-    private String state;
+    private String number; // Numero
+    private String street; // Logradouro
+    private String complement; // Complemento
+    private String neighborhood; // Bairro
+    private String city; // Cidade
+    private String state; // UF
 
 }

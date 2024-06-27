@@ -1,9 +1,11 @@
 package br.com.finalproject.petconnect.appointment.entities;
 
+import br.com.finalproject.petconnect.appointment.entities.enums.AppointmentStatus;
+import br.com.finalproject.petconnect.appointment.entities.enums.ServiceType;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.user.entities.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,18 +21,13 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "appointments")
 @Entity
+@Table(name = "appointments")
 public class Appointment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("appointmentId")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Pet pet;
 
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
@@ -41,13 +38,17 @@ public class Appointment implements Serializable {
     @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalTime appointmentTime;
 
+    @Enumerated(EnumType.STRING)
+    private AppointmentStatus status;
+
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_appointment_user"))
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AppointmentStatus status;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "pet_id", nullable = false, foreignKey = @ForeignKey(name = "FK_appointment_pet"))
+    private Pet pet;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -1,6 +1,6 @@
 package br.com.finalproject.petconnect.pets.dto.request;
 
-import br.com.finalproject.petconnect.appointment.entities.PetType;
+import br.com.finalproject.petconnect.pets.entities.enums.PetType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
