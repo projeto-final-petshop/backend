@@ -1,8 +1,11 @@
 package br.com.finalproject.petconnect.pets.entities;
 
-import br.com.finalproject.petconnect.appointment.entities.PetType;
+import br.com.finalproject.petconnect.appointment.entities.Appointment;
+import br.com.finalproject.petconnect.pets.entities.enums.PetType;
 import br.com.finalproject.petconnect.user.entities.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -17,6 +20,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Representa o animal de estimação do usuário
@@ -56,8 +61,13 @@ public class Pet implements Serializable {
     private LocalDate birthdate;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_pet_user"))
     private User user;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Appointment> appointments = new ArrayList<>();
 
     @CreationTimestamp
     @Column(updatable = false)

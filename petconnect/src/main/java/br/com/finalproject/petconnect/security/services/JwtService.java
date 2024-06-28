@@ -39,55 +39,37 @@ public class JwtService {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        try {
-            final Claims claims = extractAllClaims(token);
-            return claimsResolver.apply(claims);
-        } catch (JwtException | IllegalArgumentException e) {
-            log.error("Erro ao extrair claim do token JWT: {}", e.getMessage());
-            throw new JWTServiceException("Erro ao extrair claim do token JWT", e);
-        }
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     public String generateToken(UserDetails userDetails) {
-        try {
-            Map<String, Object> claims = new HashMap<>();
-            claims.put("name", userDetails.getUsername());
-            claims.put("email", userDetails.getUsername());
-            claims.put("roles", userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority).toList());
-            return generateToken(claims, userDetails);
-        } catch (Exception e) {
-            log.error("Erro ao gerar token JWT: {}", e.getMessage());
-            throw new JWTServiceException("Erro ao gerar token JWT", e);
-        }
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("name", userDetails.getUsername());
+        claims.put("email", userDetails.getUsername());
+        claims.put("roles", userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList());
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        try {
-            return buildToken(extraClaims, userDetails, jwtExpiration);
-        } catch (Exception e) {
-            log.error("Erro ao gerar token JWT com claims: {}", e.getMessage());
-            throw new JWTServiceException("Erro ao gerar token JWT com claims", e);
-        }
+        return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
     public long getExpirationTime() {
         return jwtExpiration;
     }
 
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-        try {
-            return Jwts.builder()
-                    .setClaims(extraClaims)
-                    .setSubject(userDetails.getUsername())
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                    .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                    .compact();
-        } catch (Exception e) {
-            log.error("Erro ao construir token JWT: {}", e.getMessage());
-            throw new JWTServiceException("Erro ao construir token JWT", e);
-        }
+    private String buildToken(Map<String, Object> extraClaims,
+                              UserDetails userDetails,
+                              long expiration) {
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -101,34 +83,19 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        try {
-            return extractExpiration(token).before(new Date());
-        } catch (Exception e) {
-            log.error("Erro ao verificar expiração do token JWT: {}", e.getMessage());
-            throw new JWTServiceException("Erro ao verificar expiração do token JWT", e);
-        }
+        return extractExpiration(token).before(new Date());
     }
 
     public Date extractExpiration(String token) {
-        try {
-            return extractClaim(token, Claims::getExpiration);
-        } catch (Exception e) {
-            log.error("Erro ao extrair expiração do token JWT: {}", e.getMessage());
-            throw new JWTServiceException("Erro ao extrair expiração do token JWT", e);
-        }
+        return extractClaim(token, Claims::getExpiration);
     }
 
     private Claims extractAllClaims(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (JwtException | IllegalArgumentException e) {
-            log.error("Erro ao extrair todos os claims do token JWT: {}", e.getMessage());
-            throw new JWTServiceException("Erro ao extrair todos os claims do token JWT", e);
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Key getSignInKey() {

@@ -13,7 +13,7 @@ public class LoginResponse {
 
     private String token;
     private String tokenType;
-    private long expiresAt;
+    private long expiresIn;
     private String username;
     private String email;
     private List<String> roles;

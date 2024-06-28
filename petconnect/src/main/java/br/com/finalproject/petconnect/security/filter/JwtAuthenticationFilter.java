@@ -1,7 +1,6 @@
 package br.com.finalproject.petconnect.security.filter;
 
 import br.com.finalproject.petconnect.security.services.JwtService;
-import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,14 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
+        final String authHeader = request.getHeader("Authorization");
 
-        final String authHeader = request.getHeader(ConstantsUtil.AUTHORIZATION);
-
-        if (authHeader == null || !authHeader.startsWith(ConstantsUtil.BEARER_PREFIX)) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -66,7 +65,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
-            log.error("Erro ao processar o token JWT: {}", exception.getMessage());
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }

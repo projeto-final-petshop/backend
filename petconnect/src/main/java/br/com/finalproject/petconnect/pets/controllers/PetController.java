@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.pets.controllers;
 
 import br.com.finalproject.petconnect.pets.dto.request.PetRequest;
+import br.com.finalproject.petconnect.pets.dto.response.PetListResponse;
 import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.services.PetService;
 import jakarta.validation.Valid;
@@ -22,13 +23,12 @@ public class PetController {
 
     private final PetService petService;
 
-    @PostMapping("/register")
+    @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PetResponse> createPet(@RequestBody @Valid PetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Criando um novo animal de estimação.");
         PetResponse response = petService.createPet(request, authorizationHeader);
-        log.info("Novo animal de estimação criado com sucesso.");
+        log.info("Pet cadastrado com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -36,19 +36,17 @@ public class PetController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PetResponse>> listPets(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recuperando a lista de animais de estimação.");
         List<PetResponse> response = petService.listPets(authorizationHeader);
-        log.info("Lista de animais de estimação recuperada com sucesso.");
+        log.info("Lista de pets obtida com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PetResponse> getPetDetails(@PathVariable(name = "id") Long id,
-                                                     @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Recuperando detalhes do animal de estimação com ID: {}", id);
-        PetResponse response = petService.getPetDetails(id, authorizationHeader);
-        log.info("Detalhes do animal de estimação recuperados com sucesso.");
+    public ResponseEntity<PetListResponse> getPetDetails(@PathVariable(name = "id") Long id,
+                                                         @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        PetListResponse response = petService.getPetDetails(id, authorizationHeader);
+        log.info("Detalhes do pet obtidos com sucesso para o ID: {}", id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -57,9 +55,8 @@ public class PetController {
     public ResponseEntity<PetResponse> updatePet(@PathVariable(name = "id") Long id,
                                                  @RequestBody @Valid PetRequest request,
                                                  @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Atualizando detalhes do animal de estimação com ID: {}", id);
         PetResponse response = petService.updatePet(id, request, authorizationHeader);
-        log.info("Detalhes do animal de estimação atualizados com sucesso.");
+        log.info("Pet com ID {} atualizado com sucesso.", id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -67,9 +64,8 @@ public class PetController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deletePet(@PathVariable(name = "id") Long id,
                                           @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        log.info("Excluindo animal de estimação com ID: {}", id);
         petService.deletePet(id, authorizationHeader);
-        log.info("Animal de estimação excluído com sucesso.");
+        log.info("Pet com ID {} excluído com sucesso.", id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -2,6 +2,7 @@ package br.com.finalproject.petconnect.user.entities;
 
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.roles.entities.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -16,8 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Representa o usuário do sistema
@@ -68,17 +68,24 @@ public class User implements UserDetails {
             message = "O endereço deve ter entre {min} e {max} caracteres.")
     private String address;
 
-    @Column(nullable = false)
     private Boolean active;
 
-    @Transient
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Pet> pets;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private List<Address> addresses = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_user_role"))
-    private Role role;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Pet> pets = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER) // Alteração para carregamento ansioso
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            foreignKey = @ForeignKey(name = "FK_user_role"),
+            inverseForeignKey = @ForeignKey(name = "FK_role_user")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -89,8 +96,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        var authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
-        return List.of(authority);
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        }
+        return authorities;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package br.com.finalproject.petconnect.security.filter;
 
-import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,18 +24,18 @@ public class CsrfCookieFilter extends OncePerRequestFilter {
 
         CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         if (csrfToken != null) {
-            log.info("CSRF token obtido: {}", csrfToken.getToken());
+            log.info("[ CsrfCookieFilter ] CSRF token obtido: {}", csrfToken.getToken());
             if (csrfToken.getHeaderName() != null) {
-                log.info("Definindo cabeçalho CSRF: {} com token", csrfToken.getHeaderName());
+                log.info("[ CsrfCookieFilter ] Definindo cabeçalho CSRF: {} com token", csrfToken.getHeaderName());
                 response.setHeader(csrfToken.getHeaderName(), csrfToken.getToken());
             }
-            var csrfCookie = new Cookie(ConstantsUtil.XSRF_TOKEN, csrfToken.getToken());
+            var csrfCookie = new Cookie("XSRF-TOKEN", csrfToken.getToken());
             csrfCookie.setPath("/");
             csrfCookie.setHttpOnly(false);
             csrfCookie.setSecure(request.isSecure());
             response.addCookie(csrfCookie);
         } else {
-            log.warn("CSRF token não encontrado na requisição");
+            log.warn("Warn: CSRF token não encontrado na requisição");
         }
 
         filterChain.doFilter(request, response);

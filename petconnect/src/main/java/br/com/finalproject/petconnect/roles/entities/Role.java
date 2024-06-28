@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect.roles.entities;
 
+import br.com.finalproject.petconnect.roles.entities.enums.RoleType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -25,7 +26,7 @@ public class Role implements Serializable {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private RoleEnum name;
+    private RoleType name;
 
     private String description;
 

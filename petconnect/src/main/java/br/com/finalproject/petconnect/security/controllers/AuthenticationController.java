@@ -1,8 +1,5 @@
 package br.com.finalproject.petconnect.security.controllers;
 
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
-import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
 import br.com.finalproject.petconnect.security.dto.LoginRequest;
 import br.com.finalproject.petconnect.security.dto.LoginResponse;
 import br.com.finalproject.petconnect.security.services.AuthenticationService;
@@ -13,18 +10,12 @@ import br.com.finalproject.petconnect.user.entities.User;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Slf4j
 @RequestMapping("/auth")
@@ -34,8 +25,6 @@ public class AuthenticationController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponse> register(@RequestBody @Valid UserRequest registerUserDto) {
@@ -44,35 +33,20 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> authenticate(@RequestBody @Valid LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.getEmail(),
-                            loginRequest.getPassword()));
+            log.info("Tentando autenticar o usuário: {}", loginRequest.getEmail());
+            User authenticatedUser = authenticationService.authenticate(loginRequest);
+            log.info("Usuário autenticado com sucesso: {}", loginRequest.getEmail());
 
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
+            String jwtToken = jwtService.generateToken(authenticatedUser);
+            log.info("Token JWT gerado para o usuário: {}", loginRequest.getEmail());
 
-            if (Boolean.FALSE.equals(((User) userDetails).getActive())) {
-                log.error("Usuário inativo: {}", loginRequest.getEmail());
-                throw new UserInactiveException();
-            }
-
-            final String jwt = jwtService.generateToken(userDetails);
-            final long expiresAt = jwtService.extractExpiration(jwt).getTime();
-            final String username = userDetails.getUsername();
-            final List<String> roles = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .toList();
-
-            var response = new LoginResponse(jwt, "Bearer", expiresAt, username, loginRequest.getEmail(), roles);
-            return ResponseEntity.ok(response);
-        } catch (UserNotRegisteredException | UserInactiveException | InvalidCredentialsException e) {
-            log.error("Erro na autenticação: {}", e.getMessage());
-            throw e;
+            LoginResponse loginResponse = authenticationService.createLoginResponse(authenticatedUser, jwtToken);
+            return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {
-            log.error("Erro interno ao autenticar usuário: {}", loginRequest.getEmail());
-            throw new InvalidCredentialsException();
+            log.error("Erro durante a autenticação do usuário", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

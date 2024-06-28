@@ -1,25 +1,18 @@
 package br.com.finalproject.petconnect.exceptions.handlers;
 
 import br.com.finalproject.petconnect.exceptions.dto.ExceptionResponse;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidCredentialsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.PasswordMismatchException;
-import br.com.finalproject.petconnect.exceptions.runtimes.conflict.UserAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
-import br.com.finalproject.petconnect.exceptions.runtimes.conflict.CpfAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.conflict.FieldAlreadyExistsException;
+import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.*;
+import br.com.finalproject.petconnect.exceptions.runtimes.conflict.*;
+import br.com.finalproject.petconnect.exceptions.runtimes.generics.*;
 import br.com.finalproject.petconnect.exceptions.runtimes.notfound.FieldNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.notfound.UserNotRegisteredException;
 import br.com.finalproject.petconnect.exceptions.runtimes.security.InvalidAuthenticationTokenException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.JWTFieldExtractionFailureException;
 import br.com.finalproject.petconnect.exceptions.runtimes.security.PetPermissionDeniedException;
+import br.com.finalproject.petconnect.exceptions.runtimes.security.UserNotAuthenticatedException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.EmailSendException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.JWTServiceException;
-import br.com.finalproject.petconnect.exceptions.runtimes.security.UserNotAuthenticatedException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.PasswordUpdateException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.UserInactiveException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -77,7 +70,8 @@ public class GlobalExceptionHandler {
             InvalidRequestException.class,
             JWTFieldExtractionFailureException.class,
             PasswordMismatchException.class,
-            UserInactiveException.class
+            UserInactiveException.class,
+            BadRequestException.class
     })
     public ResponseEntity<ExceptionResponse> handleCustomExceptions(RuntimeException ex) {
         log.error("Erro de requisição: {}", ex.getMessage());
@@ -94,7 +88,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             UserNotAuthenticatedException.class,
-            InvalidAuthenticationTokenException.class
+            InvalidAuthenticationTokenException.class,
+            UnauthorizedException.class
     })
     public final ResponseEntity<ExceptionResponse> handleAuthenticatedException(RuntimeException ex) {
         log.error("Erro de autenticação: {}", ex.getMessage());
@@ -110,7 +105,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            PetPermissionDeniedException.class
+            PetPermissionDeniedException.class,
+            ForbiddenException.class
     })
     public final ResponseEntity<ExceptionResponse> handlePermissionDeniedException(RuntimeException ex) {
         log.error("Erro de permissão: {}", ex.getMessage());
@@ -147,7 +143,10 @@ public class GlobalExceptionHandler {
             CpfAlreadyExistsException.class,
             EmailAlreadyExistsException.class,
             FieldAlreadyExistsException.class,
-            UserAlreadyExistsException.class
+            PetAlreadyExistsException.class,
+            UserAlreadyExistsException.class,
+            ConflictException.class,
+            AppointmentTimeConflictException.class
     })
     public final ResponseEntity<ExceptionResponse> handleAlreadyExistsException(RuntimeException ex) {
         log.error("Conflito de dados: {}", ex.getMessage());
@@ -166,7 +165,8 @@ public class GlobalExceptionHandler {
             ServiceException.class,
             JWTServiceException.class,
             PasswordUpdateException.class,
-            EmailSendException.class
+            EmailSendException.class,
+            InternalServerException.class
     })
     public final ResponseEntity<ExceptionResponse> handleServiceException(RuntimeException ex) {
         log.error("Erro de serviço: {}", ex.getMessage());

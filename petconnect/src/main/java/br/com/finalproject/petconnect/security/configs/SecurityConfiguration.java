@@ -2,7 +2,6 @@ package br.com.finalproject.petconnect.security.configs;
 
 import br.com.finalproject.petconnect.security.filter.CsrfCookieFilter;
 import br.com.finalproject.petconnect.security.filter.JwtAuthenticationFilter;
-import br.com.finalproject.petconnect.utils.constants.ConstantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -48,11 +47,12 @@ public class SecurityConfiguration {
                                 "/api/v1", "/api/v1/**", "/error", "/index.html", "/",
                                 "/actuator", "/actuator/**", "/webjars/**",
                                 "/auth/**", "/auth/login", "/auth/signup",
-                                "/auth/reset-password-by-cpf", "/auth/reset-password-by-email",
-                                "/auth/reset-password", "/reset-password/confirm",
+                                "/auth/reset-password", "/auth/reset-password/confirm",
                                 "/users/update-password", "/auth/authenticate",
                                 "/api-docs", "/swagger-ui.html", "/swagger-ui/api-docs.html",
-                                "/swagger-ui*/*swagger-initializer.js", "/swagger-ui*/**"
+                                "/swagger-ui*/*swagger-initializer.js", "/swagger-ui*/**",
+                                "classpath:/META-INF/resources/", "classpath:/resources/",
+                                "classpath:/static/", "classpath:/public/"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -66,26 +66,15 @@ public class SecurityConfiguration {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
-        var configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:4200",
-                "http://localhost:9090",
-                "https://viacep.com.br/ws"
-        ));
-        configuration.setAllowedMethods(Arrays.asList(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList(
-                ConstantsUtil.AUTHORIZATION,
-                ConstantsUtil.CONTENT_TYPE
-        ));
-        configuration.setExposedHeaders(List.of(
-                ConstantsUtil.AUTHORIZATION
-        ));
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:9090"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
-        var source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

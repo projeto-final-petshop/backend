@@ -2,7 +2,7 @@ package br.com.finalproject.petconnect.admin;
 
 import br.com.finalproject.petconnect.exceptions.runtimes.conflict.CpfAlreadyExistsException;
 import br.com.finalproject.petconnect.exceptions.runtimes.conflict.EmailAlreadyExistsException;
-import br.com.finalproject.petconnect.exceptions.runtimes.notfound.ResourceNotFoundException;
+import br.com.finalproject.petconnect.exceptions.runtimes.generics.ResourceNotFoundException;
 import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.mapping.PetMapper;
@@ -21,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.HashSet;
 
 @Slf4j
 @Service
@@ -59,7 +62,7 @@ public class AdminService {
                     .email(input.getEmail())
                     .password(passwordEncoder.encode(input.getPassword()))
                     .phoneNumber(input.getPhoneNumber())
-                    .role(role)
+                    .roles(new HashSet<>(Collections.singletonList(role)))
                     .active(true)
                     .build();
 

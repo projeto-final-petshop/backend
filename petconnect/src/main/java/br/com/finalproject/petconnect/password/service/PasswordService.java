@@ -14,7 +14,7 @@ import br.com.finalproject.petconnect.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,49 +27,70 @@ import java.util.UUID;
 public class PasswordService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final PasswordResetTokenRepository tokenRepository;
 
     @Transactional
     public void updatePassword(UpdatePasswordRequest passwordUpdateRequest) {
+
         User currentUser = getCurrentAuthenticatedUser();
+
         if (!passwordEncoder.matches(passwordUpdateRequest.getCurrentPassword(), currentUser.getPassword())) {
-            throw new PasswordUpdateException("alterar");
+            log.warn("Warn: Tentativa falha de alterar senha para o usuário: {}", currentUser.getEmail());
+            throw new PasswordUpdateException("Senha atual incorreta.");
         }
+
         if (!passwordUpdateRequest.getNewPassword().equals(passwordUpdateRequest.getConfirmPassword())) {
-            throw new PasswordMismatchException();
+            log.warn("Warn: Senha nova e confirmação não coincidem para o usuário: {}", currentUser.getEmail());
+            throw new PasswordMismatchException("Nova senha e confirmação não coincidem.");
         }
+
         currentUser.setPassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
         userRepository.save(currentUser);
+
+        log.info("[ PasswordService - updatePassword ] - Senha alterada com sucesso para o usuário: {}", currentUser.getEmail());
+
     }
 
     @Transactional
     public void resetPassword(String email) {
+
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new FieldNotFoundException("Email"));
+                .orElseThrow(() -> {
+                    log.warn("[ PasswordService - resetPassword ] - Email não encontrado ou não cadastrado: {}", email);
+                    return new FieldNotFoundException("Email não encontrado ou não cadastrado.");
+                });
 
         String token = UUID.randomUUID().toString();
         var passwordResetToken = new PasswordResetToken(token, user);
         tokenRepository.save(passwordResetToken);
 
-        String resetLink = "http://localhost:8888/api/v1/reset-password/confirm?token=" + token;
+        String resetLink = "http://localhost:4200/reset-password?token=" + token;
         try {
             emailService.sendEmail(user.getEmail(),
                     "Solicitação de redefinição de senha.",
                     "Para redefinir sua senha, clique no link abaixo.\n" + resetLink);
+            log.info("[ PasswordService - resetPassword ] - E-mail de redefinição de senha enviado para: {}", user.getEmail());
         } catch (Exception e) {
-            throw new EmailSendException();
+            log.error("Erro ao enviar e-mail de redefinição de senha para: {}", user.getEmail(), e);
+            throw new EmailSendException("Erro ao enviar e-mail de redefinição de senha.");
         }
+
     }
 
     @Transactional
     public void updatePasswordWithToken(String token, String newPassword) {
+
         PasswordResetToken resetToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new FieldNotFoundException("não encontrado"));
+                .orElseThrow(() -> {
+                    log.warn("Warn: Token não encontrado: {}", token);
+                    return new FieldNotFoundException("Token não encontrado.");
+                });
 
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new InvalidAuthenticationTokenException("inválido ou expirado");
+            log.warn("Warn: Token expirado para redefinição de senha do usuário: {}", resetToken.getUser().getEmail());
+            throw new InvalidAuthenticationTokenException("Token de autenticação inválido ou expirado.");
         }
 
         User user = resetToken.getUser();
@@ -77,43 +98,13 @@ public class PasswordService {
         userRepository.save(user);
         tokenRepository.delete(resetToken);
 
-        log.info("Senha atualizada com sucesso para o usuário: {}", user.getEmail());
-    }
+        log.info("[ PasswordService - updatePasswordWithToken ] - Senha atualizada com sucesso para o usuário: {}", user.getEmail());
 
-    @Transactional
-    public void resetPasswordByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new FieldNotFoundException("Email"));
-        sendPasswordResetEmail(user);
-    }
-
-    @Transactional
-    public void resetPasswordByCpf(String cpf) {
-        User user = userRepository.findByCpf(cpf)
-                .orElseThrow(() -> new FieldNotFoundException("CPF"));
-        sendPasswordResetEmail(user);
-    }
-
-    private void sendPasswordResetEmail(User user) {
-        String token = UUID.randomUUID().toString();
-        var passwordResetToken = new PasswordResetToken(token, user);
-        tokenRepository.save(passwordResetToken);
-
-        String resetLink = "http://localhost:8888/api/v1/auth/reset-password/confirm?token=" + token;
-        try {
-            emailService.sendEmail(user.getEmail(),
-                    "Solicitação de redefinição de senha.",
-                    "Para redefinir sua senha, clique no link abaixo:\n" + resetLink);
-        } catch (Exception e) {
-            throw new EmailSendException();
-        }
-
-        log.info("E-mail de redefinição de senha enviado para o usuário: {}", user.getEmail());
     }
 
     private User getCurrentAuthenticatedUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new FieldNotFoundException("Email"));
+                .orElseThrow(() -> new FieldNotFoundException("Email não encontrado ou não cadastrado."));
     }
 
 }

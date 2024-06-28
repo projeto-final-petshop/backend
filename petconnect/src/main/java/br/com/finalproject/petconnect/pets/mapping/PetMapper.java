@@ -1,6 +1,7 @@
 package br.com.finalproject.petconnect.pets.mapping;
 
 import br.com.finalproject.petconnect.pets.dto.request.PetRequest;
+import br.com.finalproject.petconnect.pets.dto.response.PetListResponse;
 import br.com.finalproject.petconnect.pets.dto.response.PetResponse;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import org.mapstruct.Mapper;
@@ -23,6 +24,9 @@ public interface PetMapper {
         return INSTANCE;
     }
 
+    @Mapping(target = "name", source = "name")
+    @Mapping(source = "color", target = "color")
+    @Mapping(source = "breed", target = "breed")
     @Mapping(target = "petType", source = "petType")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
@@ -31,6 +35,9 @@ public interface PetMapper {
     Pet toEntity(PetRequest petRequest);
 
     @Mapping(source = "id", target = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(source = "color", target = "color")
+    @Mapping(source = "breed", target = "breed")
     @Mapping(target = "petType", source = "petType")
     @Mapping(source = "user.id", target = "userId")
     @Mapping(target = "updatedAt", dateFormat = "yyyy-MM-dd HH:mm")
@@ -38,6 +45,15 @@ public interface PetMapper {
     @Mapping(target = "birthdate", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "age", expression = "java(calculateAge(pet.getBirthdate()))")
     PetResponse toResponse(Pet pet);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(source = "color", target = "color")
+    @Mapping(source = "breed", target = "breed")
+    @Mapping(target = "petType", source = "petType")
+    @Mapping(target = "birthdate", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "age", expression = "java(calculateAge(pet.getBirthdate()))")
+    PetListResponse toPetListResponse(Pet pet);
 
     List<PetResponse> toResponseList(List<Pet> pets);
 

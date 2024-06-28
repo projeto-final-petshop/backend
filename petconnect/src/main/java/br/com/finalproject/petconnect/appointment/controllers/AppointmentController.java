@@ -23,7 +23,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping(value = "/schedule", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/schedule")
     public ResponseEntity<AppointmentResponse> createAppointment(@RequestBody @Valid AppointmentRequest request,
                                                                  @RequestHeader(name = HttpHeaders
                                                                          .AUTHORIZATION) String authorizationHeader) {
@@ -32,7 +32,7 @@ public class AppointmentController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable Long id,
                                                                  @RequestBody @Valid AppointmentRequest request,
                                                                  @RequestHeader(name = HttpHeaders
@@ -42,7 +42,7 @@ public class AppointmentController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping(value = "/{id}", consumes = "application/json", produces = "text/plain")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> cancelAppointment(@PathVariable Long id,
                                                     @RequestHeader(name = HttpHeaders
                                                             .AUTHORIZATION) String authorizationHeader) {
@@ -51,7 +51,7 @@ public class AppointmentController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<AppointmentResponse> getAppointment(@PathVariable Long id,
                                                               @RequestHeader(name = HttpHeaders
                                                                       .AUTHORIZATION) String authorizationHeader) {
@@ -60,7 +60,7 @@ public class AppointmentController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = "/pet/{petId}", produces = "application/json")
+    @GetMapping(value = "/pet/{petId}")
     public ResponseEntity<List<AppointmentResponse>> listAppointmentsByPet(@PathVariable Long petId,
                                                                            @RequestHeader(name = HttpHeaders
                                                                                    .AUTHORIZATION) String authorizationHeader) {
@@ -69,7 +69,7 @@ public class AppointmentController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = "/all", produces = "application/json")
+    @GetMapping(value = "/all")
     public ResponseEntity<List<AppointmentResponse>> listAllAppointments(@RequestHeader(name = HttpHeaders
             .AUTHORIZATION) String authorizationHeader) {
         List<AppointmentResponse> responses = appointmentService.getAllAppointmentsByUser(authorizationHeader);
