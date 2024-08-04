@@ -1,5 +1,6 @@
 package br.com.finalproject.petconnect;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
@@ -16,6 +17,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class PetconnectApplication {
 
     public static void main(String[] args) {
+        Dotenv.configure().load(); // Carregar variáveis do arquivo .env
         SpringApplication.run(PetconnectApplication.class, args);
     }
 

@@ -9,6 +9,8 @@ target/classes/
 *.log
 *.tmp
 *.gz
+.env
+
 ### STS ###
 .apt_generated
 .classpath

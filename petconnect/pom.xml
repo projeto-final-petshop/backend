@@ -155,11 +155,19 @@
             <version>${jjwt.version}</version>
         </dependency>
 
+        <!-- GitHub -->
         <!-- Java Faker -->
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
             <version>1.0.2</version>
+        </dependency>
+
+        <!-- Dotenv Java -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.1</version>
         </dependency>
 
         <!-- Tests -->

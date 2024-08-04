@@ -20,7 +20,7 @@ spring:
     show-sql: false
     generate-ddl: true
     hibernate:
-      ddl-auto: update # validate
+      ddl-auto: update
       use-new-id-generator-mappings: false
     database-platform: org.hibernate.dialect.MySQLDialect
   jackson:
@@ -39,8 +39,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: 'petshop.petconnect@gmail.com'
-    password: 'zrgh nfow yzlb eext'
+    username: petshop.petconnect@gmail.com
+    password: zrgh nfow yzlb eext
     default-encoding: UTF-8
     test-connection: false
     properties:
@@ -52,7 +52,7 @@ spring:
             enable: true
             required: true
           auth: true
-          from: 'petshop.petconnect@gmail.com'
+          from: ${MAIL_USERNAME}
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -106,7 +106,7 @@ mail:
 
 security:
   jwt:
-    secret-key: '05955a2232d7f31a0a9879c9233e661f6e2923d5334ec67b7a64c79911407afc'
+    secret-key: 05955a2232d7f31a0a9879c9233e661f6e2923d5334ec67b7a64c79911407afc
     expiration-time: 86400000
 
 feign:
@@ -130,4 +130,3 @@ logging:
     web: DEBUG
     org.springframework.boot: DEBUG
     br.com.finalproject.petconnect: INFO
-

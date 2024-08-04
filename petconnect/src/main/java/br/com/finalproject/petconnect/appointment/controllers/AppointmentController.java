@@ -76,4 +76,20 @@ public class AppointmentController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/veterinary")
+    public ResponseEntity<List<AppointmentResponse>> getVeterinaryAppointments(@RequestHeader(name = "Authorization")
+                                                                               String authorizationHeader) {
+        List<AppointmentResponse> appointments = appointmentService.getVeterinaryAppointments(authorizationHeader);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/grooming")
+    public ResponseEntity<List<AppointmentResponse>> getGroomingAppointments(@RequestHeader(name = "Authorization")
+                                                                             String authorizationHeader) {
+        List<AppointmentResponse> appointments = appointmentService.getGroomingAppointments(authorizationHeader);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
 }

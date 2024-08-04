@@ -6,6 +6,7 @@ Content-Type: application/json
   "name": "Carolina Vera Gabriela de Paula",
   "email": "carolinaveradepaula@novadeliveri.com.br",
   "password": "P4$$w0rD",
+  "confirmPassword": "P4$$w0rD",
   "cpf": "519.154.459-57",
   "phoneNumber": "5544986595344"
 }
@@ -15,7 +16,7 @@ POST http://localhost:8888/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "julianemaran@gmail.com",
+  "email": "carolinaveradepaula@novadeliveri.com.br",
   "password": "P4$$w0rD"
 }
 
