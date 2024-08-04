@@ -9,7 +9,7 @@ target/classes/
 *.log
 *.tmp
 *.gz
-.env
+*.env
 
 ### STS ###
 .apt_generated
