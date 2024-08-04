@@ -10,6 +10,7 @@ target/classes/
 *.tmp
 *.gz
 .env
+.jpb/
 
 ### STS ###
 .apt_generated
