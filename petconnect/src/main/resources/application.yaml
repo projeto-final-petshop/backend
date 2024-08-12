@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8080
   servlet:
     context-path: /api/v1
 
@@ -12,17 +12,15 @@ spring:
     location: classpath:banner.txt
     charset: UTF-8
   datasource:
-    url: jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&requireSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
   jpa:
     open-in-view: false
-    show-sql: false
-    generate-ddl: true
+    show-sql: true
     hibernate:
       ddl-auto: update
       use-new-id-generator-mappings: false
-    database-platform: org.hibernate.dialect.MySQLDialect
   jackson:
     locale: 'pt-BR'
     time-zone: 'America/Sao_Paulo'
@@ -39,8 +37,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: petshop.petconnect@gmail.com
-    password: zrgh nfow yzlb eext
+    username: 'petshop.petconnect@gmail.com'
+    password: 'zrgh nfow yzlb eext'
     default-encoding: UTF-8
     test-connection: false
     properties:
@@ -52,7 +50,7 @@ spring:
             enable: true
             required: true
           auth: true
-          from: ${MAIL_USERNAME}
+          from: 'petshop.petconnect@gmail.com'
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -106,7 +104,7 @@ mail:
 
 security:
   jwt:
-    secret-key: 05955a2232d7f31a0a9879c9233e661f6e2923d5334ec67b7a64c79911407afc
+    secret-key: '05955a2232d7f31a0a9879c9233e661f6e2923d5334ec67b7a64c79911407afc'
     expiration-time: 86400000
 
 feign:

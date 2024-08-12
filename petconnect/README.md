@@ -24,6 +24,15 @@
 
 * No terminal insira o comando: `mvn spring-boot:run`
 * Executar a aplicação pulando os testes: `mvn spring-boot:run -DskipTests`
+* Inicializando o WSL2: `wsl`
+* Iniciando o serviço Docker: `sudo service docker start`
+* Construindo e iniciando contêires com Docker Compose: `docker compose up -d --build`
+  * `docker compose up`: cria e inicia os contêineres
+  * `-d`: sinalizador "detached mode", ou modo desacoplado, onde os contêineres são iniciados em segundo plano
+  * `--build`; força a recompilação das imagens Docker
+* Listando contêineres em execução, ou seja, exibe contêineres Docker em execução: `docker ps`
+* Listando todos os projetos Docker Compose ativos: `docker compose ls`
+* Parando o docker: `sudo service docker stop`
 
 ---
 
@@ -153,7 +162,7 @@ Rollback da migração: `flyway undo -configFiles=flyway.properties`
 
 ---
 
-* UserAlreadyExistsException: "Usuário já possui um pet com este nome." 
+* UserAlreadyExistsException: "Usuário já possui um pet com este nome."
 * EmailAlreadyExistsException: "E-mail já cadastrado."
 * CPFAlreadyExistsException: "CPF já cadastrado."
 * UserNotFoundException: "Usuário não encontrado."

@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0.30
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: petconnect
+    ports:
+      - '3306:3306'
+    networks:
+      - petconnect-network
+    volumes:
+      - db-data:/var/lib/mysql
+  petconnect:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/petconnect?createDatabaseIfNotExist=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    networks:
+      - petconnect-network
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+networks:
+  petconnect-network:
+    driver: bridge
+
+volumes:
+  db-data:

@@ -1,0 +1,8 @@
+.idea
+.mvn
+*.log
+*.gz
+*.md
+*.todo
+!tasks.todo
+!README.md
