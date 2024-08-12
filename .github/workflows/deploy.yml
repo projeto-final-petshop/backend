@@ -21,12 +21,14 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean package
+        working-directory: ./petconnect  # Diretório onde está o pom.xml
 
       - name: Log in to Azure Container Registry
         run: echo ${{ secrets.AZURE_ACR_PASSWORD }} | docker login ${{ secrets.AZURE_ACR_NAME }}.azurecr.io -u ${{ secrets.AZURE_ACR_USERNAME }} --password-stdin
 
       - name: Build Docker image
         run: docker build -t ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/petconnect:latest .
+        working-directory: ./petconnect  # Diretório onde está o Dockerfile
 
       - name: Push Docker image to ACR
         run: docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/petconnect:latest
