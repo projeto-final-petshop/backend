@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @OpenAPIDefinition(
         info = @Info(title = "PetConnect", description = "Aplicação PetConnect", version = "1.1.0"),
-        servers = @Server(url = "http://localhost:8888/api/v1")
+        servers = @Server(url = "http://localhost:8080/api/v1")
 )
 @EnableFeignClients(basePackages = "br.com.finalproject.petconnect.address")
 @SpringBootApplication

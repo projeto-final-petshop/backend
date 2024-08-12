@@ -45,7 +45,7 @@ public class PasswordService {
             log.warn("Warn: Senha nova e confirmação não coincidem para o usuário: {}", currentUser.getEmail());
             throw new PasswordMismatchException("Nova senha e confirmação não coincidem.");
         }
-
+        
         currentUser.setPassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
         userRepository.save(currentUser);
 

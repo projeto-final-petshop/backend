@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8080
   servlet:
     context-path: /api/v1
 
@@ -12,17 +12,15 @@ spring:
     location: classpath:banner.txt
     charset: UTF-8
   datasource:
-    url: jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&requireSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/petconnect?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
   jpa:
     open-in-view: false
-    show-sql: false
-    generate-ddl: true
+    show-sql: true
     hibernate:
-      ddl-auto: update # validate
+      ddl-auto: update
       use-new-id-generator-mappings: false
-    database-platform: org.hibernate.dialect.MySQLDialect
   jackson:
     locale: 'pt-BR'
     time-zone: 'America/Sao_Paulo'
@@ -130,4 +128,3 @@ logging:
     web: DEBUG
     org.springframework.boot: DEBUG
     br.com.finalproject.petconnect: INFO
-

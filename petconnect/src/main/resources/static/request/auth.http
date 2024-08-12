@@ -1,29 +1,30 @@
 ### Cadastrar 'USER'
-POST http://localhost:8888/api/v1/auth/signup
+POST http://localhost:8080/api/v1/auth/signup
 Content-Type: application/json
 
 {
   "name": "Carolina Vera Gabriela de Paula",
   "email": "carolinaveradepaula@novadeliveri.com.br",
   "password": "P4$$w0rD",
+  "confirmPassword": "P4$$w0rD",
   "cpf": "519.154.459-57",
   "phoneNumber": "5544986595344"
 }
 
 ### Login 'ADMIN'
-POST http://localhost:8888/api/v1/auth/login
+POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "julianemaran@gmail.com",
+  "email": "petshop.petconnect@gmail.com",
   "password": "P4$$w0rD"
 }
 
 ### Login 'USER'
-POST http://localhost:8888/api/v1/auth/login
+POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "carolinaveradepaula@novadeliveri.com.br",
+  "email": "petshop.petconnect@gmail.com",
   "password": "P4$$w0rD"
 }

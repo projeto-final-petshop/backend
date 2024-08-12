@@ -155,6 +155,7 @@
             <version>${jjwt.version}</version>
         </dependency>
 
+        <!-- GitHub -->
         <!-- Java Faker -->
         <dependency>
             <groupId>com.github.javafaker</groupId>

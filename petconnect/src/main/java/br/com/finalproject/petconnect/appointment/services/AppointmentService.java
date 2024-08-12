@@ -3,14 +3,13 @@ package br.com.finalproject.petconnect.appointment.services;
 import br.com.finalproject.petconnect.appointment.dto.AppointmentRequest;
 import br.com.finalproject.petconnect.appointment.dto.AppointmentResponse;
 import br.com.finalproject.petconnect.appointment.entities.Appointment;
+import br.com.finalproject.petconnect.appointment.entities.enums.ServiceType;
 import br.com.finalproject.petconnect.appointment.mapping.AppointmentMapper;
 import br.com.finalproject.petconnect.appointment.repositories.AppointmentRepository;
-import br.com.finalproject.petconnect.exceptions.runtimes.badrequest.InvalidRequestException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generics.BadRequestException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generics.ConflictException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generics.InternalServerException;
 import br.com.finalproject.petconnect.exceptions.runtimes.generics.ResourceNotFoundException;
-import br.com.finalproject.petconnect.exceptions.runtimes.service.ServiceException;
 import br.com.finalproject.petconnect.pets.entities.Pet;
 import br.com.finalproject.petconnect.user.entities.User;
 import lombok.AllArgsConstructor;
@@ -18,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -43,16 +43,16 @@ public class AppointmentService {
             log.info("[AppointmentService - scheduleAppointment] Agendamento criado com sucesso para o usuário: {}", user.getEmail());
             return AppointmentMapper.petMapper().toAppointmentResponse(savedAppointment);
         } catch (ResourceNotFoundException e) {
-            log.error("Erro ao criar agendamento: {}", e.getMessage(), e);
+            log.error("[RESOURCE NOT FOUND] - Erro ao criar agendamento: {}", e.getMessage(), e);
             throw new ResourceNotFoundException("Pet ou usuário não encontrado.");
         } catch (BadRequestException e) {
-            log.error("Erro ao criar agendamento: {}", e.getMessage(), e);
+            log.error("[BAD REQUEST] - Erro ao criar agendamento: {}", e.getMessage(), e);
             throw new BadRequestException("Requisição inválida.");
         } catch (ConflictException e) {
-            log.error("Erro ao criar agendamento: {}", e.getMessage(), e);
+            log.error("[CONFLICT] - Erro ao criar agendamento: {}", e.getMessage(), e);
             throw new ConflictException("Conflito de horários.");
         } catch (Exception e) {
-            log.error("Erro interno ao criar agendamento", e);
+            log.error("[INTERNAL ERROR] - Erro interno ao criar agendamento", e);
             throw new InternalServerException("Falha ao criar novo agendamento.");
         }
     }
@@ -72,7 +72,7 @@ public class AppointmentService {
             log.info("[AppointmentService - updateAppointment] Agendamento atualizado com sucesso para o usuário: {}", user.getEmail());
             return AppointmentMapper.petMapper().toAppointmentResponse(updatedAppointment);
         } catch (ResourceNotFoundException e) {
-            log.error("Erro ao atualizar agendamento: {}", e.getMessage(), e);
+            log.error("[RESOURCE NOT FOUND] - Erro ao atualizar agendamento: {}", e.getMessage(), e);
             throw new ResourceNotFoundException("Pet, usuário ou agendamento não encontrado.");
         } catch (BadRequestException e) {
             log.error("Erro ao atualizar agendamento: {}", e.getMessage(), e);
@@ -147,6 +147,36 @@ public class AppointmentService {
         } catch (Exception e) {
             log.error("Erro interno ao obter detalhes do agendamento ID: {}", appointmentId, e);
             throw new InternalServerException("Falha ao obter detalhes do agendamento.");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppointmentResponse> getVeterinaryAppointments(String authorizationHeader) {
+        try {
+            User user = appointmentServiceUtil.getUserFromAuthorizationHeader(authorizationHeader);
+            List<Appointment> appointments = appointmentRepository.findByServiceType(ServiceType.VETERINARY_CONSULTATION);
+            log.info("[AppointmentService - getVeterinaryAppointments] Listagem de consultas veterinárias do usuário: {}", user.getEmail());
+            return AppointmentMapper.petMapper().toResponseList(appointments);
+        } catch (Exception e) {
+            log.error("Erro interno ao listar consultas veterinárias", e);
+            throw new InternalServerException("Falha ao listar consultas veterinárias.");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppointmentResponse> getGroomingAppointments(String authorizationHeader) {
+        try {
+            User user = appointmentServiceUtil.getUserFromAuthorizationHeader(authorizationHeader);
+            List<ServiceType> groomingTypes = Arrays.asList(
+                    ServiceType.GROOMING,
+                    ServiceType.BATH,
+                    ServiceType.BATH_AND_GROOMING);
+            List<Appointment> appointments = appointmentRepository.findByServiceTypeIn(groomingTypes);
+            log.info("[AppointmentService - getGroomingAppointments] Listagem de serviços de banho e tosa do usuário: {}", user.getEmail());
+            return AppointmentMapper.petMapper().toResponseList(appointments);
+        } catch (Exception e) {
+            log.error("Erro interno ao listar serviços de banho e tosa", e);
+            throw new InternalServerException("Falha ao listar serviços de banho e tosa.");
         }
     }
 
