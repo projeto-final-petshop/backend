@@ -70,9 +70,6 @@ public class User implements UserDetails {
 
     private Boolean active;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<Address> addresses = new ArrayList<>();
-
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Pet> pets = new ArrayList<>();
